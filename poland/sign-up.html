@@ -208,12 +208,14 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
-<script src="../assets/crew.js"></script>
 <script>
 /* fix reveal modes + WTC storage shim (used by the form below) */
 document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
 window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
 </script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
+<script src="../assets/crew.js"></script>
 <script>
 (function(){
   var state = { name:'', going:'', dates:[], stops:[], vibes:[], activities:[], length:'', budget:'', notes:'' };
@@ -360,12 +362,43 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
     state.dates = [...selected].sort().map(function(k){ var p=k.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1]+' '+(+p[2]); });
     state.stops = myStops.map(function(s){ return {lat:s.lat,lng:s.lng,label:s.label}; });
     WTC.save('wtc-poland-signup', state);
+    // share with the crew (durable backend) + remember who I am so I can edit later
+    if(window.Store){ window.Store.setMe(state.name);
+      window.Store.saveMine({ going:state.going, signup:{ dates:state.dates, stops:state.stops, vibes:state.vibes, activities:state.activities, length:state.length, budget:state.budget, notes:state.notes } })
+        .then(function(){ renderCrew(); }); }
     document.body.classList.add('sent');
     if(window.WTCM && window.WTCM.lenis) window.WTCM.lenis.scrollTo(0); else window.scrollTo({top:0,behavior:'smooth'});
   });
   document.getElementById('edit-again').addEventListener('click', function(e){ e.preventDefault(); document.body.classList.remove('sent'); });
 
+  /* ----- prefill so a returning person can EDIT their answers ----- */
+  function pressSingle(key,val){ var grp=document.querySelector('[data-single="'+key+'"]'); if(!grp||!val) return; grp.querySelectorAll('.chip').forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-val')===val?'true':'false'); }); state[key]=val; }
+  function pressMulti(key,vals){ var grp=document.querySelector('[data-multi="'+key+'"]'); if(!grp||!vals) return; vals.forEach(function(v){ var c=grp.querySelector('.chip[data-val="'+v+'"]'); if(c){ c.setAttribute('aria-pressed','true'); if(state[key].indexOf(v)<0) state[key].push(v); } }); }
+  function prefillStop(lat,lng,label){ if(!window.L||!map) return; var marker=L.marker([lat,lng]).addTo(map); var stop={lat:lat,lng:lng,label:label||'',marker:marker}; myStops.push(stop); marker.bindPopup(label||''); marker.on('click',function(){ removeStop(stop); }); renderStops(); }
+  function prefill(sig){
+    if(!sig) return;
+    document.getElementById('f-name').value=sig.name||''; document.getElementById('f-notes').value=sig.notes||'';
+    state.name=sig.name||''; state.notes=sig.notes||'';
+    pressSingle('going',sig.going); pressSingle('length',sig.length); pressSingle('budget',sig.budget);
+    pressMulti('vibes',sig.vibes);
+    (sig.activities||[]).forEach(function(a){ if(state.activities.indexOf(a)<0) state.activities.push(a); }); renderActs();
+    var MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    (sig.dates||[]).forEach(function(d){ var m=/([A-Za-z]{3})\s+(\d+)/.exec(d); if(m && MON[m[1]]!=null){ selected.add('2026-'+String(MON[m[1]]+1).padStart(2,'0')+'-'+String(+m[2]).padStart(2,'0')); } }); renderCal();
+    (sig.stops||[]).forEach(function(s){ if(s && s.lat) prefillStop(s.lat,s.lng,s.label); });
+    var st=document.getElementById('form-status'); if(st){ st.textContent='Editing your answers — change anything and re-submit.'; st.style.color='var(--terra-2)'; }
+  }
+  // prefill from this device's last submit (instant); else from the shared store once it loads
+  var localSig = WTC.load('wtc-poland-signup', null);
+  if(localSig && localSig.name) prefill(localSig);
+
   renderCrew();
+  // shared data is async — refresh the crew card + recompute calendar "others free" when it lands
+  if(window.Store && window.Store.all){ window.Store.all().then(function(){
+    othersDays={}; window.CREW.all().forEach(function(p){ if(p.going==='no') return; (p.availableDays||[]).forEach(function(iso){ othersDays[iso]=(othersDays[iso]||0)+1; }); });
+    renderCal(); renderCrew();
+    var meKey=window.Store.key(window.Store.me());
+    if(!localSig && meKey){ var mine=window.Store.cached()[meKey]; if(mine && mine.signup) prefill(Object.assign({name:mine.name, going:mine.going}, mine.signup)); }
+  }); }
 })();
 </script>
 <script src="../assets/motion.js?v=2"></script>

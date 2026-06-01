@@ -568,6 +568,8 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
 <script src="../assets/crew.js"></script>
 <script>
 document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
@@ -643,7 +645,7 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
 })();
 </script>
 <script src="../assets/motion.js?v=2"></script>
-<script>/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+<script>/* offline support — network-first SW (assets/sw.js), auto-updating so it never serves stale */
+if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('../sw.js').catch(function(){}); }); }</script>
 </body>
 </html>

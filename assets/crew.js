@@ -1,26 +1,31 @@
-/* Where To, Crew? — the group-decision layer. Crew picks come from real
-   sign-ups (the shared sheet, wired later); for now we only surface whatever
-   the current user has saved locally. No mock/seed people. */
+/* Where To, Crew? — the group-decision layer.
+   Reads the shared store (assets/store.js → Cloudflare Worker/KV, with a local
+   cache + local-only fallback). Every real sign-up + plan-draft shows up here,
+   so "crew leaning" / consensus reflect the actual crew. No mock/seed people. */
 (function(){
-  var SEED = [];   // no fake crew — real sign-ups only
+  var SEED = [];
 
+  function isoFromDay(d){ var m=/(\d{1,2})/.exec(String(d||'')); return m?('2026-06-'+String(+m[1]).padStart(2,'0')):null; }
+
+  // Map the shared store's entries → the people shape the UI expects.
   function all(){
-    // merge current user's saved signup (if any) as a person named after them
-    var me = null;
-    try { var s = JSON.parse(localStorage.getItem('wtc-poland-signup')||'null'); if(s && s.name) me = s; } catch(e){}
-    var mePlan = null;
-    try { var p = JSON.parse(localStorage.getItem('wtc-poland-plan')||'null'); if(p && p.sel) mePlan = p.sel; } catch(e){}
-    var people = SEED.slice();
-    if(me){
-      people.push({
-        name: me.name + ' (you)', going: me.going||'in',
-        availableDays: (me.dates||[]).map(function(d){ // "Jun 24" -> iso
-          var m = /Jun\s+(\d+)/.exec(d); return m ? '2026-06-'+String(+m[1]).padStart(2,'0') : null;
-        }).filter(Boolean),
-        stops: [], vibes: me.vibes||[], tripLength: me.length||'',
-        activities: me.activities||[], plan: mePlan
-      });
-    }
+    var crew = (window.Store ? window.Store.cached() : {}) || {};
+    var meKey = window.Store ? window.Store.key(window.Store.me()) : '';
+    var people = Object.keys(crew).map(function(k){
+      var e = crew[k] || {}; var su = e.signup || {}; var pl = e.plan || {};
+      return {
+        name: (e.name || k) + (k === meKey ? ' (you)' : ''),
+        going: e.going || 'in',
+        availableDays: (su.dates || []).map(isoFromDay).filter(Boolean),
+        rawDays: su.dates || [],
+        stops: su.stops || [],
+        vibes: su.vibes || [],
+        activities: su.activities || [],
+        tripLength: su.length || (pl.sel && pl.sel.length) || '',
+        plan: pl.sel || null            // the plan-draft picks, for leaning
+      };
+    });
+    // only count people who are in/maybe (not "can't this time") for leaning
     return people;
   }
 

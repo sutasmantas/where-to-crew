@@ -559,7 +559,7 @@ function bindRegister(){
 </script>
 
 <script src="assets/motion.js?v=2"></script>
-<script>/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+<script>/* offline support — network-first SW, auto-updating so it never serves stale */
+if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }</script>
 </body>
 </html>

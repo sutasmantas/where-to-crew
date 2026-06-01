@@ -17,9 +17,19 @@
     TYPE[g] = t;
     sel[g] = (t === 'multi') ? [] : null;
   });
-  var saved = WTC.load('wtc-poland-plan', null);
+  // Resume the CURRENT person's own saved draft so they can EDIT it (returning user).
+  // Prefer the shared store (so they edit the crew-visible version), fall back to local.
+  var myKey = (window.Store ? window.Store.key(window.Store.me()) : '');
+  var shared = (window.Store && myKey) ? (window.Store.cached()[myKey] || null) : null;
+  var saved = (shared && shared.plan) ? shared.plan : WTC.load('wtc-poland-plan', null);
   var bookingStatus = (saved && saved.bookingStatus) || {};   // bookingId -> 'todo'|'booked'
-  // (we start blank per spec — NO preselections — but keep booking status if any)
+  // Fresh user → blank (NO preselections). Returning user → load their own picks to edit.
+  if(saved && saved.sel){
+    Object.keys(sel).forEach(function(g){
+      if(saved.sel[g]==null) return;
+      sel[g] = (TYPE[g]==='multi') ? (Array.isArray(saved.sel[g])?saved.sel[g].slice():[]) : saved.sel[g];
+    });
+  }
 
   /* ---------- short labels for breakdown / leaning / bookings ---------- */
   var LABEL = {
@@ -456,7 +466,9 @@
   function colorFor(n){ var h=0; for(var i=0;i<n.length;i++) h=(h*31+n.charCodeAt(i))>>>0; return PALETTE[h%PALETTE.length]; }
   function initials(n){ return n.replace(/\(you\)/,'').trim().slice(0,1).toUpperCase(); }
   function votesFor(g,v){ return people.filter(function(p){ return TYPE[g]==='multi' ? (p.plan[g]||[]).indexOf(v)>=0 : p.plan[g]===v; }).map(function(p){return p.name;}); }
+  function refreshCrew(){ people = (window.CREW ? window.CREW.all() : []).filter(function(p){ return p.plan; }); injectVotes(); renderLean(); }
   function injectVotes(){
+    document.querySelectorAll('.choice .votes').forEach(function(v){ v.remove(); });   // clear before re-render (shared data arrives async)
     document.querySelectorAll('.choice').forEach(function(c){
       var opt=c.closest('.opt'); if(!opt) return; var g=opt.getAttribute('data-group'), v=c.getAttribute('data-val');
       if(c.querySelector('.votes')) return;
@@ -543,9 +555,18 @@
   }
   document.querySelectorAll('.preset').forEach(function(b){ b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); }); });
 
-  /* ---------- persistence ---------- */
+  /* ---------- persistence (local mirror + shared store, debounced) ---------- */
   function persist(total,days,nights){
     WTC.save('wtc-poland-plan', { sel:sel, total:total, days:days, nights:nights, bookingStatus:bookingStatus, ts:Date.now() });
+  }
+  var saveTimer=null;
+  function pushShared(){
+    if(!window.Store || !window.Store.me()) return;   // no identity yet → local only
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(function(){
+      var p=WTC.load('wtc-poland-plan',{})||{};
+      window.Store.saveMine({ going:'in', plan:{ sel:sel, total:p.total, days:p.days, nights:p.nights, bookings:p.bookings, bookingStatus:bookingStatus } });
+    }, 900);
   }
 
   /* ============================================================
@@ -564,15 +585,39 @@
     plan.total=c?c.total:null; plan.days=c?c.days:null; plan.nights=c?c.nights:null;
     plan.bookings=rows; plan.meters=meters; plan.ts=Date.now();
     WTC.save('wtc-poland-plan', plan);
+    pushShared();
   }
 
   /* ---------- download (shared generator) ---------- */
   var dlBtn=document.getElementById('dlMini');
   if(dlBtn) dlBtn.addEventListener('click', function(){ if(window.WTC_downloadChecklist) window.WTC_downloadChecklist(); });
 
+  /* ---------- identity (whose picks these are; lets them edit/share) ---------- */
+  function renderIdentity(){
+    var sum=document.getElementById('summary'); if(!sum) return;
+    var bar=document.getElementById('whoami');
+    if(!bar){ bar=document.createElement('div'); bar.id='whoami';
+      bar.style.cssText='font-family:var(--mono);font-size:.72rem;color:var(--paper-soft);margin-bottom:12px;line-height:1.5;';
+      sum.insertBefore(bar, sum.firstChild); }
+    var me=window.Store?window.Store.me():'';
+    if(me){
+      bar.innerHTML='Saving as <b style="color:var(--terra-2)">'+me.replace(/</g,'')+'</b> · <a href="#" id="who-change" style="color:var(--paper-soft);text-decoration:underline;">not you?</a>';
+      var ch=document.getElementById('who-change'); if(ch) ch.addEventListener('click',function(e){ e.preventDefault(); window.Store.setMe(''); renderIdentity(); });
+    } else {
+      bar.innerHTML='<span>Add your name so your picks save &amp; show to the crew:</span>'+
+        '<span style="display:flex;gap:6px;margin-top:6px;"><input id="who-input" placeholder="your name" style="flex:1;background:var(--forest-2);border:1px solid var(--line);color:var(--paper);border-radius:7px;padding:.5em .6em;font-family:var(--sans);font-size:.85rem;"><button type="button" id="who-save" class="fixbtn" style="white-space:nowrap;">Save</button></span>';
+      var go=function(){ var v=(document.getElementById('who-input').value||'').trim(); if(!v) return; window.Store.setMe(v); pushShared(); renderIdentity(); refreshCrew(); };
+      var sv=document.getElementById('who-save'); if(sv) sv.addEventListener('click',go);
+      var inp=document.getElementById('who-input'); if(inp) inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+    }
+  }
+
   /* ---------- init ---------- */
   injectSuggest();
   injectVotes();
   renderLean();
+  renderIdentity();
   render();
+  // shared data arrives async — refresh leaning/votes once the cache warms from the network
+  if(window.Store && window.Store.all){ window.Store.all().then(function(){ refreshCrew(); }); }
 })();

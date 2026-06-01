@@ -455,6 +455,8 @@ document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttr
 window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
 <script src="../assets/checklist.js"></script>
 <script>
 /* ---- The Plan reflects the CHOSEN draft (never hardcodes Morskie Oko) ----
@@ -463,6 +465,8 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
 (function(){
   var DEFAULTS = { length:'4d', dates:'25-28', hike:'morskie', mokAccess:'minibus', day4:'bochnia', base2:'zakopane', night2:'stara-polana', night1:'gregtom', night3:'n3-stara-polana', pass:'none', energylandia:'1day', breakDrive:'through', arrival:'same-evening', stops:['augustow','raj'], krakowEve:['oldtown','cruise'], mtnEvening:['baths'], addons:['gubalowka'], aqualantis:['aqualantis'], returnStops:['rb-bonarka','rb-kielce','rb-lomza','rb-suwalki'] };
   var saved = WTC.load('wtc-poland-plan', null);
+  // prefer THIS person's shared plan (so the page reflects their picks on any device)
+  if(window.Store){ var _mk=window.Store.key(window.Store.me()); var _mine=_mk && window.Store.cached()[_mk]; if(_mine && _mine.plan && _mine.plan.sel) saved = _mine.plan; }
   var hasDraft = !!(saved && saved.sel && (saved.sel.hike || saved.sel.length));
   // Object.assign respects the draft's arrays as-is (an explicit empty stays empty);
   // only a decision the draft never touched (undefined) falls back to the default.
@@ -621,7 +625,7 @@ window.WTCM_onReady = function(ctx){
 };
 </script>
 <script src="../assets/motion.js?v=2"></script>
-<script>/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+<script>/* offline support — network-first SW, auto-updating so it never serves stale */
+if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('../sw.js').catch(function(){}); }); }</script>
 </body>
 </html>
