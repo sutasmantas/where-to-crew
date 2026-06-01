@@ -115,11 +115,11 @@
     /* countdown (dated when the date window is known) */
     var dep = s.dates==='25-28' ? {label:'Thu 25 Jun 2026'} : s.dates==='26-29' ? {label:'Fri 26 Jun 2026'} : null;
     var countdown = [
-      ['−3 wks','Lock dates · book all lodging (free-cancel)'],
-      ['−2 wks','Energylandia e-tickets + pass · Kasprowy / salt-mine slots'],
-      ['−1 wk','Car service + tyres + legal kit · EHIC + travel + breakdown insurance · eSIM/roaming'],
-      ['−3 days','Morskie Oko parking e-ticket (or confirm minibus) · withdraw some złoty cash'],
-      ['−24 h','Pack · fuel up · re-check weather + park hours · confirm departure time']
+      ['−3 wks','Lock dates · book all lodging (free-cancel) · register the car in Kraków’s LEZ (ztp.krakow.pl) if you’ll drive in'],
+      ['−2 wks','Energylandia e-tickets (~€53; Energy Pass ~€56 if you want it) · Kasprowy Wierch slot (sells out) · salt-mine slot (Bochnia English tour / Wieliczka)'],
+      ['−1 wk','Car service + tyres + legal kit · EHIC + travel + breakdown insurance · buy an EU eSIM (LT SIMs opted out of free roaming)'],
+      ['−3 days','Morskie Oko TPN parking e-ticket — book ≥3 days out for the cheapest rate (~35–55 zł; no cash on site, sells out) OR plan the Bar Fis minibus · withdraw some złoty'],
+      ['−24 h','Pack · fuel up (hypermarket station) · re-check weather + park hours · confirm departure + border-crossing window']
     ];
 
     return { sel:s, days:days, nights:nights, total:plan.total, dayblocks:dayblocks, bookings:bookings, countdown:countdown, dep:dep, lab:lab };
@@ -193,11 +193,11 @@
         '<li>Service: tyres (incl. spare), oil, coolant, washer, wipers, lights, brakes. Summer tyres OK for June.</li>'+
         '<li>Mandatory kit: warning triangle, fire extinguisher, hi-vis vest in the cabin.</li>'+
         '<li>Headlights 24/7. Alcohol ~0.0 — the driver doesn’t drink. S7 section cameras (Radom) + Zakopianka tunnel (90).</li>'+
-        '<li>Kraków: Old Town is a Limited-Traffic Zone — base in Kazimierz; check the Low-Emission Zone for your Euro class or use Park &amp; Ride.</li></ul>'+
+        '<li>Kraków: Old Town is a Limited-Traffic Zone — base in Kazimierz. Low-Emission Zone is LIVE (2026): a petrol car Euro 4 / 2005+ may enter, but register your foreign car at ztp.krakow.pl first (even if it qualifies), or use Park &amp; Ride.</li></ul>'+
 
       '<h2>8 · Money &amp; apps</h2><ul>'+
         '<li>Some złoty cash for vendors/tolls/lockers (Poland’s currency); always pay/withdraw in złoty, not euro — decline DCC; use bank ATMs; Revolut/Wise. Exchange cash on ul. Sławkowska, not Rynek/airport kantors.</li>'+
-        '<li>⚠️ LT roaming may opt out of free EU roaming — sort an eSIM.</li>'+
+        '<li>⚠️ Lithuanian SIMs (Tele2/Telia/Bite) have opted out of free EU roaming — buy a cheap EU eSIM before you go.</li>'+
         '<li>Apps: Yanosik, offline Google Maps, Bolt, Jakdojade, Autopay/SkyCash, Energylandia, Splitwise.</li></ul>'+
 
       '<h2>9 · Food &amp; drink</h2><ul>'+
