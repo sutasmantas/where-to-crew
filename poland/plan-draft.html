@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Plan draft · Poland — Where To, Crew?</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  .drive{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .drive .sky{ position:absolute; inset:0; background:linear-gradient(180deg, var(--sky-top,#10201a) 0%, var(--sky-bot,#16241c) 100%); }
+  .drive .stars{ position:absolute; inset:0; opacity:0; background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.2px 1.2px at 28% 32%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.4px 1.4px at 44% 12%, rgba(243,237,225,.85), transparent),
+    radial-gradient(1.5px 1.5px at 72% 16%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.3px 1.3px at 36% 44%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.5px 1.5px at 92% 10%, rgba(243,237,225,.85), transparent); }
+  .drive .orb{ position:absolute; width:130px; height:130px; left:var(--orb-x,12%); top:var(--orb-y,72%); transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 50% 50%, var(--orb,#d98c5f) 0%, transparent 66%); filter:blur(3px); opacity:.8; }
+  .drive .orb::after{ content:''; position:absolute; inset:42px; border-radius:50%; background:var(--orb-core,#e7a877); box-shadow:0 0 60px 16px var(--orb-core,#e7a877); }
+  .drive .haze{ position:absolute; left:-12%; right:-12%; bottom:-4%; height:62%; background:radial-gradient(120% 100% at 50% 118%, var(--glow,rgba(192,97,63,.26)) 0%, transparent 70%); }
+
+  main{ position:relative; z-index:2; }
+  .page-top{ padding-top:104px; }
+  .route-eyebrow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--terra-2); }
+  .trip-head .display{ font-size:clamp(2.4rem,5.4vw,4.2rem); }
+
+  .draft-grid{ display:grid; grid-template-columns:1fr 374px; gap:clamp(24px,4vw,52px); align-items:start; }
+  @media(max-width:980px){ .draft-grid{ grid-template-columns:1fr; } }
+
+  /* ---- presets ---- */
+  .presets{ margin:8px 0 30px; }
+  .presets .pwrap{ display:flex; flex-wrap:wrap; gap:10px; }
+  .preset{ display:flex; flex-direction:column; gap:2px; text-align:left; background:var(--forest-2); border:1px solid var(--line); border-radius:12px; padding:13px 16px; cursor:pointer; transition:border-color .3s var(--ease), background .3s var(--ease); color:inherit; min-width:148px; flex:1 1 148px; }
+  .preset:hover{ border-color:var(--terra-2); }
+  .preset.active{ border-color:var(--terra); background:rgba(192,97,63,.12); box-shadow:inset 0 0 0 1px var(--terra); }
+  .preset .pn{ font-weight:700; font-size:1rem; color:var(--paper); }
+  .preset .pp{ font-family:var(--mono); font-size:.74rem; color:var(--terra-2); }
+  .preset .pd{ font-size:.78rem; color:var(--paper-soft); line-height:1.35; }
+  .presets .pnote{ font-family:var(--mono); font-size:.68rem; color:var(--paper-soft); margin-top:10px; }
+
+  /* ---- day blocks ---- */
+  .dayblock{ margin:0 0 18px; padding-top:26px; border-top:1px solid var(--line); }
+  .dayblock:first-of-type{ border-top:0; padding-top:0; }
+  .day-head{ margin-bottom:20px; }
+  .day-head .day-tag{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--terra-2); }
+  .day-head h2{ font-size:clamp(1.5rem,2.6vw,2rem); font-weight:800; letter-spacing:-.02em; margin-top:6px; }
+  .day-head .tradeoff{ font-family:var(--serif,Georgia),serif; font-style:italic; font-size:1rem; color:var(--paper-soft); margin-top:8px; max-width:60ch; }
+
+  /* ---- structured option meta ---- */
+  .choice .cmeta{ display:flex; flex-wrap:wrap; gap:6px 12px; font-family:var(--mono); font-size:.72rem; color:var(--terra-2); margin-top:5px; }
+  .choice .cmeta .m-why{ color:var(--paper-soft); text-transform:none; letter-spacing:0; }
+  .choice .cbook{ display:inline-flex; align-items:center; gap:4px; color:var(--gold,#d8b15a); }
+  .suggest-chip{ display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--forest); background:var(--terra-2); border-radius:100px; padding:.25em .6em; margin-left:8px; vertical-align:middle; }
+  .whyi{ display:inline-grid; place-items:center; width:17px; height:17px; border-radius:50%; border:1px solid var(--paper-soft); color:var(--paper-soft); font-family:var(--mono); font-size:.66rem; cursor:help; margin-left:6px; flex:none; position:relative; }
+  .whyi:hover, .whyi:focus{ border-color:var(--terra-2); color:var(--terra-2); }
+  .whyi .pop{ position:absolute; bottom:140%; left:50%; transform:translateX(-50%); width:max-content; max-width:240px; background:var(--forest-3); border:1px solid var(--terra); border-radius:8px; padding:9px 12px; font-family:var(--sans); font-size:.78rem; line-height:1.4; color:var(--paper); letter-spacing:0; text-transform:none; box-shadow:0 8px 24px rgba(0,0,0,.4); opacity:0; pointer-events:none; transition:opacity .2s; z-index:30; white-space:normal; text-align:left; }
+  .whyi:hover .pop, .whyi:focus .pop{ opacity:1; }
+  .choice.greyed{ opacity:.42; pointer-events:none; }
+  .choice.greyed .cnote{ color:var(--terra-2); }
+
+  /* hidden-by-rule groups + reveal animation */
+  .ruled[hidden]{ display:none; }
+  .reveal-anim{ animation:revealIn .45s var(--ease-out); }
+  @keyframes revealIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:none; } }
+  @media(prefers-reduced-motion:reduce){ .reveal-anim{ animation:none; } }
+  .lodge-prompt{ font-size:.88rem; color:var(--paper-soft); font-style:italic; }
+
+  /* compare table */
+  .cmp-toggle{ font-family:var(--mono); font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--terra-2); background:transparent; border:1px solid var(--line); border-radius:100px; padding:.4em .9em; cursor:pointer; }
+  .cmp-toggle:hover{ border-color:var(--terra-2); }
+  .cmp-table{ margin-top:12px; overflow-x:auto; }
+  .cmp-table table{ width:100%; border-collapse:collapse; font-size:.82rem; min-width:480px; }
+  .cmp-table th, .cmp-table td{ text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .cmp-table th{ font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; color:var(--paper-soft); }
+  .cmp-table td:first-child{ font-weight:600; color:var(--paper); }
+
+  /* ---- summary ---- */
+  .summary{ position:sticky; top:88px; background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:24px 22px; max-height:calc(100vh - 104px); overflow-y:auto; }
+  .summary::-webkit-scrollbar{ width:8px; } .summary::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
+  .summary .lab{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--paper-soft); }
+  .summary .total{ font-family:var(--display); font-weight:800; letter-spacing:-.03em; line-height:1; margin:8px 0 4px; }
+  .summary .total .num{ font-size:3.2rem; color:var(--paper); }
+  .summary .days{ font-size:1rem; color:var(--paper-soft); } .summary .days b{ color:var(--paper); }
+  .summary .feasline{ font-family:var(--mono); font-size:.74rem; margin-top:6px; }
+  .feasline.warn{ color:var(--terra-2); } .feasline.ok{ color:#8fb98f; }
+  .sum-line{ height:1px; background:var(--line); margin:18px 0; border:0; }
+  .sum-h{ font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-soft); margin-bottom:11px; display:flex; justify-content:space-between; align-items:center; }
+  .breakdown{ display:flex; flex-direction:column; gap:8px; font-size:.9rem; }
+  .breakdown .row{ display:flex; justify-content:space-between; gap:12px; color:var(--paper-soft); }
+  .breakdown .row .v{ font-family:var(--mono); white-space:nowrap; }
+  .breakdown .row.base{ color:var(--paper); font-weight:600; }
+
+  /* time meter */
+  .daymeter{ display:flex; flex-direction:column; gap:12px; }
+  .dm{ font-size:.84rem; }
+  .dm .dm-top{ display:flex; justify-content:space-between; gap:8px; color:var(--paper); margin-bottom:5px; }
+  .dm .dm-top .dm-h{ color:var(--paper-soft); font-family:var(--mono); font-size:.72rem; }
+  .dm .bar{ position:relative; height:7px; border-radius:100px; background:rgba(243,237,225,.13); overflow:hidden; }
+  .dm .bar .fill{ position:absolute; inset:0 auto 0 0; width:0%; border-radius:100px; transition:width .5s var(--ease), background .3s; }
+  .dm .fill.green{ background:#6fae6f; } .dm .fill.amber{ background:var(--gold,#d8b15a); } .dm .fill.red{ background:#d9603f; }
+  .dm .dm-warn{ font-size:.78rem; color:var(--terra-2); margin-top:6px; line-height:1.4; }
+  .dm .dm-fix{ margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; }
+  .dm .fixbtn{ font-family:var(--mono); font-size:.64rem; letter-spacing:.04em; color:var(--paper); background:rgba(192,97,63,.18); border:1px solid var(--terra); border-radius:100px; padding:.35em .7em; cursor:pointer; }
+  .dm .fixbtn:hover{ background:var(--terra); color:var(--forest); }
+
+  /* bookings */
+  .bookings{ display:flex; flex-direction:column; gap:9px; }
+  .bk{ background:var(--forest-2); border:1px solid var(--line); border-radius:9px; padding:11px 12px; font-size:.84rem; }
+  .bk .bk-t{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .bk .bk-name{ font-weight:600; color:var(--paper); }
+  .bk .bk-where{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); margin-top:3px; }
+  .bk .sells{ font-family:var(--mono); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color:#d9603f; border:1px solid #d9603f; border-radius:100px; padding:.2em .55em; white-space:nowrap; flex:none; }
+  .bk .bk-status{ margin-top:8px; display:flex; gap:6px; }
+  .bk .stbtn{ font-family:var(--mono); font-size:.64rem; letter-spacing:.04em; color:var(--paper-soft); background:transparent; border:1px solid var(--line); border-radius:100px; padding:.3em .7em; cursor:pointer; }
+  .bk .stbtn.on{ color:var(--forest); background:var(--terra-2); border-color:var(--terra-2); }
+  .bookings .empty{ color:var(--paper-soft); font-size:.86rem; }
+
+  /* progress */
+  .progress .pbar{ height:7px; border-radius:100px; background:rgba(243,237,225,.13); overflow:hidden; margin:6px 0 9px; }
+  .progress .pfill{ height:100%; width:0%; background:var(--terra); border-radius:100px; transition:width .5s var(--ease); }
+  .progress .pct{ font-family:var(--mono); font-size:.74rem; color:var(--paper); }
+  .progress .jump{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+  .progress .jbtn{ font-family:var(--mono); font-size:.64rem; color:var(--paper-soft); background:var(--forest-2); border:1px solid var(--line); border-radius:100px; padding:.3em .7em; cursor:pointer; }
+  .progress .jbtn:hover{ border-color:var(--terra-2); color:var(--paper); }
+
+  .lean{ display:flex; flex-direction:column; gap:8px; font-size:.86rem; }
+  .lean .lr{ display:flex; justify-content:space-between; gap:10px; color:var(--paper-soft); }
+  .lean .lr .pick{ color:var(--paper); font-weight:600; display:inline-flex; gap:7px; align-items:center; }
+  .lean .agreed{ color:#8fb98f; font-family:var(--mono); font-size:.62rem; }
+  .summary .btn{ width:100%; justify-content:center; margin-top:20px; }
+  .summary .dlmini{ width:100%; justify-content:center; margin-top:10px; }
+  .summary .foot{ font-family:var(--mono); font-size:.66rem; color:var(--paper-soft); margin-top:12px; text-align:center; line-height:1.5; }
+  .flash{ animation:flash .6s var(--ease); } @keyframes flash{ 0%{ color:var(--terra-2); } 100%{} }
+
+  /* lodging options get a bigger photo + a real "see rooms" link */
+  .choice.lodge .choice-thumb{ width:128px !important; height:96px !important; border-radius:10px; }
+  @media(max-width:520px){ .choice.lodge .choice-thumb{ width:96px !important; height:72px !important; } }
+  .rooms-link{ display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:.7rem; letter-spacing:.04em; color:var(--terra-2); text-decoration:none; border:1px solid var(--line); border-radius:100px; padding:.3em .7em; margin-top:8px; align-self:flex-start; }
+  .rooms-link:hover{ border-color:var(--terra-2); background:rgba(192,97,63,.12); }
+
+  .opt[data-greyblock] .choices{ opacity:.4; pointer-events:none; }
+  .greynote{ font-size:.85rem; color:var(--terra-2); margin-top:10px; }
+
+  .minibar{ display:none; }
+  @media(max-width:980px){
+    .summary{ position:static; max-height:none; }
+    .minibar{ display:flex; position:fixed; left:0; right:0; bottom:0; z-index:50; align-items:center; justify-content:space-between; gap:14px; background:var(--forest-3); border-top:1px solid var(--line); color:var(--paper); padding:12px 18px; }
+    .minibar .mb-total{ font-family:var(--display); font-weight:800; font-size:1.5rem; line-height:1; }
+    .minibar .mb-days{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); }
+    main{ padding-bottom:84px; }
+  }
+</style>
+</head>
+<body data-screen-label="Poland — Plan draft" data-auto-env data-auto-journey>
+
+<div class="preload" aria-hidden="true"><svg viewBox="0 0 340 120"><path class="pl-line" d="M14,86 C70,40 120,40 170,64 C220,88 270,88 326,44"/><circle class="pl-dot" cx="14" cy="86" r="6"/><circle class="pl-dot" cx="170" cy="64" r="6"/><circle class="pl-dot" cx="326" cy="44" r="6"/><text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text></svg></div>
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+<div class="transition"><span class="mark">Where To, Crew?</span></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+<div class="drive" aria-hidden="true"><div class="sky"></div><div class="stars"></div><div class="orb"></div><div class="haze"></div></div>
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="journey" aria-hidden="true"><div class="j-track"></div><div class="j-fill"></div><div class="j-marker"></div></div>
+
+<nav class="nav">
+  <a class="brand" href="../index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="sign-up.html" class="underline hide-sm" data-transition data-cursor="link">Sign up</a>
+    <a class="btn" href="plan.html" data-transition data-magnetic data-cursor="label" data-label="Next"><span class="fill"></span><span class="lbl">The plan</span></a>
+  </div>
+</nav>
+
+<main class="page-top">
+  <div class="wrap">
+    <div class="stepper" style="padding-top:22px;">
+      <a href="sign-up.html" class="step-done" data-transition>01 · Sign up ✓</a><span class="sep">———</span>
+      <span class="step-on">02 · Plan draft</span><span class="sep">———</span>
+      <a href="plan.html" data-transition>03 · The plan</a>
+    </div>
+
+    <header class="trip-head" data-journey="Decide" style="padding:34px 0 22px;">
+      <p class="route-eyebrow" data-reveal data-reveal-mode="fade">Decide it together · day by day</p>
+      <h1 class="display" data-reveal data-reveal="words" style="margin-top:14px;">Build the plan. Watch it add up.</h1>
+      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">Nothing's locked and nothing's pre-picked. Choose each day's options — the per-person total, the nights, and a <b>per-day time meter</b> update live, and every booking you'll need lands in <b>Your bookings</b>. Adventure's the headline; evenings are alcohol-free by default (the crew's one hard rule).</p>
+    </header>
+
+    <div class="draft-grid">
+      <div class="opts">
+
+        <!-- ============ PRESETS ============ -->
+        <div class="presets" data-reveal>
+          <div class="sum-h" style="color:var(--paper-soft);">Start from a preset <span style="text-transform:none;letter-spacing:0;">— then change anything</span></div>
+          <div class="pwrap" id="presets">
+            <button type="button" class="preset" data-preset="lowest"><span class="pn">Lowest budget</span><span class="pp">≈ €268</span><span class="pd">3-day, rope-drop, easy hike.</span></button>
+            <button type="button" class="preset" data-preset="balanced"><span class="pn">Balanced</span><span class="pp">≈ €360 · recommended</span><span class="pd">4-day, Morskie Oko, baths, Bochnia.</span></button>
+            <button type="button" class="preset" data-preset="thrill"><span class="pn">Max thrill</span><span class="pp">≈ €480+</span><span class="pd">Energy Pass + every add-on. Overloads Day 3.</span></button>
+            <button type="button" class="preset" data-preset="chill"><span class="pn">Chill &amp; social</span><span class="pp">≈ €340</span><span class="pd">Easy valley, baths, a buffer day.</span></button>
+          </div>
+          <p class="pnote">A preset is a starting point, not a validated plan — the time meter will still flag anything that won't fit.</p>
+        </div>
+
+        <!-- ============ TRIP-WIDE ============ -->
+        <section class="dayblock" data-day="0">
+          <div class="day-head"><span class="day-tag">Decide first</span><h2>Trip-wide</h2><p class="tradeoff">These shape every day below — length opens or closes Day 4, and each extra night adds a day away.</p></div>
+
+          <div class="opt" data-group="dates" data-type="single">
+            <div class="opt-head"><h3>Dates</h3></div>
+            <p class="opt-sub">Confirm the late-June window from sign-up availability.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="25-28" data-suggest="Sun 28 is a rare trading Sunday (malls + food courts open) and the park runs its longest hours."><span class="mark"></span><span class="ctext"><span class="clabel">Thu 25 – Sun 28 Jun</span><span class="cmeta"><span class="m-why">Sun 28 = trading Sunday (shops open) + longest park hours; watch Sun-PM border traffic home.</span></span></span></button>
+              <button type="button" class="choice" data-val="26-29"><span class="mark"></span><span class="ctext"><span class="clabel">Fri 26 – Mon 29 Jun</span><span class="cmeta"><span class="m-why">Quieter Monday return; avoid Fri-PM Zakopianka jams on the way down.</span></span></span></button>
+              <button type="button" class="choice" data-val="custom"><span class="mark"></span><span class="ctext"><span class="clabel">Custom</span><span class="cmeta"><span class="m-why">Whatever the crew calendar lands on. ⚠️ A non-trading Sunday closes malls/food courts — stock up Saturday.</span></span></span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="length" data-type="single">
+            <div class="opt-head"><h3>Trip length</h3></div>
+            <p class="opt-sub">No default — the total shows a range until you pick. This opens or hides Day 4.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="4d" data-price="0" data-suggest="The full trip — gives you the optional Day-4 salt mine and a third mountain night. Most crews who travel this far take it."><span class="mark"></span><span class="ctext"><span class="clabel">4 days / 3 nights</span><span class="cmeta"><span>core trip</span><span class="m-why">Reveals Day 4 + a Night-3 mountain stay.</span></span></span><span class="price free">core</span></button>
+              <button type="button" class="choice" data-val="3d" data-price="-35"><span class="mark"></span><span class="ctext"><span class="clabel">3 days / 2 nights</span><span class="cmeta"><span>−€35</span><span class="m-why">Tighter — drops Day 4 and the third night.</span></span></span><span class="price down">−€35</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="breakDrive" data-type="single">
+            <div class="opt-head"><h3>Break the return drive?</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="through" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Straight through</span><span class="cmeta"><span>€0</span><span class="m-why">~11 h home, swap drivers every ~2 h — break at the same food-courts on the way back (Bonarka → Kielce → Łomża → Suwałki). Fewer nights to pay for.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="warsaw-night" data-price="0" data-book="warsawNight"><span class="mark"></span><span class="ctext"><span class="clabel">Warsaw overnight on the way home</span><span class="cmeta"><span>+1 night (€18)</span><span>+~1 day</span><span class="cbook">📌 lodging</span></span><span class="cnote">Splits the ~11 h return into two easy halves.</span></span><span class="price up">+€18</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="buffer" data-type="single">
+            <div class="opt-head"><h3>Buffer / rest day?</h3><span class="tag-opt">most crews skip — highest value</span></div>
+            <p class="opt-sub">Absorbs weather, slippage and tired legs — the calm thread beside the adrenaline.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="add" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Add a buffer day</span><span class="cmeta"><span>+1 day +1 night (€18)</span><span class="m-why">Pick where &amp; what below — frees up an over-packed day.</span></span></span><span class="price up">+€18</span></button>
+              <button type="button" class="choice" data-val="no" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">No buffer</span><span class="cmeta"><span>€0</span><span class="m-why">Tighter and cheaper, but no slack if a day goes sideways.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="bufferWhere" data-type="single" hidden>
+            <div class="opt-head"><h3>Buffer day — where?</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="krakow" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Around Kraków</span><span class="cmeta"><span class="m-why">City pace, easy day-trips, the Night-1 lodging list.</span></span></span></button>
+              <button type="button" class="choice" data-val="zakopane" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Around Zakopane</span><span class="cmeta"><span class="m-why">Recover near the mountains; the Night-2 lodging list.</span></span></span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="bufferActivity" data-type="single" hidden>
+            <div class="opt-head"><h3>Buffer day — do what?</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="ojcow" data-price="6" data-hours="5"><span class="mark"></span><span class="ctext"><span class="clabel">Ojców NP + Pieskowa Skała</span><span class="cmeta"><span>~€6</span><span>~30 min N of Kraków · half-day</span><span class="m-why">Limestone canyon, caves, fairytale castle.</span></span></span><span class="price up">~€6</span></button>
+              <button type="button" class="choice" data-val="chill-krakow" data-price="3" data-hours="5"><span class="mark"></span><span class="ctext"><span class="clabel">A chill Kraków day</span><span class="cmeta"><span>~€3</span><span class="m-why">Zakrzówek / Kryspinów swim + cafés. Pure rest.</span></span></span><span class="price up">~€3</span></button>
+              <button type="button" class="choice" data-val="auschwitz" data-price="0" data-hours="7" data-book="auschwitz"><span class="mark"></span><span class="ctext"><span class="clabel">Auschwitz-Birkenau</span><span class="cmeta"><span>free entry</span><span>full ~7 h</span><span class="cbook">📌 timed pass, weeks ahead</span></span><span class="cnote">Heavy and profound — opt-in, on a non-party day.</span></span><span class="price free">free</span></button>
+              <button type="button" class="choice" data-val="rest" data-price="0" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">Just rest</span><span class="cmeta"><span>€0</span><span class="m-why">Sleep in, do nothing, bank the energy.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="bufferNight" data-type="single" hidden>
+            <div class="opt-head"><h3>Buffer night · lodging</h3><span class="tag-opt">📌 book</span></div>
+            <p class="lodge-prompt" data-buffernight-prompt>Pick where the buffer day is first.</p>
+            <div class="choices">
+              <button type="button" class="choice bn-krakow" data-val="bn-gregtom" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Greg &amp; Tom Hostel · Kraków</span><span class="cmeta"><span>~€23 pp display</span><span class="m-why">9.6★, free breakfast + dinner.</span></span></span><span class="price free">night €18</span></button>
+              <button type="button" class="choice bn-krakow" data-val="bn-atlantis" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Atlantis Hostel · Kraków</span><span class="cmeta"><span>~€13 pp display</span><span class="m-why">Cheapest beds, Kazimierz border.</span></span></span><span class="price free">night €18</span></button>
+              <button type="button" class="choice bn-zakopane" data-val="bn-stara-polana" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Stara Polana · Zakopane</span><span class="cmeta"><span>~€16 pp display</span><span class="m-why">Central, by the Morskie Oko bus.</span></span></span><span class="price free">night €18</span></button>
+              <button type="button" class="choice bn-zakopane" data-val="bn-wielka-krokiew" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Wielka Krokiew · Zakopane</span><span class="cmeta"><span>~€14 pp display</span><span class="m-why">Cheapest beds, free parking.</span></span></span><span class="price free">night €18</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="weather" data-type="single">
+            <div class="opt-head"><h3>Weather plan-B</h3><span class="tag-opt">no € — sets the day's backup</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="trigger" data-price="0" data-suggest="June afternoons storm. A pre-agreed trigger means no on-the-day argument when the ridge clouds over."><span class="mark"></span><span class="ctext"><span class="clabel">Set a storm trigger</span><span class="cmeta"><span class="m-why">&gt;60% storm by noon → swap the ridge for baths / a lit cave / GOjump / escape room / a museum.</span></span></span></button>
+              <button type="button" class="choice" data-val="wing" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Wing it</span><span class="cmeta"><span class="m-why">Decide on the day.</span></span></span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ DAY 1 ============ -->
+        <section class="dayblock" data-day="1">
+          <div class="day-head"><span class="day-tag">Day 1</span><h2>Drive down + Kraków evening</h2><p class="tradeoff">Every stop you add pushes your Kraków evening later — the meter shows when you'd lose the Old Town golden hour.</p></div>
+
+          <div class="opt" data-group="stops" data-type="multi">
+            <div class="opt-head"><h3>Stops on the way</h3><span class="tag-opt">pick any</span></div>
+            <p class="opt-sub">The ~7.5 h Kaunas→Kraków run wants a break every ~2 h. Two kinds below: <b>quick resets</b> (toilets / food court / fuel — a few minutes) and <b>worth-a-detour</b> things to actually see. Each adds to your day — watch Day 1 on the meter.</p>
+            <p class="opt-sub" style="color:var(--terra-2);">⛽ Quick resets — toilets, cheap food, fuel</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="suwalki-plaza" data-price="0" data-hours="0.5" data-drive="0" data-suggest="First proper stop in Poland — clean toilets, a food court and 455 free spaces (350 underground). The natural ~1 h-in reset."><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Suwałki — Suwałki Plaza</span><span class="cmeta"><span>€0 (buy lunch)</span><span>~1 h into PL · ~30 min</span><span class="m-why">Food court, toilets, 455 free spaces. Best first PL break.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="lomza-veneda" data-price="0" data-hours="0.5" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Łomża — Galeria Veneda</span><span class="cmeta"><span>€0 (buy lunch)</span><span>~3.5 h in · ~30 min</span><span class="m-why">KFC/café food court, Carrefour, 580 free spaces. Best-timed 2nd break.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="kielce-echo" data-price="0" data-hours="0.5" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Kielce — Galeria Echo</span><span class="cmeta"><span>€0 (buy lunch)</span><span>~5 h in · ~30 min</span><span class="m-why">Big food court, ~2,100 free covered spaces. Main Leg-B break.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="bonarka" data-price="0" data-hours="0.5" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Kraków-south — Bonarka</span><span class="cmeta"><span>€0 (fuel up)</span><span>~7 h in · edge of Kraków · ~30 min</span><span class="m-why">30+ eateries, cheap fuel, 3,200 free spaces — last stage before the mountains.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="nowytarg" data-price="0" data-hours="0.5" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Nowy Targ reset (before Zakopane)</span><span class="cmeta"><span>€0</span><span>Day-2 leg · ~1.5 h past Kraków · ~30 min</span><span class="m-why">Biedronka/Lidl, clean toilets, cheap food, free parking — fuel up before the Zakopianka.</span></span></span><span class="price free">€0</span></button>
+            </div>
+            <p class="opt-sub" style="color:var(--terra-2); margin-top:18px;">📸 Worth a detour — see something</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="augustow" data-price="0" data-hours="0.75" data-drive="0" data-suggest="Best leg-stretch on the whole drive — a lake swim ~100 km in, costs nothing, barely a detour. Town beach, free parking."><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Augustów / Lake Necko swim</span><span class="cmeta"><span>€0</span><span>~1.5 h in (~100 km) · ~45 min</span><span class="m-why">Best warm-weather reset — quick swim or stretch at the town beach.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="raj" data-price="12" data-hours="2" data-drive="0.3" data-book="raj" data-suggest="Poland's prettiest cave (~€7) + a climbable hilltop castle (~€5), and barely off the S7. The best near-zero-detour sight on the route."><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Jaskinia Raj cave + Chęciny Castle</span><span class="cmeta"><span>+€12 (~€7 cave + ~€5 castle)</span><span>~10 min off S7 (Kielce) · ~2 h</span><span class="cbook">📌 timed cave slot</span></span><span class="cnote">Stalactite cave + a hilltop ruin you can climb. Pre-book the cave — it's a timed slot.</span></span><span class="price up">+€12</span></button>
+              <button type="button" class="choice" data-multi data-val="swietokrzyski" data-price="1" data-hours="3" data-drive="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Świętokrzyski — Łysa Góra</span><span class="cmeta"><span>~€1</span><span>~30 min off S7 · ~3 h</span><span class="m-why">The one real mid-route ridge hike (easy ~4 km, reopened 2026).</span></span></span><span class="price free">~€1</span></button>
+              <button type="button" class="choice" data-multi data-val="krzemionki" data-price="7" data-hours="2" data-drive="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Krzemionki flint mines (UNESCO)</span><span class="cmeta"><span>+€7</span><span>~45 min off S7 · ~2 h</span><span class="m-why">Descend 5,000-yr-old Neolithic shafts — genuinely singular. Commit or skip.</span></span></span><span class="price up">+€7</span></button>
+              <button type="button" class="choice" data-multi data-val="tykocin" data-price="0" data-hours="1.5" data-drive="0.3"><span class="mark"></span><span class="ctext"><span class="clabel">Tykocin</span><span class="cmeta"><span>€0</span><span>off S61 · ~1 h</span><span class="m-why">Baroque town + a lunch stop with character.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="cisowa" data-price="0" data-hours="1.5" data-drive="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Cisowa Góra + Suwałki Park viewpoints</span><span class="cmeta"><span>€0</span><span>~25 min off S61</span><span class="m-why">NE Poland's striking glacial hills &amp; lakes — quick photogenic climb.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="wigry" data-price="0" data-hours="1" data-drive="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Lake Wigry monastery</span><span class="cmeta"><span>~€2</span><span>~20 min off route · ~1 h</span><span class="m-why">Clifftop monastery on the lake (+ swim / kayak).</span></span></span><span class="price free">~€2</span></button>
+              <button type="button" class="choice" data-multi data-val="augustow-canal" data-price="20" data-hours="3" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">Augustów Canal lock cruise</span><span class="cmeta"><span>~€20</span><span>in Augustów · ~3 h</span><span class="m-why">Historic lock-passage boat — an alternative to the lake swim.</span></span></span><span class="price up">~€20</span></button>
+              <button type="button" class="choice" data-multi data-val="kadzielnia" data-price="3" data-hours="0.75" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">Kadzielnia zip-line + cave, Kielce</span><span class="cmeta"><span>~€3</span><span>in Kielce · ~45 min</span><span class="m-why">Quick adrenaline zip over a quarry — right by the S7.</span></span></span><span class="price up">~€3</span></button>
+              <button type="button" class="choice" data-multi data-val="debno" data-price="0" data-hours="0.3" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">Dębno UNESCO wooden church</span><span class="cmeta"><span>~€2</span><span>on the Nowy Targ road · ~20 min</span><span class="m-why">15-min curiosity on the way into the mountains.</span></span></span><span class="price free">~€2</span></button>
+              <button type="button" class="choice" data-multi data-val="warsaw-break" data-price="0" data-hours="2.5" data-drive="0"><span class="mark"></span><span class="ctext"><span class="clabel">Warsaw 2–3 h break</span><span class="cmeta"><span>€0</span><span>≈ halfway · ~2.5 h</span><span class="m-why">Old Town + a milk bar, or the Vistula boulevards &amp; Neon Museum.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="arrival" data-type="single">
+            <div class="opt-head"><h3>Arrival</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="same-evening" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Arrive Kraków for the evening</span><span class="cmeta"><span>€0</span><span class="m-why">Default flow — roll in ~15:30, evening in the Old Town.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="night-before" data-price="0" data-book="arrivalNight"><span class="mark"></span><span class="ctext"><span class="clabel">Arrive the night before</span><span class="cmeta"><span>+1 night (€18)</span><span>+1 day</span><span class="cbook">📌 arrival-night lodging</span></span><span class="cnote">Leave Kaunas a day earlier, sleep at Day-1's anchor — a fresh, full first day.</span></span><span class="price up">+€18</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="krakowEve" data-type="multi">
+            <div class="opt-head"><h3>Kraków evening</h3><span class="tag-opt">pick any</span></div>
+            <p class="opt-sub">Alcohol-free by default — the crew's one hard rule. The bar lane is an optional aside, never the headline.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="oldtown" data-price="0" data-suggest="Free, and the classic first-night walk — Old Town, Cloth Hall, Wawel at golden hour, zapiekanka after."><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Old Town + Wawel at golden hour</span><span class="cmeta"><span>€0</span><span>~2 h</span><span class="m-why">Classic first walk + zapiekanka at Plac Nowy (~€3).</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="cruise" data-price="14"><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Vistula sunset cruise (non-wine)</span><span class="cmeta"><span>~€14</span><span>~1 h</span><span class="m-why">Chill + photos past Wawel.</span></span></span><span class="price up">~€14</span></button>
+              <button type="button" class="choice" data-multi data-val="arcadebee" data-price="14"><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Arcade Bee</span><span class="cmeta"><span>~€14</span><span>~2 h</span><span class="m-why">Karaoke + billiards + arcade — best dry night out.</span></span></span><span class="price up">~€14</span></button>
+              <button type="button" class="choice" data-multi data-val="vr" data-price="18"><span class="mark"></span><span class="ctext"><span class="clabel">VRepublic VR park</span><span class="cmeta"><span>~€18</span><span>~1.5 h</span><span class="m-why">Co-op VR, competitive, photogenic.</span></span></span><span class="price up">~€18</span></button>
+              <button type="button" class="choice" data-multi data-val="underground" data-price="4"><span class="mark"></span><span class="ctext"><span class="clabel">Rynek Underground museum</span><span class="cmeta"><span>~€4</span><span>~1.5 h</span><span class="m-why">Medieval market beneath the square.</span></span></span><span class="price up">~€4</span></button>
+              <button type="button" class="choice" data-multi data-val="krakus" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Krakus Mound sunset</span><span class="cmeta"><span>€0</span><span>~45 min</span><span class="m-why">Free panorama (📸).</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="zakrzowek" data-price="3"><span class="mark"></span><span class="ctext"><span class="clabel">Zakrzówek quarry swim</span><span class="cmeta"><span>~€3</span><span>if daylight</span><span class="m-why">Turquoise lagoon (📸).</span></span></span><span class="price up">~€3</span></button>
+              <button type="button" class="choice" data-multi data-val="bernatka" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Bernatka love-lock bridge</span><span class="cmeta"><span>€0</span><span>~30 min</span><span class="m-why">Night photos (📸).</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="forum" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Forum Przystań riverside</span><span class="cmeta"><span>€0</span><span>~1.5 h</span><span class="m-why">Hipster riverside bar on a communist-era hotel — sunset over Wawel, soft drinks, cheap.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="nowahuta" data-price="45" data-book="nowahuta"><span class="mark"></span><span class="ctext"><span class="clabel">Nowa Huta Trabant tour</span><span class="cmeta"><span>~€45</span><span>~2.5 h</span><span class="cbook">📌 tour</span></span><span class="cnote">Communist district by old Trabant — quirky.</span></span><span class="price up">~€45</span></button>
+              <button type="button" class="choice" data-multi data-val="streetart" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Kazimierz street-art / night walk</span><span class="cmeta"><span>€0</span><span>~1 h</span><span class="m-why">Mural lanes + the old Jewish quarter at night (📸).</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="bars" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Kazimierz bars <span class="tag-opt">optional aside</span></span><span class="cmeta"><span>€0–€8</span><span>~2 h</span><span class="m-why">Only if some fancy it — kept off the headline (no-drinking rule). Driver stays dry; walk past club/"cabaret" touts.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="night1" data-type="single">
+            <div class="opt-head"><h3>Night 1 · Kraków lodging</h3><span class="tag-opt">📌 book</span></div>
+            <p class="opt-sub">Base in Kazimierz — the Old Town core is a no-drive zone. Per-night cost is the €18 already in the total; the per-person figures are display-only.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="gregtom" data-price="0" data-book="night1" data-suggest="9.6★ and free breakfast + dinner — the meals alone offset the higher bed price for a budget crew."><span class="mark"></span><span class="ctext"><span class="clabel">Greg &amp; Tom Hostel</span><span class="cmeta"><span>~€23 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">9.6★, free breakfast + dinner, social.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice" data-val="atlantis" data-price="0" data-book="night1"><span class="mark"></span><span class="ctext"><span class="clabel">Atlantis Hostel</span><span class="cmeta"><span>~€13 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Cheapest beds, Kazimierz border.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice" data-val="apt-kazimierz" data-price="0" data-book="night1"><span class="mark"></span><span class="ctext"><span class="clabel">Apartment-Kazimierz</span><span class="cmeta"><span>~€27 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Free parking + a kitchen → cook together.</span></span></span><span class="price free">incl.</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ DAY 2 ============ -->
+        <section class="dayblock" data-day="2">
+          <div class="day-head"><span class="day-tag">Day 2</span><h2>Energylandia → the mountains</h2><p class="tradeoff">Day 2 is all Energylandia — the park, Aqualantis and the queue pass all fit inside one day; nothing else stacks on it.</p></div>
+
+          <div class="opt" data-group="energylandia" data-type="single">
+            <div class="opt-head"><h3>Energylandia ticket</h3><span class="tag-opt">📌 e-tickets · ~€53</span></div>
+            <p class="opt-sub">A full thrill day — the headline. Park hours 10:00–20:00 (summer). Buy e-tickets online (<b>~€53</b>); online beats the gate. Tick to confirm + add it to your bookings.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="1day" data-price="0" data-book="energylandia" data-suggest="One disciplined rope-drop day clears every major coaster. Tue–Thu are lightest; on a quiet weekday max queues run ~20 min and one day does the lot."><span class="mark"></span><span class="ctext"><span class="clabel">1-day pass — confirm</span><span class="cmeta"><span>~€53 · in core budget</span><span>full day</span><span class="cbook">📌 e-tickets</span></span><span class="cnote">Gate for 10:00, rope-drop Zadra → Hyperion → Abyssus → Formuła → Speed Water. Leave &amp; re-enter to eat cheaper — outside food/water allowed. Lockers ~€3.</span></span><span class="price free">core</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="pass" data-type="single">
+            <div class="opt-head"><h3>Queue pass</h3><span class="tag-opt">optional · pricey</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="none" data-price="0" data-suggest="Tue–Thu the park is light; rope-drop the back of the park first and you rarely wait — most crews skip the paid pass."><span class="mark"></span><span class="ctext"><span class="clabel">None — rope-drop &amp; smart timing</span><span class="cmeta"><span>€0</span><span class="m-why">At the gate for 10:00, ride Zadra → Hyperion first. Disciplined, free.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="fast" data-price="47" data-book="pass"><span class="mark"></span><span class="ctext"><span class="clabel">Fast Pass</span><span class="cmeta"><span>+€47</span><span class="cbook">📌 with tickets</span><span class="m-why">Skip-queue on 5 coasters, one skip each.</span></span></span><span class="price up">+€47</span></button>
+              <button type="button" class="choice" data-val="energy" data-price="56" data-book="pass"><span class="mark"></span><span class="ctext"><span class="clabel">Energy Pass</span><span class="cmeta"><span>+€56</span><span class="cbook">📌 with tickets</span><span class="m-why">~14 attractions — the works on a busy day.</span></span></span><span class="price up">+€56</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="aqualantis" data-type="multi">
+            <div class="opt-head"><h3>Aqualantis water park</h3><span class="tag-opt">included · toggle</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="aqualantis" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Do the water park</span><span class="cmeta"><span>included free</span><span class="m-why">Bring swimwear — it's inside the day, in the afternoon heat.</span></span></span><span class="price free">free</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="base2" data-type="single">
+            <div class="opt-head"><h3>Night-2 base</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="zakopane" data-price="0" data-suggest="A Zakopane base gives Day 3 a full ~12 h window and sits right by the Morskie Oko minibus. A Zator base costs you ~3 h of mountain time."><span class="mark"></span><span class="ctext"><span class="clabel">Zakopane</span><span class="cmeta"><span>incl.</span><span class="m-why">Mountain vibe, highlander food, by the Morskie Oko bus — full Day-3 window.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice" data-val="zator" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Zator (by the park)</span><span class="cmeta"><span>incl.</span><span class="m-why">Less evening driving — but ~1.5 h each way to the Tatras Day 3 (shorter hike window).</span></span></span><span class="price free">incl.</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="night2" data-type="single" hidden>
+            <div class="opt-head"><h3>Night 2 · lodging</h3><span class="tag-opt">📌 book</span></div>
+            <p class="lodge-prompt" data-night2-prompt>Pick a Night-2 base first.</p>
+            <div class="choices">
+              <button type="button" class="choice n2-zakopane" data-val="stara-polana" data-price="0" data-book="night2"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Stara Polana</span><span class="cmeta"><span>~€16 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Central, 5 min to the Morskie Oko bus. Best logistics.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice n2-zakopane" data-val="wielka-krokiew" data-price="0" data-book="night2"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Wielka Krokiew</span><span class="cmeta"><span>~€14 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">9.0★, ~1.8 km out, cheapest beds, free parking.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice n2-zator" data-val="niko" data-price="0" data-book="night2"><span class="mark"></span><span class="ctext"><span class="clabel">Apartamenty Niko · Zator</span><span class="cmeta"><span>~€22 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Minutes from the gate, apartment. Recommended near-park pick.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice n2-zator" data-val="energylandia-noclegi" data-price="0" data-book="night2"><span class="mark"></span><span class="ctext"><span class="clabel">Noclegi Energylandia · Zator</span><span class="cmeta"><span>~€13 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Rooms right by the park, cheapest.</span></span></span><span class="price free">incl.</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ DAY 3 ============ -->
+        <section class="dayblock" data-day="3">
+          <div class="day-head"><span class="day-tag">Day 3</span><h2>The mountains — your one big day</h2><p class="tradeoff">Day 3 is your one mountain day — pick ONE big thing. A full-day hike already fills the window, so any add-on can tip it red.</p></div>
+
+          <div class="opt" data-group="hike" data-type="single">
+            <div class="opt-head"><h3>What's the mountain day?</h3><button type="button" class="cmp-toggle" data-compare="hike">Compare ⇄</button></div>
+            <p class="opt-sub">No default — the whole day is a choice. Door-to-door hours include the access drive/minibus + the recommended extension.</p>
+            <div class="cmp-table" data-compare-table="hike" hidden></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="morskie" data-price="8" data-hours="10" data-suggest="The iconic glacial lake, and the headline most crews come for. Push past it to Czarny Staw for the views day-trippers skip."><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Morskie Oko (+ Czarny Staw)</span><span class="cmeta"><span>+€8</span><span>~8 km tarmac each way · full day (~10 h)</span></span><span class="cnote">Iconic, busy → reveals an access sub-choice below.</span></span><span class="price up">+€8</span></button>
+              <button type="button" class="choice" data-val="koscieliska" data-price="5" data-hours="4"><span class="mark"></span><span class="ctext"><span class="clabel">Dolina Kościeliska + Mroźna Cave</span><span class="cmeta"><span>+€5</span><span>easy · half-day (~4 h)</span><span class="m-why">Prettiest valley, far quieter, lit show-cave.</span></span></span><span class="price up">+€5</span></button>
+              <button type="button" class="choice" data-val="rusinowa" data-price="3" data-hours="3"><span class="mark"></span><span class="ctext"><span class="clabel">Rusinowa Polana</span><span class="cmeta"><span>+€3</span><span>easy ~1 h walk · half-day (~3 h)</span><span class="m-why">Best High-Tatra panorama for least effort.</span></span></span><span class="price up">+€3</span></button>
+              <button type="button" class="choice" data-val="fivelakes" data-price="5" data-hours="10"><span class="mark"></span><span class="ctext"><span class="clabel">Five Lakes Valley + Wielka Siklawa</span><span class="cmeta"><span>+€5</span><span>hard · full day (~10 h)</span><span class="m-why">Poland's tallest waterfall + 5 lakes, less mobbed.</span></span></span><span class="price up">+€5</span></button>
+              <button type="button" class="choice" data-val="pieniny" data-price="20" data-hours="9"><span class="mark"></span><span class="ctext"><span class="clabel">Pieniny: Trzy Korony + Dunajec</span><span class="cmeta"><span>+€20</span><span>~1 h drive · full day (~9 h)</span><span class="m-why">Clifftop + gorge raft (raft included — greys the add-on).</span></span></span><span class="price up">+€20</span></button>
+              <button type="button" class="choice" data-val="chill" data-price="0" data-hours="4"><span class="mark"></span><span class="ctext"><span class="clabel">Chill lake day instead</span><span class="cmeta"><span>€0–€12</span><span>half-day (~4 h)</span><span class="m-why">Zakrzówek / Czorsztyn + SUP — the calm option → reveals which lake.</span></span></span><span class="price free">€0+</span></button>
+              <button type="button" class="choice" data-val="slovak" data-price="28" data-hours="10" data-book="slovak"><span class="mark"></span><span class="ctext"><span class="clabel">Slovak-side day (cross the border)</span><span class="cmeta"><span>~€28</span><span>~1 h each way · full day (~10 h)</span><span class="cbook">📌 cable-car + passport</span></span><span class="cnote">Lomnický štít tram / Bachledka treetop / Belianska cave / Tatralandia.</span></span><span class="price up">~€28</span></button>
+              <button type="button" class="choice" data-val="strazyska" data-price="0" data-hours="3"><span class="mark"></span><span class="ctext"><span class="clabel">Dolina Strążyska + Siklawica</span><span class="cmeta"><span>€0</span><span>easy half-day (~3 h)</span><span class="m-why">Short, quiet, waterfall payoff, walkable from town.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="chocholowska" data-price="0" data-hours="5"><span class="mark"></span><span class="ctext"><span class="clabel">Dolina Chochołowska</span><span class="cmeta"><span>€0</span><span>easy–moderate (~5 h)</span><span class="m-why">The longest, wildest valley (famous spring crocuses).</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="gesia" data-price="0" data-hours="4"><span class="mark"></span><span class="ctext"><span class="clabel">Gęsia Szyja</span><span class="cmeta"><span>€0</span><span>moderate (~4 h)</span><span class="m-why">Panoramic meadow summit, far fewer people.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="mokAccess" data-type="single" hidden>
+            <div class="opt-head"><h3>Morskie Oko access</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="minibus" data-price="5" data-suggest="The minibus skips the parking lottery entirely — the TPN lot sells out and fills before 08:00. No booking needed."><span class="mark"></span><span class="ctext"><span class="clabel">Minibus from Bar Fis</span><span class="cmeta"><span>~€5</span><span class="m-why">Leaves when full, ~40 min, skips the parking lottery.</span></span></span><span class="price up">~€5</span></button>
+              <button type="button" class="choice" data-val="drive-park" data-price="5" data-book="mokParking"><span class="mark"></span><span class="ctext"><span class="clabel">Drive + pre-booked TPN parking</span><span class="cmeta"><span>~€5</span><span class="cbook">📌 sells out, no cash on site</span></span><span class="cnote">~€8–17 e-ticket, fills before 08:00.</span></span><span class="price up">~€5</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="chillLake" data-type="single" hidden>
+            <div class="opt-head"><h3>Chill lake — which?</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="zakrzowek" data-price="3" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">Zakrzówek (Kraków)</span><span class="cmeta"><span>~€3</span><span class="m-why">Turquoise flooded-quarry swim park, lifeguarded.</span></span></span><span class="price up">~€3</span></button>
+              <button type="button" class="choice" data-val="czorsztyn" data-price="12" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">Czorsztyn lake + SUP</span><span class="cmeta"><span>~€12</span><span class="m-why">Paddleboard with two castles facing across the water.</span></span></span><span class="price up">~€12</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="addons" data-type="multi">
+            <div class="opt-head"><h3>Adventure add-ons</h3><span class="tag-opt">pick any — they eat the hike's hours</span></div>
+            <p class="opt-sub">Each stacks on top of the hike. A full-day hike already nearly fills the day — watch Day 3 go amber/red.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="kasprowy" data-price="40" data-hours="3" data-book="kasprowy"><span class="mark"></span><span class="ctext"><span class="clabel">Kasprowy Wierch cable car</span><span class="cmeta"><span>+€40</span><span>~3 h</span><span class="cbook">📌 timed, sells out</span></span><span class="cnote">Up to the high ridge.</span></span><span class="price up">+€40</span></button>
+              <button type="button" class="choice" data-multi data-val="gubalowka" data-price="10" data-hours="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Gubałówka funicular + slide + zipline</span><span class="cmeta"><span>+€10</span><span>~1.5 h</span><span class="m-why">Cheap in-town adrenaline.</span></span></span><span class="price up">+€10</span></button>
+              <button type="button" class="choice" data-multi data-val="dunajec" data-price="15" data-hours="3" data-book="dunajec"><span class="mark"></span><span class="ctext"><span class="clabel">Dunajec raft / kayak</span><span class="cmeta"><span>+€15</span><span>~3 h</span><span class="cbook">📌 seasonal</span></span><span class="cnote">Self-paddle is more fun than the slow wooden raft.</span></span><span class="price up">+€15</span></button>
+              <button type="button" class="choice" data-multi data-val="czorsztyn-toboggan" data-price="5" data-hours="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Czorsztyn 1000 m toboggan</span><span class="cmeta"><span>~€5/ride</span><span>~1.5 h</span><span class="m-why">Fastest/longest gravity slide — cheapest big thrill.</span></span></span><span class="price up">~€5</span></button>
+              <button type="button" class="choice" data-multi data-val="skijump" data-price="5" data-hours="1"><span class="mark"></span><span class="ctext"><span class="clabel">Wielka Krokiew ski-jump slide</span><span class="cmeta"><span>~€5</span><span>~1 h</span><span class="m-why">Slide down the famous ski jump.</span></span></span><span class="price up">~€5</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="mtnEvening" data-type="multi">
+            <div class="opt-head"><h3>Mountain evening</h3><span class="tag-opt">pick any · sits after the hike</span></div>
+            <p class="opt-sub">Evening items run ~2.5 h after the day — they push into the dark, fine after a half-day hike, tight after a full one.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="baths" data-price="12" data-hours="2.5" data-suggest="Bukovina baths = best value + mountain views for a short post-hike soak. The classic recovery after a big day."><span class="mark"></span><span class="ctext"><span class="clabel">Thermal baths</span><span class="cmeta"><span>+€12</span><span>~2.5 h eve</span><span class="m-why">Bukovina/Chochołowskie — recover after the hike.</span></span></span><span class="price up">+€12</span></button>
+              <button type="button" class="choice" data-multi data-val="cook-bacowka" data-price="8" data-hours="2" data-book="bacowka"><span class="mark"></span><span class="ctext"><span class="clabel">⭐ Cook together: grill oscypek at a bacówka</span><span class="cmeta"><span>+€8</span><span>~2 h eve</span><span class="cbook">📌 check / book</span></span><span class="cnote">Smoke-cheese hut — grill it yourself with cranberry. Very Tatra.</span></span><span class="price up">+€8</span></button>
+              <button type="button" class="choice" data-multi data-val="lodge-bbq" data-price="6" data-hours="2"><span class="mark"></span><span class="ctext"><span class="clabel">Lodge BBQ (groceries)</span><span class="cmeta"><span>+€6</span><span>~2 h eve</span><span class="m-why">Cheapest + most social — cook a meal together.</span></span></span><span class="price up">+€6</span></button>
+              <button type="button" class="choice" data-multi data-val="karczma" data-price="15" data-hours="2"><span class="mark"></span><span class="ctext"><span class="clabel">Karczma dinner</span><span class="cmeta"><span>+€15</span><span>~2 h eve</span><span class="m-why">Oscypek + kwaśnica + placek po zbójnicku.</span></span></span><span class="price up">+€15</span></button>
+              <button type="button" class="choice" data-multi data-val="gubalowka-dusk" data-price="8" data-hours="2"><span class="mark"></span><span class="ctext"><span class="clabel">Gubałówka at dusk</span><span class="cmeta"><span>+€8</span><span>~2 h eve</span><span class="m-why">Ridge views at golden hour (📸).</span></span></span><span class="price up">+€8</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="night3" data-type="single" hidden>
+            <div class="opt-head"><h3>Night 3 · lodging</h3><span class="tag-opt">4-day only · 📌 book</span></div>
+            <p class="opt-sub">The pre-drive-home mountain night (the buffer night, if you added one, is its own line). Per-night cost is the €18 in the total.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="n3-stara-polana" data-price="0" data-book="night3"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Stara Polana · Zakopane</span><span class="cmeta"><span>~€16 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Stay put by the bus.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice" data-val="n3-wielka-krokiew" data-price="0" data-book="night3"><span class="mark"></span><span class="ctext"><span class="clabel">Hostel Wielka Krokiew · Zakopane</span><span class="cmeta"><span>~€14 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Cheapest, free parking.</span></span></span><span class="price free">incl.</span></button>
+              <button type="button" class="choice" data-val="n3-nearer-krakow" data-price="0" data-book="night3"><span class="mark"></span><span class="ctext"><span class="clabel">Nearer Kraków / Warsaw</span><span class="cmeta"><span>~€18 pp display</span><span class="cbook">📌 lodging</span><span class="m-why">Shortens the Day-4 drive home.</span></span></span><span class="price free">incl.</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ DAY 4 ============ -->
+        <section class="dayblock" data-day="4" data-day4-block>
+          <div class="day-head"><span class="day-tag">Day 4 · optional</span><h2>Salt mine + drive home</h2><p class="tradeoff">A salt mine adds ~3 h to an already ~11 h drive home — the meter flags it; a Warsaw overnight splits it.</p></div>
+
+          <div class="opt" data-group="day4" data-type="single">
+            <div class="opt-head"><h3>Day 4 plan</h3><button type="button" class="cmp-toggle" data-compare="day4">Compare ⇄</button></div>
+            <div class="cmp-table" data-compare-table="day4" hidden></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="skip" data-price="0" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">Skip — relaxed drive home</span><span class="cmeta"><span>€0</span><span class="m-why">Leave the mountains in the morning, easier day.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-val="bochnia" data-price="16" data-hours="3" data-book="bochnia" data-suggest="140 m underground slide + a salt-lake boat, fewer crowds, cheaper than Wieliczka — more fun for a young crew."><span class="mark"></span><span class="ctext"><span class="clabel">Bochnia Salt Mine</span><span class="cmeta"><span>+€16</span><span>~3 h</span><span class="cbook">📌 English tour 10:30 only</span></span><span class="cnote">140 m slide + salt-lake boat — fewer crowds.</span></span><span class="price up">+€16</span></button>
+              <button type="button" class="choice" data-val="wieliczka" data-price="33" data-hours="3" data-book="wieliczka"><span class="mark"></span><span class="ctext"><span class="clabel">Wieliczka Salt Mine</span><span class="cmeta"><span>+€33</span><span>~3 h</span><span class="cbook">📌 tour slot</span></span><span class="cnote">The famous carved chapel — bigger name, busier, pricier.</span></span><span class="price up">+€33</span></button>
+              <button type="button" class="choice" data-val="warsaw" data-price="0" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">Warsaw stopover instead</span><span class="cmeta"><span>shares the Warsaw night</span><span class="m-why">Turns on the Warsaw overnight — one shared night, one booking.</span></span></span><span class="price free">±€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="warsawNight" data-type="single" hidden>
+            <div class="opt-head"><h3>Warsaw return-night</h3><span class="tag-opt">📌 book · one shared night</span></div>
+            <p class="opt-sub">Linked to "break the return drive" — set either and both light up; it's one night, one booking, counted once.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="warsaw-hostel" data-price="0" data-book="warsawNight"><span class="mark"></span><span class="ctext"><span class="clabel">A cheap Warsaw hostel</span><span class="cmeta"><span>night €18</span><span class="cbook">📌 lodging</span><span class="m-why">Clears the worst roads + the Zakopianka early.</span></span></span><span class="price free">incl.</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ THE DRIVE BACK ============ -->
+        <section class="dayblock" data-day="back">
+          <div class="day-head"><span class="day-tag">↩ The drive back</span><h2>Stops on the way home</h2><p class="tradeoff">The ~11 h home needs the same breaks as the way down — pick where you'll stop so it's planned, not improvised. (Free, quick; the same food-courts in reverse.)</p></div>
+          <div class="opt" data-group="returnStops" data-type="multi">
+            <div class="opt-head"><h3>Return rest / food stops</h3><span class="tag-opt">pick any · €0</span></div>
+            <p class="opt-sub">Set either "Warsaw overnight" above and the drive splits there into two easy halves; otherwise break roughly every ~2 h at these.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="rb-bonarka" data-price="0" data-hours="0.3" data-suggest="Fuel up as you leave Kraków — hypermarket stations are cheapest, and you won't want to stop on the Zakopianka."><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Bonarka — fuel leaving Kraków</span><span class="cmeta"><span>€0</span><span>start of the haul · +~20 min</span><span class="m-why">Top up cheap before the long stretch north.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="rb-kielce" data-price="0" data-hours="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Kielce — Galeria Echo</span><span class="cmeta"><span>€0</span><span>~2 h in · +~30 min</span><span class="m-why">Food court + toilets, big free parking.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="rb-warsaw" data-price="0" data-hours="0.75"><span class="mark"></span><span class="ctext"><span class="clabel">Warsaw — leg-stretch (if not overnighting)</span><span class="cmeta"><span>€0</span><span>≈ halfway · +~45 min</span><span class="m-why">A walk + a milk bar to break the middle of the drive.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="rb-lomza" data-price="0" data-hours="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Łomża — Galeria Veneda</span><span class="cmeta"><span>€0</span><span>~6.5 h in · +~30 min</span><span class="m-why">Last big food court before the quiet north.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="rb-suwalki" data-price="0" data-hours="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">⛽ Suwałki — Suwałki Plaza</span><span class="cmeta"><span>€0</span><span>~8.5 h in · +~30 min</span><span class="m-why">Final reset + fuel before the border.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice" data-multi data-val="rb-augustow" data-price="0" data-hours="0.75"><span class="mark"></span><span class="ctext"><span class="clabel">Augustów / Lake Necko — last swim</span><span class="cmeta"><span>€0</span><span>~8 h in · +~45 min</span><span class="m-why">One more dip to break the drive (summer).</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="summary" id="summary" data-journey="Total">
+        <p class="lab">Your trip, per person</p>
+        <div class="total"><span class="num tnum" id="sum-total">≈ €250–340</span></div>
+        <p class="days" id="sum-days">Pick a trip length to start your total</p>
+        <p class="feasline" id="feasline"></p>
+
+        <hr class="sum-line">
+        <div class="sum-h">Decisions made <span class="pct" id="prog-pct">0 / 13</span></div>
+        <div class="progress">
+          <div class="pbar"><div class="pfill" id="prog-fill"></div></div>
+          <div class="jump" id="prog-jump"></div>
+        </div>
+
+        <hr class="sum-line">
+        <div class="sum-h">Per-day time meter</div>
+        <div class="daymeter" id="daymeter"></div>
+
+        <hr class="sum-line">
+        <div class="sum-h">Cost breakdown</div>
+        <div class="breakdown" id="breakdown"></div>
+
+        <hr class="sum-line">
+        <div class="sum-h">Your bookings <span id="bk-count" class="pct"></span></div>
+        <div class="bookings" id="bookings"></div>
+
+        <hr class="sum-line">
+        <div class="sum-h">Where the crew's leaning</div>
+        <div class="lean" id="lean"></div>
+
+        <a class="btn btn--solid" href="plan.html" id="lock-btn" data-transition data-magnetic data-cursor="label" data-label="Lock in"><span class="fill"></span><span class="lbl">Lock it in → The plan</span></a>
+        <button type="button" class="btn dlmini" id="dlMini" data-magnetic data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download checklist</span></button>
+        <p class="foot">Estimate per person, split 3 ways. May-2026 prices — re-check at booking.</p>
+      </aside>
+    </div>
+  </div>
+  <div style="height:70px;"></div>
+</main>
+
+<div class="minibar">
+  <div><div class="mb-total tnum" id="mb-total">€250–340</div><div class="mb-days" id="mb-days">pick your options</div></div>
+  <a class="btn btn--solid" href="plan.html" data-transition><span class="fill"></span><span class="lbl">The plan</span></a>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><a class="brand" href="../index.html"><svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+      <p class="muted" style="margin-top:14px;">Plan the trip. Bring the crew.</p></div>
+    <div style="max-width:32ch;"><small>Made by friends, for friends — no bookings taken here, just planning. © 2026. · <a href="emergency.html" data-transition style="color:var(--terra-2);">Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="../assets/crew.js"></script>
+<script>
+document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
+window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
+</script>
+<script src="../assets/checklist.js"></script>
+<script src="../assets/plan-draft.js"></script>
+<script>
+/* per-option thumbnails — LOCAL images in assets/img/ (no hotlinking, works offline/headless). */
+(function(){
+  var DIR='../assets/img/';
+  var IMG={
+    '4d':'giewont','3d':'giewont',
+    'bochnia':'bochnia','wieliczka':'salt-mine','warsaw':'warsaw',
+    '1day':'energylandia','none':'energylandia','fast':'energylandia','energy':'energylandia','aqualantis':'energylandia',
+    'zakopane':'giewont','zator':'energylandia',
+    '25-28':'krakow','26-29':'krakow','custom':'krakow','through':'warsaw','warsaw-night':'warsaw','warsaw-hostel':'warsaw',
+    'augustow':'augustow','raj':'raj-cave','krzemionki':'krzemionki','swietokrzyski':'swietokrzyski','warsaw-break':'warsaw',
+    'tykocin':'warsaw','cisowa':'augustow','wigry':'augustow','augustow-canal':'augustow','kadzielnia':'swietokrzyski','debno':'giewont',
+    'suwalki-plaza':'augustow','lomza-veneda':'warsaw','kielce-echo':'swietokrzyski','bonarka':'krakow','nowytarg':'giewont',
+    'rb-bonarka':'krakow','rb-kielce':'swietokrzyski','rb-warsaw':'warsaw','rb-lomza':'warsaw','rb-suwalki':'augustow','rb-augustow':'augustow',
+    'oldtown':'wawel','cruise':'vistula','underground':'krakow','krakus':'krakus','zakrzowek':'zakrzowek',
+    'bernatka':'wawel','nowahuta':'nowahuta','streetart':'krakow','forum':'vistula','bars':'krakow',
+    'arcadebee':'krakow','vr':'krakow',
+    'morskie':'morskie-oko','koscieliska':'koscieliska','rusinowa':'rusinowa','fivelakes':'morskie-oko','pieniny':'pieniny',
+    'chill':'zakrzowek','slovak':'slovak','strazyska':'chocholowska','chocholowska':'chocholowska','gesia':'rusinowa',
+    'minibus':'morskie-oko','drive-park':'morskie-oko','czorsztyn':'pieniny','czorsztyn-toboggan':'pieniny','skijump':'gubalowka',
+    'kasprowy':'kasprowy','gubalowka':'gubalowka','dunajec':'dunajec',
+    'baths':'tatra','cook-bacowka':'oscypek','karczma':'oscypek','gubalowka-dusk':'gubalowka','lodge-bbq':'oscypek',
+    'gregtom':'krakow','atlantis':'krakow','apt-kazimierz':'krakow','bn-gregtom':'krakow','bn-atlantis':'krakow',
+    'stara-polana':'giewont','wielka-krokiew':'giewont','niko':'energylandia','energylandia-noclegi':'energylandia',
+    'bn-stara-polana':'giewont','bn-wielka-krokiew':'giewont','n3-stara-polana':'giewont','n3-wielka-krokiew':'giewont','n3-nearer-krakow':'krakow',
+    'ojcow':'ojcow','chill-krakow':'zakrzowek','auschwitz':'auschwitz','krakow':'krakow'
+  };
+  var st=document.createElement('style');
+  st.textContent='.choice-thumb{width:54px;height:54px;flex:none;border-radius:8px;background-color:var(--forest);background-size:cover;background-position:center;border:1px solid var(--line);}'+
+    '.choice-thumb.ph{background-image:repeating-linear-gradient(135deg,rgba(243,237,225,.08) 0 2px,transparent 2px 9px);}'+
+    '@media(max-width:520px){.choice-thumb{width:42px;height:42px;}}';
+  document.head.appendChild(st);
+  document.querySelectorAll('.choice').forEach(function(c){
+    if(c.querySelector('.choice-thumb')) return;
+    var v=c.getAttribute('data-val');
+    var t=document.createElement('span'); t.className='choice-thumb';
+    if(IMG[v]) t.style.backgroundImage="url('"+DIR+IMG[v]+".jpg')";
+    else t.classList.add('ph');
+    var ct=c.querySelector('.ctext'); c.insertBefore(t, ct);
+  });
+
+  /* Lodging: bigger photo + a real "see rooms & photos" link to the actual listing,
+     so the crew can check the interiors (we don't hotlink the listing's images). */
+  var ROOMS={
+    gregtom:'https://www.hostelworld.com/hostels/p/7327/greg-and-tom-hostel/',
+    atlantis:'https://www.hostelworld.com/hostels/p/9702/atlantis-hostel/',
+    'apt-kazimierz':'https://www.booking.com/hotel/pl/apartment-kazimierz-with-fast-wifi-amp-parking-space.pl.html',
+    'stara-polana':'https://www.hostelworld.com/hostels/p/19173/hostel-stara-polana/',
+    'wielka-krokiew':'https://www.booking.com/hotel/pl/hostel-wielka-krokiew.html',
+    niko:'https://www.booking.com/hotel/pl/apartamenty-niko-zator.pl.html',
+    'energylandia-noclegi':'https://www.nocowanie.pl/noclegi/zator/'
+  };
+  function baseVal(v){ return v.replace(/^bn-/,'').replace(/^n3-/,''); }
+  var LODGE_GROUPS={night1:1,night2:1,night3:1,bufferNight:1,warsawNight:1};
+  document.querySelectorAll('.opt[data-group]').forEach(function(opt){
+    if(!LODGE_GROUPS[opt.getAttribute('data-group')]) return;
+    opt.querySelectorAll('.choice').forEach(function(c){
+      c.classList.add('lodge');
+      var url=ROOMS[baseVal(c.getAttribute('data-val'))];
+      if(url && !c.querySelector('.rooms-link')){
+        var a=document.createElement('a'); a.className='rooms-link'; a.href=url; a.target='_blank'; a.rel='noopener'; a.textContent='See rooms & photos ↗';
+        c.querySelector('.ctext').appendChild(a);
+      }
+    });
+  });
+})();
+</script>
+<script src="../assets/motion.js?v=2"></script>
+<script>/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+</body>
+</html>

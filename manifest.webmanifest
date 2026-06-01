@@ -1,0 +1,13 @@
+{
+  "name": "Where To, Crew? — Poland",
+  "short_name": "Where To, Crew?",
+  "description": "Friends-only trip planning — plan, decide, and carry the Poland road trip offline.",
+  "start_url": "./poland/plan.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16241c",
+  "theme_color": "#16241c",
+  "icons": [
+    { "src": "assets/img/giewont.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" }
+  ]
+}

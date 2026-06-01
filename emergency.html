@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Emergency one-pager · Where To, Crew?</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/motion.css">
+<style>
+  main{ position:relative; z-index:2; padding-top:96px; }
+  .em-head{ padding:18px 0 26px; }
+  .em-head .display{ font-size:clamp(2rem,5vw,3.4rem); }
+  .em-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:8px; }
+  @media(max-width:760px){ .em-grid{ grid-template-columns:1fr; } }
+  .em-card{ background:var(--forest-2); border:1px solid var(--line); border-radius:14px; padding:22px 22px 24px; }
+  .em-card.urgent{ border-color:var(--terra); box-shadow:inset 0 0 0 1px var(--terra); }
+  .em-card h2{ font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:10px; }
+  .em-card .tag{ font-family:var(--mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-2); }
+  .em-line{ display:flex; justify-content:space-between; gap:14px; align-items:baseline; padding:11px 0; border-bottom:1px solid var(--line); font-size:.96rem; }
+  .em-line:last-child{ border-bottom:0; }
+  .em-line .who{ color:var(--paper-soft); }
+  .em-line a, .em-line .num{ font-family:var(--mono); font-weight:700; color:var(--paper); text-decoration:none; white-space:nowrap; font-size:1.05rem; }
+  .em-line a.call{ color:var(--terra-2); }
+  .em-steps{ margin:10px 0 0; padding-left:18px; color:var(--paper-soft); font-size:.94rem; }
+  .em-steps li{ margin:6px 0; }
+  .fillrow{ display:flex; gap:10px; margin-top:8px; }
+  .fillrow input{ flex:1; }
+  .em-note{ font-family:var(--mono); font-size:.72rem; color:var(--paper-soft); margin-top:8px; }
+  .offline-pill{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:.7rem; color:var(--terra-2); border:1px solid var(--line); border-radius:100px; padding:.4em .9em; }
+</style>
+</head>
+<body data-screen-label="Emergency one-pager">
+
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+
+<nav class="nav">
+  <a class="brand" href="index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="poland/plan.html" class="underline hide-sm" data-cursor="link">The plan</a>
+    <a class="btn" href="poland/plan-draft.html" data-cursor="label" data-label="Draft"><span class="fill"></span><span class="lbl">Plan draft</span></a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <header class="em-head">
+      <p class="eyebrow">🆘 Emergency one-pager</p>
+      <h1 class="display" style="margin-top:12px;">If something goes wrong.</h1>
+      <p class="lede" style="max-width:60ch; margin-top:14px;">Everything you'd need in a hurry. The Tatras drop signal — so <b>print this page or save it as a PDF</b> and keep a copy in the car and on each phone before you go.</p>
+      <p class="offline-pill" style="margin-top:16px;">🖨️ Print it / screenshot it — reachable with no signal</p>
+    </header>
+
+    <div class="em-grid">
+      <div class="em-card urgent">
+        <span class="tag">Call first</span>
+        <h2>🚨 Emergency numbers</h2>
+        <div class="em-line"><span class="who">EU emergency (PL &amp; LT)</span><a class="call" href="tel:112">112</a></div>
+        <div class="em-line"><span class="who">TOPR mountain rescue (Tatras)</span><a class="call" href="tel:+48601100300">601 100 300</a></div>
+        <div class="em-line"><span class="who">Police direct</span><a class="call" href="tel:997">997</a></div>
+        <div class="em-line"><span class="who">Ambulance direct</span><a class="call" href="tel:999">999</a></div>
+        <p class="em-note">Save TOPR offline before hiking — Tatra signal drops. Carry a paper trail map.</p>
+      </div>
+
+      <div class="em-card">
+        <span class="tag">Fill these in before you go</span>
+        <h2>📇 Your crew &amp; cover</h2>
+        <div class="em-line"><span class="who">Insurer 24 h hotline</span><span class="num" data-fill="insurer">____</span></div>
+        <div class="em-line"><span class="who">Breakdown / roadside number</span><span class="num" data-fill="breakdown">____</span></div>
+        <div class="em-line"><span class="who">Travel insurance policy #</span><span class="num" data-fill="policy">____</span></div>
+        <div class="em-line"><span class="who">Crew member 1</span><span class="num" data-fill="crew1">____</span></div>
+        <div class="em-line"><span class="who">Crew member 2</span><span class="num" data-fill="crew2">____</span></div>
+        <div class="em-line"><span class="who">Crew member 3</span><span class="num" data-fill="crew3">____</span></div>
+        <p class="em-note">Tap any ____ to fill it in.</p>
+      </div>
+
+      <div class="em-card">
+        <span class="tag">Where to go</span>
+        <h2>🏥 Hospitals by region</h2>
+        <div class="em-line"><span class="who"><b>Kraków</b> — University Hospital, ul. Jakubowskiego 2 (24 h ER)</span><a class="call" href="tel:+48124002424">12 400 24 24</a></div>
+        <div class="em-line"><span class="who"><b>Zakopane</b> — Szpital Powiatowy, ul. Kamieniec 10</span><a class="call" href="tel:+48182015045">18 201 50 45</a></div>
+        <div class="em-line"><span class="who"><b>Pharmacy</b> = <i>apteka</i> (green cross) — some 24 h in Kraków</span><span class="num">—</span></div>
+        <p class="em-note">EHIC + travel insurance cover treatment — carry both, reachable not in the boot.</p>
+      </div>
+
+      <div class="em-card">
+        <span class="tag">Documents</span>
+        <h2>🛂 Lost passport / ID</h2>
+        <ol class="em-steps">
+          <li>Report it to local police (112 / 997) — get a written report.</li>
+          <li>Contact the <b>Lithuanian Embassy in Warsaw</b> for an emergency travel document.</li>
+          <li>Use your saved digital + paper photocopy of the passport to speed it up.</li>
+          <li>At the LT–PL border, the emergency document + police report get you home.</li>
+        </ol>
+        <div class="em-line" style="margin-top:8px;"><span class="who">LT Embassy, Warsaw</span><a class="call" href="tel:+48226251440">22 625 14 40</a></div>
+      </div>
+
+      <div class="em-card">
+        <span class="tag">On the road</span>
+        <h2>🚗 Car &amp; border trouble</h2>
+        <div class="em-line"><span class="who"><b>Breakdown</b> → call your roadside number (above); put out the triangle + hi-vis vest.</span><span class="num">⚠️</span></div>
+        <div class="em-line"><span class="who"><b>Border jam</b> at Budzisko → divert to <b>Ogrodniki–Lazdijai</b> crossing.</span><span class="num">↩</span></div>
+        <div class="em-line"><span class="who"><b>Accident</b> → 112, photograph everything, exchange insurance details.</span><span class="num">112</span></div>
+        <div class="em-line"><span class="who"><b>Foreign-plate fine</b> → paid on the spot (card or cash).</span><span class="num">€</span></div>
+      </div>
+
+      <div class="em-card">
+        <span class="tag">Don't lose each other</span>
+        <h2>📍 Meeting points</h2>
+        <div class="em-line"><span class="who">Energylandia (if you split)</span><span class="num" data-fill="mp-park">main gate</span></div>
+        <div class="em-line"><span class="who">Kraków Old Town</span><span class="num" data-fill="mp-krakow">Cloth Hall</span></div>
+        <div class="em-line"><span class="who">Morskie Oko / trailhead</span><span class="num" data-fill="mp-tatra">Bar Fis</span></div>
+        <p class="em-note">Share live location between all three + agree a fallback meeting time. Tap to edit.</p>
+      </div>
+    </div>
+
+    <p class="muted" style="margin:34px 0 60px; font-family:var(--mono); font-size:.74rem;">
+      <a href="poland/plan.html" data-transition style="color:var(--terra-2);">← Back to the plan</a> · Print this page (Ctrl/⌘+P) and keep a paper copy in the car.
+    </p>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
+(function(){
+  // editable fill-ins, saved on device (moves to the shared sheet later)
+  var store = WTC.load('wtc-poland-emergency', {}) || {};
+  document.querySelectorAll('[data-fill]').forEach(function(el){
+    var k=el.getAttribute('data-fill');
+    if(store[k]) el.textContent=store[k];
+    el.style.cursor='pointer'; el.title='Tap to edit';
+    el.addEventListener('click', function(){
+      var v=prompt('Set: '+(el.previousElementSibling?el.previousElementSibling.textContent:k), store[k]||'');
+      if(v!=null){ store[k]=v||'____'; el.textContent=store[k]; try{ localStorage.setItem('wtc-poland-emergency', JSON.stringify(store)); }catch(e){} }
+    });
+  });
+})();
+/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }
+</script>
+</body>
+</html>

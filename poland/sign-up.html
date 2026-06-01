@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Sign up · Poland — Where To, Crew?</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  /* drive environment */
+  .drive{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .drive .sky{ position:absolute; inset:0; background:linear-gradient(180deg, var(--sky-top,#10201a) 0%, var(--sky-bot,#16241c) 100%); }
+  .drive .stars{ position:absolute; inset:0; opacity:0; background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.2px 1.2px at 28% 32%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.4px 1.4px at 44% 12%, rgba(243,237,225,.85), transparent),
+    radial-gradient(1.5px 1.5px at 72% 16%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.1px 1.1px at 84% 30%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.3px 1.3px at 36% 44%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.5px 1.5px at 92% 10%, rgba(243,237,225,.85), transparent); }
+  .drive .orb{ position:absolute; width:130px; height:130px; left:var(--orb-x,12%); top:var(--orb-y,72%); transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 50% 50%, var(--orb,#d98c5f) 0%, transparent 66%); filter:blur(3px); opacity:.8; }
+  .drive .orb::after{ content:''; position:absolute; inset:42px; border-radius:50%; background:var(--orb-core,#e7a877); box-shadow:0 0 60px 16px var(--orb-core,#e7a877); }
+  .drive .haze{ position:absolute; left:-12%; right:-12%; bottom:-4%; height:62%; background:radial-gradient(120% 100% at 50% 118%, var(--glow,rgba(192,97,63,.26)) 0%, transparent 70%); }
+
+  main{ position:relative; z-index:2; }
+  .page-top{ padding-top:104px; }
+  .route-eyebrow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--terra-2); }
+  .trip-head .display{ font-size:clamp(2.4rem,5.4vw,4.2rem); }
+  .trip-head .lede{ margin-top:18px; max-width:52ch; }
+
+  .crew-card{ background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:26px clamp(20px,3vw,32px); margin-top:30px; }
+  .crew-card .lab{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--paper-soft); }
+  .crew-sec{ margin-top:18px; }
+  .crew-sec .t{ font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--paper-soft); margin-bottom:10px; }
+
+  .form-card{ background:var(--forest-2); border:1px solid var(--line); border-radius:16px; padding:clamp(24px,4vw,46px); margin-top:24px; }
+  .seg{ display:inline-flex; flex-wrap:wrap; gap:10px; }
+  fieldset{ border:0; padding:0; margin:0; }
+  #map{ height:380px; border-radius:12px; border:1px solid var(--line); overflow:hidden; z-index:0; }
+  .leaflet-container{ font-family:var(--sans); }
+  .star-pin{ font-size:26px; line-height:1; filter:drop-shadow(0 1px 2px rgba(0,0,0,.5)); }
+  .form-foot{ display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:10px; }
+
+  .success{ display:none; text-align:center; padding:clamp(34px,6vw,72px) 0; }
+  body.sent .form-card{ display:none; }
+  body.sent .success{ display:block; }
+  .success .badge{ width:84px; height:84px; border-radius:50%; background:var(--forest-2); border:1px solid var(--line); color:var(--terra-2); display:grid; place-items:center; font-size:2.2rem; margin:0 auto 22px; }
+  .success-next{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:26px; }
+</style>
+</head>
+<body data-screen-label="Poland — Sign up" data-auto-env data-auto-journey>
+
+<!-- chrome -->
+<div class="preload" aria-hidden="true"><svg viewBox="0 0 340 120"><path class="pl-line" d="M14,86 C70,40 120,40 170,64 C220,88 270,88 326,44"/><circle class="pl-dot" cx="14" cy="86" r="6"/><circle class="pl-dot" cx="170" cy="64" r="6"/><circle class="pl-dot" cx="326" cy="44" r="6"/><text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text></svg></div>
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+<div class="transition"><span class="mark">Where To, Crew?</span></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+<div class="drive" aria-hidden="true"><div class="sky"></div><div class="stars"></div><div class="orb"></div><div class="haze"></div></div>
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="journey" aria-hidden="true"><div class="j-track"></div><div class="j-fill"></div><div class="j-marker"></div></div>
+
+<nav class="nav">
+  <a class="brand" href="../index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="../index.html#board" class="underline hide-sm" data-transition data-cursor="link">All trips</a>
+    <a class="btn" href="plan-draft.html" data-transition data-magnetic data-cursor="label" data-label="Next"><span class="fill"></span><span class="lbl">Plan draft</span></a>
+  </div>
+</nav>
+
+<main class="page-top">
+  <div class="wrap-narrow">
+
+    <div class="stepper" style="padding-top:22px;">
+      <span class="step-on">01 · Sign up</span><span class="sep">———</span>
+      <a href="plan-draft.html" data-transition>02 · Plan draft</a><span class="sep">———</span>
+      <a href="plan.html" data-transition>03 · The plan</a>
+    </div>
+
+    <header class="trip-head" data-journey="Start" style="padding:34px 0 8px;">
+      <p class="route-eyebrow" data-reveal data-reveal-mode="fade">Kaunas → Kraków → Energylandia → Tatra Mountains</p>
+      <h1 class="display" data-reveal data-reveal="words" style="margin-top:14px;">Going to Poland with us?</h1>
+      <p class="lede" data-reveal>Fill this in so we can plan around everyone — your dates, the stops you fancy, and how you like to travel. No account needed.</p>
+    </header>
+
+    <section class="crew-card" id="crew" data-journey="Crew">
+      <p class="lab">The crew so far</p>
+      <div class="stat-row" id="crewStats" style="display:flex; gap:12px; margin-top:14px;"></div>
+      <div class="crew-sec" id="crewDays"><div class="t">Most-free days</div><div class="chips" id="crewDaysBody"></div></div>
+      <div class="crew-sec" id="crewVibes"><div class="t">Top vibes</div><div class="chips" id="crewVibesBody"></div></div>
+    </section>
+
+    <form class="form-card" id="signup" novalidate>
+      <div class="field"><p class="field-num">01</p><label for="f-name">What's your name?</label>
+        <input type="text" id="f-name" name="name" placeholder="e.g. Domas" required></div>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">02</p><span class="field-label">Are you in?</span>
+        <div class="chips seg" data-single="going" role="group">
+          <button type="button" class="chip" data-val="in">I'm in</button>
+          <button type="button" class="chip" data-val="maybe">Maybe</button>
+          <button type="button" class="chip" data-val="no">Can't this time</button>
+        </div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">03</p><span class="field-label">Your available dates</span>
+        <span class="hint">Click or drag across the days you're free. Dots show how many of the crew are already free that day. The trip is <strong>late June 2026, ~4 days</strong> (terra ring = target window).</span>
+        <div class="cal" style="max-width:440px;">
+          <div class="cal-ctrl"><button type="button" class="cal-nav" id="calPrev">‹</button><h4 id="calMonth">June 2026</h4><button type="button" class="cal-nav" id="calNext">›</button></div>
+          <div class="cal-grid" id="calDow"></div>
+          <div class="cal-grid" id="calGrid" style="margin-top:6px;"></div>
+          <div class="cal-legend">
+            <span><span class="dot" style="background:var(--terra);"></span>You're free</span>
+            <span><span class="dot" style="background:var(--forest-2); box-shadow:inset 0 0 0 1.5px var(--terra-2);"></span>Target window</span>
+            <span><span class="dot" style="background:var(--terra-2); border-radius:50%; width:9px; height:9px;"></span>Crew free</span>
+          </div>
+        </div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">04</p><span class="field-label">Suggested stops</span>
+        <span class="hint">Click the map to drop a pin where you'd want to stop. Click your own pin to remove it. Faded dots are stops the crew already suggested.</span>
+        <div id="map" data-journey="Stops"></div>
+        <div class="stops-list" id="stopsList"></div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">05</p><span class="field-label">Your vibes</span>
+        <span class="hint">Pick as many as fit — it shapes the plan draft.</span>
+        <div class="chips" data-multi="vibes" role="group">
+          <button type="button" class="chip" data-val="Thrill">Thrill</button>
+          <button type="button" class="chip" data-val="Nature">Nature</button>
+          <button type="button" class="chip" data-val="Nightlife">Nightlife</button>
+          <button type="button" class="chip" data-val="Chill">Chill</button>
+          <button type="button" class="chip" data-val="Culture">Culture</button>
+          <button type="button" class="chip" data-val="Food">Food</button>
+        </div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">06</p><span class="field-label">Activity ideas</span>
+        <span class="hint">Anything you really want to do — add a few.</span>
+        <div class="act-row">
+          <input type="text" id="actInput" placeholder="e.g. ride Hyperion first thing">
+          <button type="button" class="btn btn--solid" id="actAdd"><span class="fill"></span><span class="lbl">Add</span></button>
+        </div>
+        <div class="act-list" id="actList"></div>
+        <div class="act-others" id="actOthers" style="display:none;"><div class="t">Already suggested by the crew</div><div id="actOthersList"></div></div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">07</p><span class="field-label">Preferred trip length</span>
+        <div class="chips seg" data-single="length" role="group">
+          <button type="button" class="chip" data-val="3 days / 2 nights">3 days / 2 nights</button>
+          <button type="button" class="chip" data-val="4 days / 3 nights">4 days / 3 nights</button>
+        </div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <fieldset class="field"><p class="field-num">08</p><span class="field-label">Budget comfort</span>
+        <span class="hint">Roughly what you'd like to keep it under, per person.</span>
+        <div class="chips seg" data-single="budget" role="group">
+          <button type="button" class="chip" data-val="~€250">~€250 · leaner</button>
+          <button type="button" class="chip" data-val="~€285">~€285 · core trip</button>
+          <button type="button" class="chip" data-val="~€330+">~€330+ · go big</button>
+        </div>
+      </fieldset>
+      <hr class="divider" style="margin:6px 0 30px;">
+
+      <div class="field"><p class="field-num">09</p><label for="f-notes">Anything else?</label>
+        <span class="hint">Driving prefs, dietary stuff, must-dos, vetoes — whatever.</span>
+        <textarea id="f-notes" placeholder="I can drive the first leg, and I'm out for the salt mine…"></textarea></div>
+
+      <div class="form-foot">
+        <button type="submit" class="btn btn--solid"><span class="fill"></span><span class="lbl">Count me in →</span></button>
+        <span class="muted" id="form-status" style="font-family:var(--mono); font-size:.78rem;"></span>
+      </div>
+    </form>
+
+    <div class="success">
+      <div class="badge">✦</div>
+      <h2 class="display" style="font-size:clamp(2rem,4vw,3rem);">You're on the list.</h2>
+      <p class="lede" style="max-width:46ch; margin:14px auto 0;">We'll shape the plan from here. Next up — weigh the options together and watch the price move.</p>
+      <div class="success-next">
+        <a class="btn btn--solid" href="plan-draft.html" data-transition data-magnetic data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Go to the plan draft →</span></a>
+        <a class="btn" href="#" id="edit-again"><span class="fill"></span><span class="lbl">Edit my answers</span></a>
+      </div>
+      <p class="muted" style="margin-top:26px; font-family:var(--mono); font-size:.72rem;">Your answers are in — the crew can see them on the plan.</p>
+    </div>
+
+  </div>
+  <div style="height:90px;"></div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><a class="brand" href="../index.html"><svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+      <p class="muted" style="margin-top:14px;">Plan the trip. Bring the crew.</p></div>
+    <div style="max-width:32ch;"><small>Made by friends, for friends — no bookings taken here, just planning. © 2026. · <a href="../emergency.html" data-transition style="color:var(--terra-2);">🆘 Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="../assets/crew.js"></script>
+<script>
+/* fix reveal modes + WTC storage shim (used by the form below) */
+document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
+window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
+</script>
+<script>
+(function(){
+  var state = { name:'', going:'', dates:[], stops:[], vibes:[], activities:[], length:'', budget:'', notes:'' };
+  var people = window.CREW.all();
+
+  document.querySelectorAll('[data-single]').forEach(function(grp){
+    var key = grp.getAttribute('data-single');
+    grp.addEventListener('click', function(e){
+      var b = e.target.closest('.chip'); if(!b) return;
+      grp.querySelectorAll('.chip').forEach(function(c){ c.setAttribute('aria-pressed', c===b ? 'true':'false'); });
+      state[key] = b.getAttribute('data-val');
+    });
+  });
+  document.querySelectorAll('[data-multi]').forEach(function(grp){
+    var key = grp.getAttribute('data-multi');
+    grp.addEventListener('click', function(e){
+      var b = e.target.closest('.chip'); if(!b) return;
+      var on = b.getAttribute('aria-pressed') === 'true';
+      b.setAttribute('aria-pressed', on ? 'false':'true');
+      var v = b.getAttribute('data-val');
+      if(on) state[key] = state[key].filter(function(x){ return x!==v; });
+      else state[key].push(v);
+    });
+  });
+
+  function badgeCount(g){ return people.filter(function(p){ return p.going===g; }).length; }
+  function renderCrew(){
+    people = window.CREW.all();
+    document.getElementById('crewStats').innerHTML =
+      '<div class="stat-box"><div class="n">'+badgeCount('in')+'</div><div class="l">In</div></div>'+
+      '<div class="stat-box"><div class="n">'+badgeCount('maybe')+'</div><div class="l">Maybe</div></div>'+
+      '<div class="stat-box"><div class="n">'+badgeCount('no')+'</div><div class="l">Out</div></div>';
+    var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var days = window.CREW.tally(people.filter(function(p){return p.going!=='no';}), function(p){ return p.availableDays; }).slice(0,6);
+    document.getElementById('crewDaysBody').innerHTML = days.length ? days.map(function(d){
+      var parts=d[0].split('-'); var lbl=MON[+parts[1]-1]+' '+(+parts[2]);
+      return '<span class="pop-pill" title="'+d[2].join(', ')+'">'+lbl+' <b>'+d[1]+'</b></span>';
+    }).join('') : '<span class="muted">No dates yet</span>';
+    var vibes = window.CREW.tally(people, function(p){ return p.vibes; }).slice(0,6);
+    document.getElementById('crewVibes').style.display = vibes.length ? '' : 'none';
+    document.getElementById('crewVibesBody').innerHTML = vibes.map(function(v){ return '<span class="pop-pill">'+v[0]+' <b>'+v[1]+'</b></span>'; }).join('');
+  }
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var viewY = 2026, viewM = 5;
+  var selected = new Set();
+  var othersDays = {};
+  people.forEach(function(p){ if(p.going==='no') return; (p.availableDays||[]).forEach(function(iso){ othersDays[iso]=(othersDays[iso]||0)+1; }); });
+  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var suggested = {'2026-06-22':1,'2026-06-23':1,'2026-06-24':1,'2026-06-25':1};
+  (function(){ var el=document.getElementById('calDow'); el.innerHTML=DOW.map(function(d){return '<div class="cal-dow">'+d+'</div>';}).join(''); })();
+  function iso(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+  var dragging=false, dragMode=null;
+  function applyDrag(cell){
+    if(!cell || !cell.classList.contains('cal-day') || cell.classList.contains('empty') || cell.classList.contains('past')) return;
+    var k=cell.dataset.iso; if(!k) return;
+    if(dragMode==='select'){ selected.add(k); cell.classList.add('sel'); }
+    else if(dragMode==='deselect'){ selected.delete(k); cell.classList.remove('sel'); }
+  }
+  function renderCal(){
+    document.getElementById('calMonth').textContent = MONTHS[viewM]+' '+viewY;
+    var grid=document.getElementById('calGrid'); grid.innerHTML='';
+    var first=new Date(viewY,viewM,1); var start=(first.getDay()+6)%7;
+    var dim=new Date(viewY,viewM+1,0).getDate();
+    for(var i=0;i<start;i++){ var e=document.createElement('div'); e.className='cal-day empty'; grid.appendChild(e); }
+    for(var d=1;d<=dim;d++){
+      var k=iso(viewY,viewM,d); var cell=document.createElement('div'); cell.className='cal-day'; cell.textContent=d; cell.dataset.iso=k;
+      if(new Date(viewY,viewM,d)<today) cell.classList.add('past');
+      if(suggested[k]) cell.classList.add('suggested');
+      if(selected.has(k)) cell.classList.add('sel');
+      if(othersDays[k]){ var dot=document.createElement('span'); dot.className='odot'; dot.title=othersDays[k]+' crew free'; cell.appendChild(dot); }
+      cell.addEventListener('mousedown', function(ev){ var c=ev.currentTarget; if(c.classList.contains('past')) return; ev.preventDefault(); dragging=true; dragMode=selected.has(c.dataset.iso)?'deselect':'select'; applyDrag(c); });
+      cell.addEventListener('mouseenter', function(ev){ if(dragging) applyDrag(ev.currentTarget); });
+      grid.appendChild(cell);
+    }
+  }
+  document.addEventListener('mouseup', function(){ dragging=false; dragMode=null; });
+  var grid=document.getElementById('calGrid');
+  grid.addEventListener('touchstart', function(ev){ var c=ev.target.closest('.cal-day'); if(!c||c.classList.contains('past')||c.classList.contains('empty')) return; ev.preventDefault(); dragging=true; dragMode=selected.has(c.dataset.iso)?'deselect':'select'; applyDrag(c); }, {passive:false});
+  grid.addEventListener('touchmove', function(ev){ if(!dragging) return; ev.preventDefault(); var t=ev.touches[0]; if(!t) return; var el=document.elementFromPoint(t.clientX,t.clientY); applyDrag(el); }, {passive:false});
+  document.addEventListener('touchend', function(){ dragging=false; dragMode=null; });
+  document.getElementById('calPrev').addEventListener('click', function(){ viewM--; if(viewM<0){viewM=11;viewY--;} renderCal(); });
+  document.getElementById('calNext').addEventListener('click', function(){ viewM++; if(viewM>11){viewM=0;viewY++;} renderCal(); });
+  renderCal();
+
+  var ENERGY={lat:49.9881,lng:19.4569};
+  var map, myStops=[];
+  function initMap(){
+    map = L.map('map',{scrollWheelZoom:false}).setView([51.6,20.2], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap', maxZoom:18}).addTo(map);
+    var star=L.divIcon({className:'', html:'<div class="star-pin">⭐</div>', iconSize:[26,26], iconAnchor:[13,13]});
+    L.marker([ENERGY.lat,ENERGY.lng],{icon:star}).addTo(map).bindPopup('<b>Energylandia</b><br>Our destination');
+    people.forEach(function(p){ (p.stops||[]).forEach(function(s){ if(!s.lat) return;
+      L.circleMarker([s.lat,s.lng],{radius:7,color:'#c0613f',weight:2,fillColor:'#d98c5f',fillOpacity:.55})
+        .addTo(map).bindPopup('<b>'+esc(p.name)+'</b> suggested:<br>'+esc(s.label||'')); }); });
+    map.on('click', function(e){ addStop(e.latlng.lat, e.latlng.lng); });
+    setTimeout(function(){ map.invalidateSize(); }, 200);
+  }
+  function addStop(lat,lng){
+    var marker=L.marker([lat,lng]).addTo(map);
+    var stop={lat:lat,lng:lng,label:'Looking up…',marker:marker};
+    myStops.push(stop); marker.bindPopup(stop.label).openPopup();
+    marker.on('click', function(){ removeStop(stop); });
+    renderStops();
+    revGeocode(lat,lng).then(function(lbl){ stop.label=lbl; marker.setPopupContent(lbl); renderStops(); });
+  }
+  function removeStop(stop){ map.removeLayer(stop.marker); var i=myStops.indexOf(stop); if(i>=0) myStops.splice(i,1); renderStops(); }
+  function renderStops(){
+    var el=document.getElementById('stopsList');
+    el.innerHTML = myStops.length ? myStops.map(function(s,i){ return '<div class="stop-row"><span>📍 '+esc(s.label)+'</span><button type="button" class="rm" data-i="'+i+'">remove</button></div>'; }).join('') : '';
+    el.querySelectorAll('.rm').forEach(function(b){ b.addEventListener('click', function(){ removeStop(myStops[+b.dataset.i]); }); });
+  }
+  function revGeocode(lat,lng){
+    var url='https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat='+lat+'&lon='+lng;
+    return fetch(url,{headers:{'Accept-Language':'en'}}).then(function(r){return r.json();}).then(function(j){
+      if(j.address){ var a=j.address; return [a.city||a.town||a.village||a.county, a.country].filter(Boolean).join(', ') || j.display_name; }
+      return j.display_name || (lat.toFixed(3)+', '+lng.toFixed(3));
+    }).catch(function(){ return lat.toFixed(3)+', '+lng.toFixed(3); });
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  if(window.L) initMap();
+
+  function renderActs(){
+    var el=document.getElementById('actList');
+    el.innerHTML = state.activities.map(function(a,i){ return '<div class="act-item"><span>'+esc(a)+'</span><button type="button" class="rm" data-i="'+i+'">remove</button></div>'; }).join('');
+    el.querySelectorAll('.rm').forEach(function(b){ b.addEventListener('click', function(){ state.activities.splice(+b.dataset.i,1); renderActs(); }); });
+  }
+  function addAct(){ var inp=document.getElementById('actInput'); var v=inp.value.trim(); if(!v) return; state.activities.push(v); inp.value=''; renderActs(); inp.focus(); }
+  document.getElementById('actAdd').addEventListener('click', addAct);
+  document.getElementById('actInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); addAct(); } });
+  (function(){
+    var others=[]; people.forEach(function(p){ (p.activities||[]).forEach(function(a){ others.push({name:p.name, idea:a}); }); });
+    if(others.length){ document.getElementById('actOthers').style.display=''; document.getElementById('actOthersList').innerHTML = others.map(function(o){ return '<div class="act-other">• '+esc(o.idea)+' <span class="by">— '+esc(o.name)+'</span></div>'; }).join(''); }
+  })();
+
+  document.getElementById('signup').addEventListener('submit', function(e){
+    e.preventDefault();
+    state.name=document.getElementById('f-name').value.trim();
+    state.notes=document.getElementById('f-notes').value.trim();
+    var status=document.getElementById('form-status');
+    if(!state.name){ status.textContent='↑ pop your name in first'; status.style.color='var(--terra-2)'; document.getElementById('f-name').focus(); return; }
+    if(!state.going){ status.textContent='↑ let us know if you\u2019re in'; status.style.color='var(--terra-2)'; return; }
+    state.dates = [...selected].sort().map(function(k){ var p=k.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1]+' '+(+p[2]); });
+    state.stops = myStops.map(function(s){ return {lat:s.lat,lng:s.lng,label:s.label}; });
+    WTC.save('wtc-poland-signup', state);
+    document.body.classList.add('sent');
+    if(window.WTCM && window.WTCM.lenis) window.WTCM.lenis.scrollTo(0); else window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('edit-again').addEventListener('click', function(e){ e.preventDefault(); document.body.classList.remove('sent'); });
+
+  renderCrew();
+})();
+</script>
+<script src="../assets/motion.js?v=2"></script>
+<script>/* offline SW disabled during build — purge any old one + its stale caches so edits always show */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+</body>
+</html>
