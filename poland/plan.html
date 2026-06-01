@@ -564,8 +564,8 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     var booked = WTC.load('wtc-poland-booked', {}) || {};
     var el = document.getElementById('booklist'); if(!el) return;
     function render(){
+      // ONLY what the chosen plan needs (drop the rest — this is your plan's booking list)
       var active = ITEMS.filter(function(i){ return i.on; });
-      var optional = ITEMS.filter(function(i){ return !i.on; });
       function row(i){
         var done = !!booked[i.id];
         var meta = [];
@@ -579,10 +579,9 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
           (i.note?'<span class="bk-note">'+i.note+'</span>':'')+'</span>'+
           '<span class="when">book by '+i.when+'</span></div>';
       }
-      el.innerHTML = (active.map(row).join('')) +
-        (optional.length ? '<p class="eyebrow" style="color:var(--paper-soft); margin:20px 0 4px;">Optional — only if you add these</p>'+optional.map(row).join('') : '');
+      el.innerHTML = active.map(row).join('');
       var total = active.length, doneN = active.filter(function(i){ return booked[i.id]; }).length;
-      var prog = document.getElementById('bk-progress'); if(prog) prog.textContent = doneN+' / '+total+' booked for your current plan';
+      var prog = document.getElementById('bk-progress'); if(prog) prog.innerHTML = doneN+' / '+total+' booked · based on your plan — <a style="color:var(--terra-2)" href="plan-draft.html" data-transition>change picks</a>';
       el.querySelectorAll('.bkrow').forEach(function(r){ r.addEventListener('click', function(e){
         if(e.target.closest('a')) return;
         var id=r.getAttribute('data-id'); booked[id]=!booked[id];
