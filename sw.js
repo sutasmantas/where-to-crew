@@ -4,17 +4,23 @@
    images (they don't change). Cross-origin (Supabase/Worker API, CDN libs, map
    tiles) is left untouched. Versioned cache + skipWaiting + clients.claim so a
    new deploy takes over immediately. This is the offline support, done right. */
-var CACHE = 'wtc-v3';
+var CACHE = 'wtc-v4';
+// Resolve the app-shell as ABSOLUTE same-origin URLs relative to THIS worker's
+// location (e.g. .../where-to-crew/), so addAll works under any subpath.
+var BASE = self.location.href.replace(/sw\.js(\?.*)?$/, '');
 var SHELL = [
-  './index.html','./emergency.html',
-  './poland/sign-up.html','./poland/plan-draft.html','./poland/plan.html',
-  './assets/motion.css','./assets/site.css',
-  './assets/motion.js','./assets/crew.js','./assets/plan-draft.js','./assets/checklist.js','./assets/store.js',
-  './manifest.webmanifest'
-];
+  'index.html','emergency.html',
+  'poland/sign-up.html','poland/plan-draft.html','poland/plan.html',
+  'assets/motion.css','assets/site.css',
+  'assets/motion.js','assets/config.js','assets/store.js','assets/crew.js','assets/plan-draft.js','assets/checklist.js',
+  'manifest.webmanifest'
+].map(function(p){ return BASE + p; });
 
 self.addEventListener('install', function(e){
-  e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(SHELL).catch(function(){}); }).then(function(){ return self.skipWaiting(); }));
+  // cache each file independently so one failure can't wipe the whole precache
+  e.waitUntil(caches.open(CACHE).then(function(c){
+    return Promise.all(SHELL.map(function(u){ return c.add(u).catch(function(){}); }));
+  }).then(function(){ return self.skipWaiting(); }));
 });
 self.addEventListener('activate', function(e){
   e.waitUntil(caches.keys().then(function(keys){ return Promise.all(keys.filter(function(k){ return k!==CACHE; }).map(function(k){ return caches.delete(k); })); }).then(function(){ return self.clients.claim(); }));
