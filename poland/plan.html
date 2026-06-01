@@ -98,6 +98,25 @@
   .leaflet-tooltip.map-anchor-lbl{ background:rgba(15,24,19,.82); color:var(--paper); border:1px solid var(--terra); border-radius:6px; font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.04em; padding:2px 7px; box-shadow:none; white-space:nowrap; }
   .leaflet-tooltip.map-anchor-lbl::before{ display:none; }
 
+  /* booking console — everything to reserve, tickable */
+  .bklist{ display:flex; flex-direction:column; gap:10px; margin-top:24px; }
+  .bkrow{ display:flex; gap:14px; align-items:flex-start; background:var(--forest-2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; cursor:pointer; transition:border-color .25s, opacity .25s; }
+  .bkrow:hover{ border-color:var(--terra-2); }
+  .bkrow.done{ opacity:.55; }
+  .bkrow.done .bk-name{ text-decoration:line-through; }
+  .bkrow .box{ width:22px; height:22px; flex:none; margin-top:2px; border:1.5px solid var(--line); border-radius:6px; display:grid; place-items:center; color:var(--forest); font-size:.8rem; }
+  .bkrow.done .box{ background:var(--terra-2); border-color:var(--terra-2); }
+  .bkrow .bk-main{ flex:1; min-width:0; }
+  .bkrow .bk-name{ font-weight:700; color:var(--paper); font-size:1.04rem; }
+  .bkrow .bk-meta{ display:flex; flex-wrap:wrap; gap:6px 14px; font-family:var(--mono); font-size:.74rem; color:var(--terra-2); margin-top:5px; }
+  .bkrow .bk-meta a{ color:var(--terra-2); text-decoration:underline; }
+  .bkrow .bk-note{ font-size:.9rem; color:var(--paper-soft); margin-top:6px; }
+  .bkrow .when{ font-family:var(--mono); font-size:.66rem; letter-spacing:.06em; color:var(--paper); background:rgba(192,97,63,.22); border:1px solid var(--terra); border-radius:100px; padding:.25em .6em; white-space:nowrap; flex:none; align-self:flex-start; }
+  .bkrow .sells{ font-family:var(--mono); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color:#d9603f; border:1px solid #d9603f; border-radius:100px; padding:.15em .5em; }
+  .bkrow.admin{ background:var(--forest-3); }
+  .bkrow.admin .bk-name{ font-weight:600; color:var(--paper-soft); }
+  .bk-progress{ font-family:var(--mono); font-size:.78rem; color:var(--paper-soft); margin-top:6px; }
+
   /* reflects-your-draft note */
   .reflect-note{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:.72rem; color:var(--terra-2); margin-top:8px; }
   /* per-day timeline + plan-B inside each day card */
@@ -187,7 +206,7 @@
   <section class="section-pad">
     <div class="wrap">
       <div data-reveal style="max-width:680px;"><p class="eyebrow">🎢 Energylandia game-plan</p><h2 class="sec-title" style="margin-top:10px;">One disciplined day clears the whole park.</h2>
-      <p class="lede" style="margin-top:14px;">Being at the gate for 10:00 is your single best decision — it protects the entire day. Then rope-drop the back of the park, eat off-peak, and hit the water coasters in the heat.</p></div>
+      <p class="lede" style="margin-top:14px;">Being at the gate for 10:00 is your single best decision — it protects the entire day. Then rope-drop the back of the park, eat off-peak, and hit the water coasters in the heat. <b>Tickets ~209–229 zł (~€49–53) pp</b> online (cheaper than the gate); the optional <b>Energy Pass fast-track is ~239 zł (~€56)</b> — most crews skip it and rope-drop instead. Hours 10:00–20:00 in summer.</p></div>
       <div class="know" style="grid-template-columns:repeat(2,1fr);">
         <div><span class="ic">1</span><span><b>Ride order (rope-drop)</b> <span>sprint <b>Zadra</b> (back of the park) → <b>Hyperion</b> → <b>Abyssus</b> → Formuła → Speed Water. The front clogs first.</span></span></div>
         <div><span class="ic">2</span><span><b>Beat the queues</b> <span>Poles eat ~15:00, so big-coaster lines ease early afternoon — ride then, eat off-peak. Use the official app for live wait times (no single-rider lines).</span></span></div>
@@ -244,20 +263,13 @@
   <section class="section-pad">
     <div class="wrap">
       <div data-reveal style="max-width:680px;">
-        <p class="eyebrow">Book ahead · sells out</p>
-        <h2 class="sec-title" style="margin-top:10px;">Lock these before the date, not the week of.</h2>
+        <p class="eyebrow">📋 Book it · the reservation checklist</p>
+        <h2 class="sec-title" style="margin-top:10px;">Everything to reserve — in the order to do it.</h2>
+        <p class="lede" style="margin-top:14px;">One place for whoever's booking. Tap a row to tick it off (saved on this device). Prices are 2026 estimates — re-check at booking. The <b>“book by”</b> tag is the deadline; <span style="color:#d9603f;">sells out</span> = do it early.</p>
         <p class="reflect-note" id="bookahead-note"></p>
+        <p class="bk-progress" id="bk-progress"></p>
       </div>
-      <div id="bookahead-yours"></div>
-      <p class="eyebrow" style="color:var(--paper-soft); margin-top:30px;">Everything you might need to reserve</p>
-      <ul class="checklist" style="padding:0; margin-top:14px;">
-        <li><span><b>Energylandia e-tickets</b> (+ queue pass if chosen) — online beats the gate price.</span></li>
-        <li><span><b>Morskie Oko parking e-ticket</b> — prebook only, no cash on site; or take the minibus from Bar Fis.</span></li>
-        <li><span><b>Salt-mine tour slot</b> — Bochnia's English tour is 10:30 only; peak slots sell out by midday.</span></li>
-        <li><span><b>All 3 nights' lodging</b> — pick free-cancellation rates while dates still flex.</span></li>
-        <li><span><b>Kasprowy Wierch slot</b> — only if you add the cable car; timed and limited.</span></li>
-        <li><span><b>Passports &amp; insurance</b> — saved offline, reachable at the border.</span></li>
-      </ul>
+      <div class="bklist" id="booklist"></div>
     </div>
   </section>
 
@@ -389,8 +401,8 @@
       <ul class="checklist" style="padding:0; margin-top:22px;">
         <li><span><b>A4 toll</b> Kraków–Katowice — small cash/Autopay.</span></li>
         <li><span><b>Kraków</b> — Park &amp; Ride or a guarded lot; don't drive the Old Town.</span></li>
-        <li><span><b>Zakopane</b> — paid parking (often 7-day passes).</span></li>
-        <li><span><b>Morskie Oko</b> — pre-booked TPN e-ticket or the Bar Fis minibus (no cash on site).</span></li>
+        <li><span><b>Zakopane</b> — paid parking <b>7 days/week, 08:00–21:00</b> (street ~5 zł/30 min); cheaper to use a guarded lot (~30 zł/day). Kuźnice (for Kasprowy) fills early.</span></li>
+        <li><span><b>Morskie Oko</b> — TPN e-ticket <b>only</b> (no cash on site, sells out); book ≥3 days out for ~35–55 zł, max 75 zł. Or the Bar Fis minibus (no booking).</span></li>
         <li><span><b>Emergencies:</b> 112 · mountain rescue TOPR 601 100 300.</span></li>
         <li><span><b>Watch</b> pickpockets (Main Square/trams) &amp; car break-ins — nothing on show.</span></li>
       </ul>
@@ -514,16 +526,74 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       '</div></div>';
   }).join('');
 
-  var bk = (saved && saved.bookings) || m.bookings || [];
-  var note = document.getElementById('bookahead-note');
-  if(note){ note.innerHTML = bk.length ? '✓ '+bk.length+' apply to your '+(hasDraft?'draft':'default plan')+' — listed below, with the full reference list under it.' : (hasDraft?'':'Showing the recommended set — build your draft to personalise it.'); }
-  var yours = document.getElementById('bookahead-yours');
-  if(yours && bk.length){
-    yours.innerHTML = '<p class="eyebrow" style="margin-top:24px;">'+(hasDraft?'Your draft':'This plan')+' needs</p>'+
-      '<ul class="checklist" style="padding:0; margin-top:14px;">'+bk.map(function(b){
-        return '<li><span><b>'+b.name+'</b> — '+b.where+(b.sells?' · <i style="color:var(--terra-2)">sells out, book early</i>':'')+'</span></li>';
-      }).join('')+'</ul>';
-  }
+  /* ---- Booking console: every reservation, ordered by deadline, tickable ---- */
+  (function(){
+    var inc = function(arr,v){ return (arr||[]).indexOf(v)>=0; };
+    var ITEMS = [
+      { id:'lodging', name:'All lodging', where:'Booking.com / Hostelworld', url:'https://www.booking.com/', price:'free-cancellation rates', when:'−3 wks', sells:true,
+        note:'Night 1 Kraków (Kazimierz) + Night 2'+(sel.length==='4d'?'/3':'')+' '+(sel.base2==='zator'?'Zator':'Zakopane')+(/* extras */ (sel.breakDrive==='warsaw-night'||sel.day4==='warsaw')?' + a Warsaw return-night':'')+(sel.buffer==='add'?' + the buffer night':''), on:true },
+      { id:'lez', name:'Register the car in Kraków’s LEZ', where:'ztp.krakow.pl', url:'https://ztp.krakow.pl/en/lez/lez-requirements', price:'free', when:'−3 wks', sells:false,
+        note:'Foreign plate — register even if it’s petrol Euro-4 / 2005+. (Or just Park & Ride.)', on:true },
+      { id:'auschwitz', name:'Auschwitz-Birkenau timed pass', where:'visit.auschwitz.org', url:'https://visit.auschwitz.org/', price:'free entry', when:'−3 wks', sells:true,
+        note:'Only if you chose the Auschwitz buffer day — books out weeks ahead.', on: sel.bufferActivity==='auschwitz' },
+      { id:'energylandia', name:'Energylandia e-tickets', where:'ticket.energylandia.pl', url:'https://ticket.energylandia.pl/en/', price:'~209–229 zł (~€49–53) pp', when:'−2 wks', sells:false,
+        note:'Online beats the gate. Gate 10:00–20:00.', on:true },
+      { id:'pass', name:'Energylandia queue pass', where:'with the tickets', url:'https://ticket.energylandia.pl/en/', price:'Energy Pass ~239 zł (~€56) pp', when:'−2 wks', sells:false,
+        note:'Optional — only if you skip rope-drop. ~14 rides fast-track.', on: sel.pass==='fast'||sel.pass==='energy' },
+      { id:'kasprowy', name:'Kasprowy Wierch cable car slot', where:'pkl.pl', url:'https://www.pkl.pl/', price:'~170 zł (~€40) pp', when:'−2 wks', sells:true,
+        note:'Only if you add it — timed slot, sells out.', on: inc(sel.addons,'kasprowy') },
+      { id:'saltmine', name:(sel.day4==='wieliczka'?'Wieliczka':'Bochnia')+' salt-mine tour', where:(sel.day4==='wieliczka'?'bilety.kopalnia.pl':'kopalnia-bochnia.pl'), url:(sel.day4==='wieliczka'?'https://bilety.kopalnia.pl/':'https://kopalnia-bochnia.pl/en/bilety-on-line/'), price:(sel.day4==='wieliczka'?'143 zł (~€33)':'~88 zł (~€20)')+' pp', when:'−2 wks', sells:true,
+        note:'Only if Day 4 = salt mine. Bochnia: book the English tour ahead.', on: sel.day4==='bochnia'||sel.day4==='wieliczka' },
+      { id:'raj', name:'Jaskinia Raj cave timed slot', where:'jaskiniaraj.pl', url:'https://jaskiniaraj.pl/', price:'~30 zł (~€7) pp', when:'−2 wks', sells:true,
+        note:'Only if you stop at the cave on Day 1.', on: inc(sel.stops,'raj') },
+      { id:'dunajec', name:'Dunajec gorge raft / kayak', where:'seasonal operator', url:'https://flisacy.com.pl/en/', price:'~60–110 zł (~€15–25)', when:'−1 wk', sells:false,
+        note:'Only if you add it (or do the Pieniny day).', on: inc(sel.addons,'dunajec') || sel.hike==='pieniny' },
+      { id:'nowahuta', name:'Nowa Huta Trabant tour', where:'tour operator', url:'', price:'~€45', when:'−1 wk', sells:false,
+        note:'Only if you chose it for a Kraków evening.', on: inc(sel.krakowEve,'nowahuta') },
+      { id:'bacowka', name:'Bacówka cheese-grill evening', where:'check / book locally', url:'', price:'~€8', when:'−1 wk', sells:false,
+        note:'Only if you picked the cook-together mountain evening.', on: inc(sel.mtnEvening,'cook-bacowka') },
+      { id:'insurance', name:'EHIC + travel + breakdown insurance', where:'your providers', url:'', price:'~€15 pp', when:'−1 wk', sells:false, admin:true,
+        note:'Cover rides + medical + mountain rescue; all 3 drivers named.', on:true },
+      { id:'esim', name:'EU eSIM (data abroad)', where:'Airalo / Holafly / etc.', url:'https://www.airalo.com/poland-esim', price:'~€5–10', when:'−1 wk', sells:false, admin:true,
+        note:'LT SIMs (Tele2/Telia/Bite) opted out of free EU roaming.', on:true },
+      { id:'mokparking', name:'Morskie Oko TPN parking e-ticket', where:'tpn.gov.pl', url:'https://tpn.gov.pl/parkingi-morskie-oko', price:'~35–55 zł (book ≥3 days out)', when:'−3 days', sells:true,
+        note:'E-ticket ONLY — no cash on site, sells out. Or take the Bar Fis minibus (no booking).', on: sel.hike==='morskie' && sel.mokAccess==='drive-park' },
+      { id:'cash', name:'Withdraw some złoty cash', where:'bank ATM', url:'', price:'', when:'−3 days', sells:false, admin:true,
+        note:'For meters, lockers, small vendors. Decline DCC, pay in złoty.', on:true }
+    ];
+    var booked = WTC.load('wtc-poland-booked', {}) || {};
+    var el = document.getElementById('booklist'); if(!el) return;
+    function render(){
+      var active = ITEMS.filter(function(i){ return i.on; });
+      var optional = ITEMS.filter(function(i){ return !i.on; });
+      function row(i){
+        var done = !!booked[i.id];
+        var meta = [];
+        if(i.where) meta.push(i.url ? '<a href="'+i.url+'" target="_blank" rel="noopener">'+i.where+'</a>' : i.where);
+        if(i.price) meta.push(i.price);
+        if(i.sells) meta.push('<span class="sells">sells out</span>');
+        return '<div class="bkrow'+(done?' done':'')+(i.admin?' admin':'')+'" data-id="'+i.id+'">'+
+          '<span class="box">'+(done?'✓':'')+'</span>'+
+          '<span class="bk-main"><span class="bk-name">'+i.name+'</span>'+
+          '<span class="bk-meta">'+meta.join(' · ')+'</span>'+
+          (i.note?'<span class="bk-note">'+i.note+'</span>':'')+'</span>'+
+          '<span class="when">book by '+i.when+'</span></div>';
+      }
+      el.innerHTML = (active.map(row).join('')) +
+        (optional.length ? '<p class="eyebrow" style="color:var(--paper-soft); margin:20px 0 4px;">Optional — only if you add these</p>'+optional.map(row).join('') : '');
+      var total = active.length, doneN = active.filter(function(i){ return booked[i.id]; }).length;
+      var prog = document.getElementById('bk-progress'); if(prog) prog.textContent = doneN+' / '+total+' booked for your current plan';
+      el.querySelectorAll('.bkrow').forEach(function(r){ r.addEventListener('click', function(e){
+        if(e.target.closest('a')) return;
+        var id=r.getAttribute('data-id'); booked[id]=!booked[id];
+        try{ localStorage.setItem('wtc-poland-booked', JSON.stringify(booked)); }catch(err){}
+        render();
+      }); });
+    }
+    render();
+    var note = document.getElementById('bookahead-note');
+    if(note) note.textContent = '';
+  })();
 
   document.getElementById('countdown').innerHTML = m.countdown.map(function(c){ return '<div class="cd-row"><div class="when">'+c[0]+'</div><div class="what">'+c[1]+'</div></div>'; }).join('');
 
