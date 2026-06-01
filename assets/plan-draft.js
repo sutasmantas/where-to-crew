@@ -605,7 +605,7 @@
       var ch=document.getElementById('who-change'); if(ch) ch.addEventListener('click',function(e){ e.preventDefault(); window.Store.setMe(''); renderIdentity(); });
     } else {
       bar.innerHTML='<span>Add your name so your picks save &amp; show to the crew:</span>'+
-        '<span style="display:flex;gap:6px;margin-top:6px;"><input id="who-input" placeholder="your name" style="flex:1;background:var(--forest-2);border:1px solid var(--line);color:var(--paper);border-radius:7px;padding:.5em .6em;font-family:var(--sans);font-size:.85rem;"><button type="button" id="who-save" class="fixbtn" style="white-space:nowrap;">Save</button></span>';
+        '<span style="display:flex;gap:6px;margin-top:6px;"><input id="who-input" type="text" placeholder="your name" style="flex:1;min-width:0;background:var(--forest-2);border:1px solid var(--line);color:var(--paper);border-radius:7px;padding:.5em .6em;font-family:var(--sans);font-size:.85rem;"><button type="button" id="who-save" class="fixbtn" style="white-space:nowrap;">Save</button></span>';
       var go=function(){ var v=(document.getElementById('who-input').value||'').trim(); if(!v) return; window.Store.setMe(v); pushShared(); renderIdentity(); refreshCrew(); };
       var sv=document.getElementById('who-save'); if(sv) sv.addEventListener('click',go);
       var inp=document.getElementById('who-input'); if(inp) inp.addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
