@@ -591,6 +591,8 @@
   /* ---------- download (shared generator) ---------- */
   var dlBtn=document.getElementById('dlMini');
   if(dlBtn) dlBtn.addEventListener('click', function(){ if(window.WTC_downloadChecklist) window.WTC_downloadChecklist(); });
+  var shBtn=document.getElementById('shareMini');
+  if(shBtn) shBtn.addEventListener('click', function(){ if(window.WTC_sharePlan) window.WTC_sharePlan(); });
 
   /* ---------- identity (whose picks these are; lets them edit/share) ---------- */
   function renderIdentity(){

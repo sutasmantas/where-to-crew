@@ -444,7 +444,10 @@
       <p class="eyebrow" data-reveal data-reveal-mode="fade">Take it with you</p>
       <h2 class="sec-title" data-reveal style="margin-top:10px;">Print the whole plan or save the PDF.</h2>
       <p class="lede" data-reveal style="margin:16px auto 26px; max-width:46ch;">Your chosen draft options plus the full pre-trip checklist — packing, documents, car, money, apps, day-by-day and final checks.</p>
-      <button class="btn btn--solid" id="dlChecklist" data-magnetic data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download your checklist →</span></button>
+      <div style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center;">
+        <button class="btn btn--solid" id="dlChecklist" data-magnetic data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download your checklist →</span></button>
+        <button class="btn" id="sharePlan" data-magnetic data-cursor="label" data-label="Share"><span class="fill"></span><span class="lbl">Share this plan ↗</span></button>
+      </div>
     </div>
   </section>
 </main>
@@ -479,6 +482,18 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
   var saved = WTC.load('wtc-poland-plan', null);
   // prefer THIS person's shared plan (so the page reflects their picks on any device)
   if(window.Store){ var _mk=window.Store.key(window.Store.me()); var _mine=_mk && window.Store.cached()[_mk]; if(_mine && _mine.plan && _mine.plan.sel) saved = _mine.plan; }
+  // SHARED link (plan.html#p=…) → render THAT plan read-only; never touch the visitor's own data.
+  var SHARED=null, _hp=(location.hash.match(/[#&]p=([^&]+)/)||[])[1];
+  if(_hp && window.WTC_decodePlan) SHARED=window.WTC_decodePlan(decodeURIComponent(_hp));
+  if(SHARED){ saved={ sel:SHARED.sel, total:SHARED.total, bookings:SHARED.bookings, bookingStatus:SHARED.bookingStatus, who:SHARED.who }; }
+  window.WTC_CURRENT_PLAN = saved;   // what Share/Download act on (the shared plan in shared mode)
+  if(SHARED){
+    var _who=String(SHARED.who||'a friend').replace(/[<>]/g,'');
+    var _b=document.createElement('div');
+    _b.style.cssText='position:sticky;top:0;z-index:60;background:var(--terra,#c0613f);color:var(--forest,#16241c);font-family:var(--mono),monospace;font-size:.78rem;padding:.7em 1em;text-align:center;';
+    _b.innerHTML='📨 You’re viewing <b>'+_who+'’s</b> plan — read-only. <a href="plan-draft.html" data-transition style="color:var(--forest);text-decoration:underline;font-weight:700;">Build your own →</a>';
+    document.body.insertBefore(_b, document.body.firstChild);
+  }
   var hasDraft = !!(saved && saved.sel && (saved.sel.hike || saved.sel.length));
   // Object.assign respects the draft's arrays as-is (an explicit empty stays empty);
   // only a decision the draft never touched (undefined) falls back to the default.
@@ -665,7 +680,7 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
   })();
   if(m.dep) document.getElementById('cd-dateline').textContent='Counting down to '+m.dep.label+' — book the sell-out things first.';
 
-  if(saved && saved.total){ document.getElementById('db-text').textContent = saved.days + ' days · ≈ €' + saved.total + '/person'; document.getElementById('draft-banner').style.display='inline-flex'; }
+  if(!SHARED && saved && saved.total){ document.getElementById('db-text').textContent = (saved.days||'') + ' days · ≈ €' + saved.total + '/person'; document.getElementById('draft-banner').style.display='inline-flex'; }
 
   var GEAR=['Power bank','First-aid kit','Dashcam','Warning triangle','Hi-vis vest','Fire extinguisher','Paper map','Phone mount','AUX cable'];
   var claims = WTC.load('wtc-poland-gear', {}) || {};
@@ -690,7 +705,9 @@ window.WTCM_onReady = function(ctx){
   });
   // download the personalised, in-depth checklist (shared generator)
   var dlBtn = document.getElementById('dlChecklist');
-  if(dlBtn) dlBtn.addEventListener('click', function(){ if(window.WTC_downloadChecklist) window.WTC_downloadChecklist(); });
+  if(dlBtn) dlBtn.addEventListener('click', function(){ if(window.WTC_downloadChecklist) window.WTC_downloadChecklist(window.WTC_CURRENT_PLAN||undefined); });
+  var shBtn = document.getElementById('sharePlan');
+  if(shBtn) shBtn.addEventListener('click', function(){ if(window.WTC_sharePlan) window.WTC_sharePlan(window.WTC_CURRENT_PLAN||undefined); });
 };
 </script>
 <script src="../assets/motion.js?v=2"></script>

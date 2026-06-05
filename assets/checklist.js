@@ -219,16 +219,58 @@
       '</body></html>';
   }
 
-  function download(){
-    var plan=WTC.load('wtc-poland-plan', {});
+  function download(plan){
+    plan = plan || WTC.load('wtc-poland-plan', {});
     var html=buildHTML(plan);
     var w=window.open('','_blank');
     if(w){ w.document.write(html); w.document.close(); setTimeout(function(){ try{w.print();}catch(e){} }, 400); }
     else { var blob=new Blob([html],{type:'text/html'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='poland-trip-checklist.html'; a.click(); }
   }
 
+  /* ============================================================
+     SHARE — a self-contained link that encodes the chosen plan.
+     The picks ARE the plan, so we pack `sel` (+ total/bookings/status/who)
+     into the URL hash → opening it reconstructs the plan read-only, no
+     backend call, works offline. (#p= goes in the hash, never to a server.)
+     ============================================================ */
+  function b64urlEnc(str){ return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function b64urlDec(str){ str=String(str).replace(/-/g,'+').replace(/_/g,'/'); while(str.length%4) str+='='; return decodeURIComponent(escape(atob(str))); }
+
+  function encodePlan(plan){
+    plan = plan || WTC.load('wtc-poland-plan', {}) || {};
+    var who = plan.who || (window.Store && window.Store.me && window.Store.me()) || '';
+    var payload = { v:1, who:who, sel:plan.sel||{}, total:plan.total||null, bookings:plan.bookings||[], bookingStatus:plan.bookingStatus||{} };
+    return b64urlEnc(JSON.stringify(payload));
+  }
+  function decodePlan(str){ try{ var o=JSON.parse(b64urlDec(str)); return (o && o.sel) ? o : null; }catch(e){ return null; } }
+  function shareURL(plan){
+    var path = location.pathname.replace(/[^/]*$/, 'plan.html');   // always point at the read-only Plan page
+    return location.origin + path + '#p=' + encodePlan(plan);
+  }
+  function toast(msg){
+    var t=document.createElement('div'); t.textContent=msg;
+    t.style.cssText='position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:9999;background:#16241c;color:#f3ede1;border:1px solid rgba(243,237,225,.2);border-radius:10px;padding:.7em 1.1em;font-family:monospace;font-size:.8rem;box-shadow:0 10px 34px rgba(0,0,0,.4);opacity:0;transition:opacity .25s;';
+    document.body.appendChild(t); requestAnimationFrame(function(){ t.style.opacity='1'; });
+    setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); }, 320); }, 2300);
+  }
+  function sharePlan(plan){
+    plan = plan || WTC.load('wtc-poland-plan', {}) || {};
+    if(!plan.sel || !(plan.sel.length || plan.sel.hike)){ toast('Build your plan first — pick a few options.'); return; }
+    var url = shareURL(plan);
+    var who = plan.who || (window.Store && window.Store.me && window.Store.me()) || '';
+    var title = 'Where To, Crew? — '+(who?who+'’s ':'')+'Poland plan';
+    var text  = (who?who+'’s ':'My ')+'Energylandia road-trip plan'+(plan.total?' (≈ €'+plan.total+'/person)':'')+' — tap to see it:';
+    if(navigator.share){ navigator.share({ title:title, text:text, url:url }).catch(function(){}); }
+    else if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(function(){ toast('Plan link copied — paste it to the crew.'); }).catch(function(){ prompt('Copy your plan link:', url); }); }
+    else { prompt('Copy your plan link:', url); }
+  }
+
   window.WTC_planModel = model;
   window.WTC_planPicks = picksList;
   window.WTC_buildChecklist = buildHTML;
   window.WTC_downloadChecklist = download;
+  window.WTC_encodePlan = encodePlan;
+  window.WTC_decodePlan = decodePlan;
+  window.WTC_shareURL = shareURL;
+  window.WTC_sharePlan = sharePlan;
 })();
