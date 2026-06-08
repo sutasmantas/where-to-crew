@@ -224,18 +224,27 @@
     }
     var BASE = has4 ? 285 : 250;
     var total = BASE + 18*ex;
-    var rows = [{ label:(has4?'4-day core trip':'3-day core trip')+' · '+(has4?3:2)+' nights', v:'€'+BASE, base:true }];
+    // What the core actually covers — real May-2026 estimates, split 3 ways; these sum to BASE.
+    // (The hike + its access are NOT here — they're your Day-3 choice below, so the base assumes nothing.)
+    var core = has4
+      ? [['Fuel — round trip ~1,700 km ÷ 3', 62], ['Tolls + parking — A4 gate, Kraków P+R, Zakopane', 12], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 3 nights (Kraków + 2 in the mountains)', 56], ['Food & drink — ~€15/day × 4 days', 60], ['Travel insurance + EHIC / breakdown', 15], ['Contingency / souvenirs', 27]]
+      : [['Fuel — round trip ~1,700 km ÷ 3', 62], ['Tolls + parking — A4 gate, Kraków P+R, Zakopane', 12], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 2 nights (Kraków + mountains)', 38], ['Food & drink — ~€15/day × 3 days', 45], ['Travel insurance + EHIC / breakdown', 15], ['Contingency / souvenirs', 25]];
+    var rows = [{ label:(has4?'4-day core trip':'3-day core trip')+' · '+(has4?3:2)+' nights', v:'€'+BASE, base:true },
+                { label:'what the core covers — est., ÷3', grouphead:true }];
+    core.forEach(function(c){ rows.push({ label:c[0], v:'€'+c[1], sub:true }); });
 
     // sum every selected option delta EXCEPT length (its −35 is already in BASE)
+    var addRows=[];
     Object.keys(sel).forEach(function(g){
       if(g==='length') return;
       var vals = TYPE[g]==='multi' ? sel[g] : (sel[g]?[sel[g]]:[]);
       vals.forEach(function(v){
         var p=priceOf(g,v);
-        if(p>0){ total+=p; rows.push({ label:lab(v), v:'+€'+p }); }
+        if(p>0){ total+=p; addRows.push({ label:lab(v), v:'+€'+p }); }
       });
     });
-    if(ex>0) rows.push({ label:ex+' extra night'+(ex>1?'s':'')+' (lodging)', v:'+€'+(18*ex) });
+    if(ex>0) addRows.push({ label:ex+' extra night'+(ex>1?'s':'')+' (lodging)', v:'+€'+(18*ex) });
+    if(addRows.length){ rows.push({ label:'your add-ons', grouphead:true }); rows=rows.concat(addRows); }
 
     var days=(has4?4:3)+ex, nights=(has4?3:2)+ex;
     // animate total
@@ -245,7 +254,7 @@
     lastTotal=total;
     sd.innerHTML='<b>'+days+' days</b> · '+nights+' nights';
     mbT.textContent='€'+total; mbD.textContent=days+' days · per person';
-    bdEl.innerHTML = rows.map(function(r){ return '<div class="row'+(r.base?' base':'')+'"><span>'+r.label+'</span><span class="v">'+r.v+'</span></div>'; }).join('');
+    bdEl.innerHTML = rows.map(function(r){ var cls=r.base?' base':(r.sub?' sub':(r.grouphead?' grouphead':'')); return '<div class="row'+cls+'"><span>'+r.label+'</span><span class="v">'+(r.v||'')+'</span></div>'; }).join('');
     return { total:total, days:days, nights:nights };
   }
 
