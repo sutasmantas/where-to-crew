@@ -33,7 +33,7 @@
 
   /* ---------- short labels for breakdown / leaning / bookings ---------- */
   var LABEL = {
-    '4d':'4-day trip','3d':'3-day trip (−€35)',
+    '4d':'4-day trip','3d':'3-day trip (−€31)',
     skip:'Skip Day 4', bochnia:'Bochnia Salt Mine', wieliczka:'Wieliczka Salt Mine', warsaw:'Warsaw stopover',
     none:'No queue pass', fast:'Fast Pass', energy:'Energy Pass',
     '1day':'Energylandia',
@@ -215,22 +215,23 @@
     var bdEl=document.getElementById('breakdown');
 
     if(!L){
-      st.textContent='≈ €250–340'; sd.textContent='Pick a trip length to start your total';
-      mbT.textContent='€250–340'; mbD.textContent='pick your options';
-      bdEl.innerHTML='<div class="row"><span>Choose a trip length to begin</span><span class="v">≈ €250–340</span></div>';
+      st.textContent='≈ €215–435'; sd.textContent='Pick a trip length to start your total';
+      mbT.textContent='€215–435'; mbD.textContent='pick your options';
+      bdEl.innerHTML='<div class="row"><span>Choose a trip length to begin</span><span class="v">≈ €215–435</span></div>';
       lastTotal=null;
       persist(null,null,null);
       return;
     }
-    var BASE = has4 ? 285 : 250;
-    var total = BASE + 18*ex;
-    // What the core actually covers — real May-2026 estimates, split 3 ways; these sum to BASE.
-    // (The hike + its access are NOT here — they're your Day-3 choice below, so the base assumes nothing.)
+    // Realistic MINIMUM — built bottom-up from real May-2026 costs (split 3 ways), NOT padded
+    // to a target. No souvenirs/discretionary spend (add your own buffer). Beds ~€16/night.
+    // The hike + its access are NOT here — they're your Day-3 choice below, so the base assumes nothing.
     var core = has4
-      ? [['Fuel — round trip ~1,700 km ÷ 3', 62], ['Tolls + parking — A4 gate, Kraków P+R, Zakopane', 12], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 3 nights (Kraków + 2 in the mountains)', 56], ['Food & drink — ~€15/day × 4 days', 60], ['Travel insurance + EHIC / breakdown', 15], ['Contingency / souvenirs', 27]]
-      : [['Fuel — round trip ~1,700 km ÷ 3', 62], ['Tolls + parking — A4 gate, Kraków P+R, Zakopane', 12], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 2 nights (Kraków + mountains)', 38], ['Food & drink — ~€15/day × 3 days', 45], ['Travel insurance + EHIC / breakdown', 15], ['Contingency / souvenirs', 25]];
+      ? [['Fuel — round trip ~1,700 km, ~7 L/100 ÷ 3', 62], ['Tolls + parking — A4 gate + Kraków/Zakopane', 8], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 3 nights × ~€16', 48], ['Food — cheap eats + groceries, ~€15/day × 4', 60], ['Travel insurance + EHIC', 15]]
+      : [['Fuel — round trip ~1,700 km, ~7 L/100 ÷ 3', 62], ['Tolls + parking — A4 gate + Kraków/Zakopane', 8], ['Energylandia 1-day ticket (229 zł)', 53], ['Beds — 2 nights × ~€16', 32], ['Food — cheap eats + groceries, ~€15/day × 3', 45], ['Travel insurance + EHIC', 15]];
+    var BASE = core.reduce(function(s,c){ return s+c[1]; }, 0);   // base = the honest sum (4d €246 · 3d €215)
+    var total = BASE + 16*ex;                                      // each extra night ≈ €16 (a bed ÷3), same as the core
     var rows = [{ label:(has4?'4-day core trip':'3-day core trip')+' · '+(has4?3:2)+' nights', v:'€'+BASE, base:true },
-                { label:'what the core covers — est., ÷3', grouphead:true }];
+                { label:'realistic minimum · est. ÷3 · no souvenirs', grouphead:true }];
     core.forEach(function(c){ rows.push({ label:c[0], v:'€'+c[1], sub:true }); });
 
     // sum every selected option delta EXCEPT length (its −35 is already in BASE)
@@ -243,7 +244,7 @@
         if(p>0){ total+=p; addRows.push({ label:lab(v), v:'+€'+p }); }
       });
     });
-    if(ex>0) addRows.push({ label:ex+' extra night'+(ex>1?'s':'')+' (lodging)', v:'+€'+(18*ex) });
+    if(ex>0) addRows.push({ label:ex+' extra night'+(ex>1?'s':'')+' (~€16 each)', v:'+€'+(16*ex) });
     if(addRows.length){ rows.push({ label:'your add-ons', grouphead:true }); rows=rows.concat(addRows); }
 
     var days=(has4?4:3)+ex, nights=(has4?3:2)+ex;
@@ -545,10 +546,10 @@
   // Picksets per Enhancements §1 (kept in sync with the Logic §3 deltas; the live total is the source of truth).
   // Lodging picks (night1/base2/night2/night3) are €0 deltas — they only feed the bookings list, never the price.
   var PRESETS={
-    lowest:{ length:'3d', pass:'none', hike:'rusinowa', stops:['augustow','suwalki-plaza'], krakowEve:['oldtown','krakus'], night1:'atlantis', base2:'zakopane', night2:'wielka-krokiew', mtnEvening:['karczma'], day4:null, addons:[], breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger', energylandia:'1day' },        // ≈ €268
-    balanced:{ length:'4d', pass:'none', hike:'morskie', mokAccess:'minibus', stops:['augustow','raj','kielce-echo'], krakowEve:['oldtown','cruise'], night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', addons:['gubalowka'], mtnEvening:['baths'], day4:'bochnia', breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger', energylandia:'1day' },  // ≈ €362
-    thrill:{ length:'4d', energylandia:'1day', pass:'energy', hike:'morskie', mokAccess:'minibus', addons:['kasprowy','gubalowka','dunajec','czorsztyn-toboggan'], krakowEve:['arcadebee','vr'], night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', day4:'bochnia', breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger' },  // ≈ €472 — overloads Day 3 on purpose
-    chill:{ length:'4d', pass:'none', hike:'koscieliska', krakowEve:['oldtown','cruise','forum'], mtnEvening:['baths','cook-bacowka'], buffer:'add', bufferWhere:'krakow', bufferActivity:'chill-krakow', bufferNight:'bn-gregtom', day4:'skip', night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', stops:['augustow'], breakDrive:'through', arrival:'same-evening', weather:'trigger', energylandia:'1day' }  // ≈ €345
+    lowest:{ length:'3d', pass:'none', hike:'rusinowa', stops:['augustow','suwalki-plaza'], krakowEve:['oldtown','krakus'], night1:'atlantis', base2:'zakopane', night2:'wielka-krokiew', mtnEvening:['karczma'], day4:null, addons:[], breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger', energylandia:'1day' },        // ≈ €233
+    balanced:{ length:'4d', pass:'none', hike:'morskie', mokAccess:'minibus', stops:['augustow','raj','kielce-echo'], krakowEve:['oldtown','cruise'], night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', addons:['gubalowka'], mtnEvening:['baths'], day4:'bochnia', breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger', energylandia:'1day' },  // ≈ €323
+    thrill:{ length:'4d', energylandia:'1day', pass:'energy', hike:'morskie', mokAccess:'minibus', addons:['kasprowy','gubalowka','dunajec','czorsztyn-toboggan'], krakowEve:['arcadebee','vr'], night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', day4:'bochnia', breakDrive:'through', buffer:'no', arrival:'same-evening', weather:'trigger' },  // ≈ €433 — overloads Day 3 on purpose
+    chill:{ length:'4d', pass:'none', hike:'koscieliska', krakowEve:['oldtown','cruise','forum'], mtnEvening:['baths','cook-bacowka'], buffer:'add', bufferWhere:'krakow', bufferActivity:'chill-krakow', bufferNight:'bn-gregtom', day4:'skip', night1:'gregtom', base2:'zakopane', night2:'stara-polana', night3:'n3-stara-polana', stops:['augustow'], breakDrive:'through', arrival:'same-evening', weather:'trigger', energylandia:'1day' }  // ≈ €301
   };
   var activePreset=null;
   function clearPreset(){ activePreset=null; document.querySelectorAll('.preset').forEach(function(p){ p.classList.remove('active'); }); }
