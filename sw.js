@@ -4,7 +4,7 @@
    images (they don't change). Cross-origin (Supabase/Worker API, CDN libs, map
    tiles) is left untouched. Versioned cache + skipWaiting + clients.claim so a
    new deploy takes over immediately. This is the offline support, done right. */
-var CACHE = 'wtc-v8';
+var CACHE = 'wtc-v9';
 // Resolve the app-shell as ABSOLUTE same-origin URLs relative to THIS worker's
 // location (e.g. .../where-to-crew/), so addAll works under any subpath.
 var BASE = self.location.href.replace(/sw\.js(\?.*)?$/, '');

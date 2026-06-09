@@ -47,7 +47,7 @@
     var days = (has4?4:3)+ex, nights=(has4?3:2)+ex;
 
     /* per-day clock timeline */
-    var HIKE_H={morskie:10,fivelakes:10,pieniny:9,slovak:10,koscieliska:4,rusinowa:3,chill:4,strazyska:3,chocholowska:5,gesia:4};
+    var HIKE_H={morskie:10,fivelakes:8,pieniny:9,slovak:10,koscieliska:4,rusinowa:3,chill:4,strazyska:3,chocholowska:5,gesia:4};
     var dayblocks=[];
 
     // Day 1
