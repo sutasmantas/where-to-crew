@@ -415,7 +415,6 @@
     if(sel.stops.indexOf('raj')>=0) add('raj','Jaskinia Raj cave timed slot','pre-book');
     if(sel.krakowEve.indexOf('nowahuta')>=0) add('nowahuta','Nowa Huta Trabant tour','book the slot');
     if(sel.krakowEve.indexOf('arcadebee')>=0) add('arcadebee','Arcade Bee — reserve a room','arcadebee.pl — fills on evenings');
-    if(sel.mtnEvening.indexOf('cook-bacowka')>=0) add('bacowka','Bacówka cheese-grill','check / booking');
     if(sel.bufferActivity==='auschwitz') add('auschwitz','Auschwitz timed pass (free)','book weeks ahead',true);
     // lodging
     if(sel.night1) add('night1','Night 1 — Kraków lodging','free-cancellation',true);
