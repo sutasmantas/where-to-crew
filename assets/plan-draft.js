@@ -406,7 +406,7 @@
     function add(id,name,where,sells){ r.push({id:id,name:name,where:where,sells:!!sells}); }
     if(sel.energylandia) add('energylandia','Energylandia e-tickets (~€53)','ticket.energylandia.pl — online beats the gate');
     if(sel.pass==='fast'||sel.pass==='energy') add('pass','Queue pass ('+lab(sel.pass)+')','ticket.energylandia.pl, with tickets');
-    if((sel.hike==='morskie' && sel.mokAccess==='drive-park') || sel.hike==='fivelakes') add('mokParking','Tatra parking e-ticket — Palenica (Morskie Oko / Five Lakes) or Bar Fis minibus','tpn.gov.pl — prebook, sells out, no cash',true);
+    if((sel.hike==='morskie' && sel.mokAccess==='drive-park') || sel.hike==='fivelakes') add('mokParking','Trailhead: Bar Fis minibus (no booking, ~15–20 zł) — Five Lakes / Morskie Oko','from Zakopane, ul. Kościuszki 22; only book TPN parking if you drive',false);
     if(sel.addons.indexOf('kasprowy')>=0) add('kasprowy','Kasprowy Wierch timed slot','pkl.pl',true);
     if(sel.hike==='slovak') add('slovak','Lomnický štít cable-car slot + passport/ID','vt.sk',true);
     if(sel.addons.indexOf('dunajec')>=0 || sel.hike==='pieniny') add('dunajec','Dunajec raft (seasonal)','book once');

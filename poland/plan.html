@@ -573,8 +573,8 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
         note:'Cover rides + medical + mountain rescue; all 3 drivers named.', on:true },
       { id:'esim', name:'EU eSIM (data abroad)', where:'Airalo / Holafly / etc.', url:'https://www.airalo.com/poland-esim', price:'~€5–10', when:'−1 wk', sells:false, admin:true,
         note:'LT SIMs (Tele2/Telia/Bite) opted out of free EU roaming.', on:true },
-      { id:'mokparking', name:'Tatra trailhead parking e-ticket — Palenica Białczańska', where:'tpn.gov.pl', url:'https://tpn.gov.pl/parkingi-morskie-oko', price:'~35–75 zł (book ≥3 days out)', when:'−3 days', sells:true,
-        note:'The Morskie Oko / Five Lakes trail starts at Palenica Białczańska — parking is E-ticket ONLY, no cash on site, sells out before ~08:00. Or take the Bar Fis minibus from Zakopane (no booking). + ~12 zł pp TPN entry on arrival.', on: (sel.hike==='morskie' && sel.mokAccess==='drive-park') || sel.hike==='fivelakes' },
+      { id:'mokparking', name:'Get to the trailhead — Bar Fis minibus (no booking)', where:'Bar Fis, ul. Kościuszki 22, Zakopane', url:'', price:'minibus ~15–20 zł pp one way', when:'on the day', sells:false,
+        note:'EASIEST — just take the Bar Fis minibus: NO booking, ~40 min, leaves when full (wait ≤~30 min). Five Lakes & Morskie Oko share this trailhead. + ~12 zł pp TPN park entry on arrival. Only if you insist on driving your own car: pre-book the TPN parking e-ticket (tpn.gov.pl/parkingi-morskie-oko, ≥3 days out, sells out before ~08:00, no cash).', on: (sel.hike==='morskie' && sel.mokAccess==='drive-park') || sel.hike==='fivelakes' },
       { id:'cash', name:'Withdraw some złoty cash', where:'bank ATM', url:'', price:'', when:'−3 days', sells:false, admin:true,
         note:'For meters, lockers, small vendors. Decline DCC, pay in złoty.', on:true }
     ];
