@@ -518,7 +518,7 @@
      Compare tables (hike · pass · day4)
      ============================================================ */
   var CMP_EXTRA = {
-    hike:{ morskie:['Busy','Full day','Iconic lake + Czarny Staw'], koscieliska:['Quiet','Half-day','Valley + show-cave'], rusinowa:['Quiet','~1 h','Panorama for least effort'], fivelakes:['Moderate','Full day · hard','Waterfall + 5 lakes'], pieniny:['Moderate','Full day','Clifftop + raft (incl.)'], chill:['Calm','Half-day','Lake + SUP'], slovak:['Varies','Full day','Border — passport'], strazyska:['Quiet','~3 h','Short waterfall walk'], chocholowska:['Quiet','~5 h','Longest wild valley'], gesia:['Empty','~4 h','Meadow summit'] },
+    hike:{ morskie:['Busy','~8 h','Iconic lake + Czarny Staw'], koscieliska:['Quiet','~4 h','Easy valley + show-cave'], rusinowa:['Quiet','~3 h','Most view for least effort'], fivelakes:['Moderate','~8 h','5 lakes + Poland’s tallest waterfall'], pieniny:['Moderate','~9 h','Clifftop summit + gorge raft'], chill:['Calm','~4 h','Lake + SUP'], slovak:['Varies','~9 h','Cross-border day — passport'], strazyska:['Quiet','~3 h','Short waterfall walk'], chocholowska:['Quiet','~5 h','Longest wild valley'], gesia:['Empty','~4 h','Meadow summit'] },
     pass:{ none:['Busiest','—','Rope-drop discipline'], fast:['Skips 5','—','One skip each coaster'], energy:['Skips ~14','—','The works, busy days'] },
     day4:{ skip:['—','0 h','Relaxed drive home'], bochnia:['Fewer','~3 h','Slide + salt-lake boat'], wieliczka:['Busiest','~3 h','Famous carved chapel'], warsaw:['—','split','Overnight halves the drive'] }
   };
