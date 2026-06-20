@@ -100,6 +100,33 @@
   .drawer footer{ padding:16px 20px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:10px; background:var(--forest-2); }
   .drawer .empty-d{ color:var(--paper-soft); font-size:.92rem; padding:30px 0; text-align:center; }
 
+  /* play tools (timer / who-goes-first / dice) */
+  .tools-fab{ position:fixed; left:18px; bottom:18px; z-index:50; }
+  .tools{ position:fixed; left:0; top:0; bottom:0; width:min(380px,92vw); z-index:90; background:var(--forest-2);
+    border-right:1px solid var(--line); transform:translateX(-100%); transition:transform .4s var(--ease); display:flex; flex-direction:column; }
+  .tools.open{ transform:none; }
+  .tools header{ padding:20px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; }
+  .tools header h2{ font-size:1.2rem; }
+  .tools .close{ background:none; border:0; color:var(--paper); font-size:1.6rem; cursor:pointer; line-height:1; }
+  .tools .body{ flex:1; overflow:auto; padding:18px 20px; display:flex; flex-direction:column; gap:22px; }
+  .tool{ border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .tool h3{ font-size:.95rem; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .tool h3 .ico{ font-size:1.1rem; }
+  .row-btns{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tbtn{ font-family:var(--mono); font-weight:700; font-size:.74rem; color:var(--paper); background:var(--forest-3);
+    border:1px solid var(--line); border-radius:100px; padding:8px 13px; cursor:pointer; transition:.2s var(--ease); }
+  .tbtn:hover{ border-color:var(--terra-2); }
+  .tbtn.go{ background:var(--terra); border-color:var(--terra); color:var(--forest); }
+  .timer-face{ font-family:var(--mono); font-weight:700; font-size:2.6rem; letter-spacing:.02em; text-align:center; margin:4px 0 12px; color:var(--paper); }
+  .timer-face.done{ color:var(--terra-2); animation:tflash .5s steps(1) 6; }
+  @keyframes tflash{ 50%{ opacity:.25; } }
+  @media(prefers-reduced-motion:reduce){ .timer-face.done{ animation:none; } }
+  .spin-name{ font-family:var(--display); font-weight:800; font-size:1.8rem; text-align:center; margin:6px 0 12px; min-height:2.2rem; color:var(--terra-2); }
+  .names-in{ width:100%; background:var(--forest-3); border:1px solid var(--line); color:var(--paper); border-radius:8px; padding:9px 11px; font-family:var(--sans); font-size:.85rem; margin-bottom:10px; }
+  .dice-face{ font-family:var(--display); font-weight:800; font-size:2.6rem; text-align:center; margin:4px 0 12px; color:var(--paper); }
+  .toggle{ display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--paper-soft); margin-top:10px; cursor:pointer; }
+  .toggle input{ accent-color:var(--terra); width:16px; height:16px; }
+
   @media print{
     .nav,.bg-amb,.grain,.drive,.routebar,.transition,.journey,.controls,.cg-grid,.picks-fab,.drawer-bg,.drawer,.footer,.to-start,.cg-head .row{ display:none!important; }
     #printArea{ display:block!important; color:#000; } body{ background:#fff; color:#000; }
@@ -185,6 +212,46 @@
 </aside>
 
 <div id="printArea"></div>
+
+<button class="btn tools-fab" id="openTools" data-cursor="label" data-label="Tools"><span class="fill"></span><span class="lbl">🎲 Play tools</span></button>
+<aside class="tools" id="tools" aria-label="Play tools">
+  <header><h2>Play tools</h2><button class="close" id="closeTools" aria-label="Close">×</button></header>
+  <div class="body">
+    <div class="tool">
+      <h3><span class="ico">⏱</span> Timer</h3>
+      <div class="timer-face" id="timerFace">0:60</div>
+      <div class="row-btns" style="margin-bottom:8px;">
+        <button class="tbtn" data-sec="30">0:30</button>
+        <button class="tbtn" data-sec="60">1:00</button>
+        <button class="tbtn" data-sec="120">2:00</button>
+        <button class="tbtn" data-sec="180">3:00</button>
+        <button class="tbtn" data-sec="300">5:00</button>
+      </div>
+      <div class="row-btns">
+        <button class="tbtn go" id="timerStart">Start</button>
+        <button class="tbtn" id="timerReset">Reset</button>
+      </div>
+    </div>
+
+    <div class="tool">
+      <h3><span class="ico">🎯</span> Who goes first</h3>
+      <div class="spin-name" id="spinName">—</div>
+      <input class="names-in" id="namesIn" value="P1, P2, P3, P4" aria-label="Crew names, comma separated">
+      <div class="row-btns"><button class="tbtn go" id="spinBtn">Spin</button></div>
+    </div>
+
+    <div class="tool">
+      <h3><span class="ico">🎲</span> Dice</h3>
+      <div class="dice-face" id="diceFace">—</div>
+      <div class="row-btns">
+        <button class="tbtn" data-die="6">Roll d6</button>
+        <button class="tbtn go" data-die="8">Punishment d8</button>
+        <button class="tbtn" id="targetBtn">21 target (15–30)</button>
+      </div>
+      <label class="toggle"><input type="checkbox" id="driverSafe"> Driver-safe (1–5 only)</label>
+    </div>
+  </div>
+</aside>
 
 <!-- libs (CDN, pinned, no build) -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
@@ -354,6 +421,51 @@ window.WTCM_onReady = function (ctx) {
     }).join(''):'<p>No games picked.</p>');
     window.print();
   });
+
+  /* ── Play tools: timer · who-goes-first · dice ── */
+  (function initTools(){
+    var panel=document.getElementById('tools');
+    document.getElementById('openTools').addEventListener('click', function(){ panel.classList.add('open'); });
+    document.getElementById('closeTools').addEventListener('click', function(){ panel.classList.remove('open'); });
+
+    // Timer
+    var face=document.getElementById('timerFace'), startBtn=document.getElementById('timerStart');
+    var total=60, left=60, tick=null, beep=null;
+    function fmt(s){ var m=Math.floor(s/60); return m+':'+('0'+(s%60)).slice(-2); }
+    function paint(){ face.textContent=fmt(left); }
+    function stop(){ if(tick){ clearInterval(tick); tick=null; } startBtn.textContent='Start'; }
+    function ding(){ try{ var Ctx=window.AudioContext||window.webkitAudioContext; if(!Ctx) return;
+      beep=beep||new Ctx(); var o=beep.createOscillator(), g=beep.createGain(); o.connect(g); g.connect(beep.destination);
+      o.frequency.value=880; g.gain.value=0.12; o.start(); o.stop(beep.currentTime+0.4); }catch(e){} }
+    function run(){ if(tick) return; if(left<=0){ left=total; }
+      face.classList.remove('done'); startBtn.textContent='Pause';
+      tick=setInterval(function(){ left--; paint(); if(left<=0){ stop(); face.classList.add('done'); ding(); } }, 1000);
+    }
+    startBtn.addEventListener('click', function(){ if(tick) stop(); else run(); });
+    document.getElementById('timerReset').addEventListener('click', function(){ stop(); left=total; face.classList.remove('done'); paint(); });
+    panel.querySelectorAll('[data-sec]').forEach(function(b){ b.addEventListener('click', function(){ stop(); total=+b.dataset.sec; left=total; face.classList.remove('done'); paint(); }); });
+    paint();
+
+    // Who goes first
+    var spinName=document.getElementById('spinName');
+    document.getElementById('spinBtn').addEventListener('click', function(){
+      var names=document.getElementById('namesIn').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+      if(!names.length){ spinName.textContent='—'; return; }
+      var n=0, ticks=14+Math.floor(Math.random()*8);
+      var iv=setInterval(function(){ spinName.textContent=names[Math.floor(Math.random()*names.length)]; n++;
+        if(n>=ticks){ clearInterval(iv); spinName.textContent=names[Math.floor(Math.random()*names.length)]; } }, 70);
+    });
+
+    // Dice
+    var diceFace=document.getElementById('diceFace'), driverSafe=document.getElementById('driverSafe');
+    function roll(max){ var lo=1, hi=max; if(driverSafe.checked && max===8){ hi=5; }
+      var n=0, ticks=10+Math.floor(Math.random()*6);
+      var iv=setInterval(function(){ diceFace.textContent=(lo+Math.floor(Math.random()*(hi-lo+1))); n++;
+        if(n>=ticks) clearInterval(iv); }, 60);
+    }
+    panel.querySelectorAll('[data-die]').forEach(function(b){ b.addEventListener('click', function(){ roll(+b.dataset.die); }); });
+    document.getElementById('targetBtn').addEventListener('click', function(){ diceFace.textContent='Target '+(15+Math.floor(Math.random()*16)); });
+  })();
 
   render();
   updatePickUI();
