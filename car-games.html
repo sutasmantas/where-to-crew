@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<title>Car games · Poland — Where To, Crew?</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/motion.css">
+<style>
+  .drive{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .drive .sky{ position:absolute; inset:0; background:linear-gradient(180deg, var(--sky-top,#10201a) 0%, var(--sky-bot,#16241c) 100%); }
+  .drive .stars{ position:absolute; inset:0; opacity:0; background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.2px 1.2px at 28% 32%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.4px 1.4px at 44% 12%, rgba(243,237,225,.85), transparent),
+    radial-gradient(1.5px 1.5px at 72% 16%, rgba(243,237,225,.9), transparent),
+    radial-gradient(1.3px 1.3px at 36% 44%, rgba(243,237,225,.7), transparent),
+    radial-gradient(1.5px 1.5px at 92% 10%, rgba(243,237,225,.85), transparent); }
+  .drive .orb{ position:absolute; width:130px; height:130px; left:var(--orb-x,12%); top:var(--orb-y,72%); transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 50% 50%, var(--orb,#d98c5f) 0%, transparent 66%); filter:blur(3px); opacity:.8; }
+  .drive .orb::after{ content:''; position:absolute; inset:42px; border-radius:50%; background:var(--orb-core,#e7a877); box-shadow:0 0 60px 16px var(--orb-core,#e7a877); }
+  .drive .haze{ position:absolute; left:-12%; right:-12%; bottom:-4%; height:62%; background:radial-gradient(120% 100% at 50% 118%, var(--glow,rgba(192,97,63,.26)) 0%, transparent 70%); }
+
+  main{ position:relative; z-index:2; }
+  .page-top{ padding-top:104px; }
+  .cg-head .display{ font-size:clamp(2.3rem,5.2vw,4rem); }
+  .cg-head .lede{ margin-top:18px; max-width:64ch; }
+  .cg-head .lede b{ color:var(--paper); }
+
+  /* controls */
+  .controls{ position:sticky; top:64px; z-index:40; background:rgba(15,24,19,.9); backdrop-filter:blur(12px);
+    border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin:26px 0 8px; display:flex; flex-direction:column; gap:12px; }
+  .ctl-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .search{ flex:1 1 240px; min-width:190px; display:flex; align-items:center; gap:8px; background:var(--forest-2);
+    border:1px solid var(--line); border-radius:100px; padding:10px 16px; }
+  .search input{ flex:1; background:none; border:0; color:var(--paper); font-family:var(--sans); font-size:.95rem; outline:none; }
+  .search input::placeholder{ color:var(--paper-soft); }
+  select.ctl{ background:var(--forest-2); color:var(--paper); border:1px solid var(--line); border-radius:100px;
+    padding:9px 14px; font-family:var(--sans); font-weight:600; font-size:.82rem; cursor:pointer; }
+  .chips{ display:flex; gap:7px; flex-wrap:wrap; }
+  .chip-g{ background:transparent; color:var(--paper-soft); border:1px solid var(--line); border-radius:100px;
+    padding:7px 13px; font-family:var(--mono); font-weight:700; font-size:.72rem; letter-spacing:.04em; cursor:pointer; transition:.25s var(--ease); white-space:nowrap; }
+  .chip-g:hover{ color:var(--paper); border-color:var(--paper-soft); }
+  .chip-g[aria-pressed="true"]{ background:var(--terra); color:var(--forest); border-color:var(--terra); }
+  .ctl-spacer{ flex:1; }
+  .count{ font-family:var(--mono); font-weight:700; font-size:.72rem; letter-spacing:.06em; color:var(--paper-soft); white-space:nowrap; }
+
+  /* grid */
+  .cg-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px; padding-block:24px 100px; }
+  .game{ background:var(--forest-2); border:1px solid var(--line); border-radius:16px; padding:20px 20px 18px;
+    display:flex; flex-direction:column; gap:12px; scroll-margin-top:150px; }
+  .game.flash{ animation:cgflash 1.6s var(--ease); }
+  @keyframes cgflash{ 0%,100%{ box-shadow:0 0 0 0 transparent; } 25%{ box-shadow:0 0 0 2px var(--terra); } }
+  @media(prefers-reduced-motion:reduce){ .game.flash{ animation:none; } }
+  .game-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .game h3{ font-size:1.18rem; line-height:1.15; }
+  .game .sec{ font-family:var(--mono); font-weight:700; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--terra-2); margin-bottom:6px; }
+  .pick-btn{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:transparent;
+    color:var(--paper-soft); font-size:1.1rem; cursor:pointer; transition:.25s var(--ease); display:grid; place-items:center; }
+  .pick-btn:hover{ border-color:var(--terra-2); color:var(--paper); }
+  .pick-btn[aria-pressed="true"]{ background:var(--terra); border-color:var(--terra); color:var(--forest); }
+  .meta{ display:flex; flex-wrap:wrap; gap:6px; }
+  .meta span{ font-family:var(--mono); font-size:.68rem; letter-spacing:.02em; color:var(--paper-soft); border:1px solid var(--line); border-radius:6px; padding:5px 8px; }
+  .meta span b{ color:var(--paper); font-weight:700; }
+  .how{ font-size:.92rem; color:var(--paper); }
+  .how ol{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:5px; }
+  .how p{ margin:0; }
+  .win{ font-size:.88rem; color:var(--paper-soft); border-left:2px solid var(--terra); padding-left:10px; }
+  .win b{ color:var(--terra-2); font-weight:700; }
+  .note{ font-size:.82rem; color:var(--paper-soft); font-style:italic; }
+  details.bank{ border-top:1px solid var(--line); padding-top:10px; }
+  details.bank summary{ cursor:pointer; font-family:var(--mono); font-weight:700; font-size:.74rem; letter-spacing:.04em; color:var(--terra-2);
+    list-style:none; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  details.bank summary::-webkit-details-marker{ display:none; }
+  details.bank summary .draw{ font-family:var(--mono); font-weight:700; font-size:.64rem; border:1px solid var(--line); border-radius:100px;
+    padding:5px 10px; color:var(--paper); background:transparent; cursor:pointer; }
+  details.bank summary .draw:hover{ background:var(--terra); border-color:var(--terra); color:var(--forest); }
+  .drawn{ margin:10px 0 4px; padding:10px 12px; background:var(--forest-3); border:1px dashed var(--terra); border-radius:8px; font-size:.9rem; color:var(--paper); display:none; }
+  .drawn.show{ display:block; }
+  .drawn .k{ font-family:var(--mono); font-weight:700; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-2); display:block; margin-bottom:4px; }
+  .bank ul{ margin:10px 0 2px; padding-left:18px; display:flex; flex-direction:column; gap:4px; font-size:.86rem; color:var(--paper-soft); }
+  .cg-empty{ text-align:center; color:var(--paper-soft); padding:60px 0; font-size:1rem; }
+
+  /* picks drawer */
+  .picks-fab{ position:fixed; right:18px; bottom:18px; z-index:50; }
+  .drawer-bg{ position:fixed; inset:0; z-index:80; background:rgba(6,12,9,.6); opacity:0; pointer-events:none; transition:.3s; }
+  .drawer-bg.open{ opacity:1; pointer-events:auto; }
+  .drawer{ position:fixed; top:0; right:0; bottom:0; width:min(420px,92vw); z-index:90; background:var(--forest-2);
+    border-left:1px solid var(--line); transform:translateX(100%); transition:transform .4s var(--ease); display:flex; flex-direction:column; }
+  .drawer.open{ transform:none; }
+  .drawer header{ padding:20px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; }
+  .drawer header h2{ font-size:1.2rem; }
+  .drawer .close{ background:none; border:0; color:var(--paper); font-size:1.6rem; cursor:pointer; line-height:1; }
+  .drawer .body{ flex:1; overflow:auto; padding:16px 20px; }
+  .pick-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); }
+  .pick-item .nm{ font-weight:600; font-size:.95rem; }
+  .pick-item .mt{ font-family:var(--mono); font-size:.66rem; color:var(--paper-soft); margin-top:3px; }
+  .pick-item button{ background:none; border:0; color:var(--terra-2); cursor:pointer; font-family:var(--mono); font-weight:700; font-size:.7rem; }
+  .drawer footer{ padding:16px 20px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:10px; background:var(--forest-2); }
+  .drawer .empty-d{ color:var(--paper-soft); font-size:.92rem; padding:30px 0; text-align:center; }
+
+  @media print{
+    .nav,.bg-amb,.grain,.drive,.routebar,.transition,.journey,.controls,.cg-grid,.picks-fab,.drawer-bg,.drawer,.footer,.to-start,.cg-head .row{ display:none!important; }
+    #printArea{ display:block!important; color:#000; } body{ background:#fff; color:#000; }
+  }
+  #printArea{ display:none; padding:20px; }
+  #printArea h2{ margin-bottom:12px; } #printArea .pg{ margin-bottom:18px; page-break-inside:avoid; }
+  #printArea .pg h3{ font-size:1.1rem; } #printArea .pg .m{ font-family:var(--mono); font-size:.8rem; color:#444; margin:4px 0; }
+</style>
+</head>
+<body data-screen-label="Poland — Car games" data-auto-env>
+
+<div class="preload" aria-hidden="true"><svg viewBox="0 0 340 120"><path class="pl-line" d="M14,86 C70,40 120,40 170,64 C220,88 270,88 326,44"/><circle class="pl-dot" cx="14" cy="86" r="6"/><circle class="pl-dot" cx="170" cy="64" r="6"/><circle class="pl-dot" cx="326" cy="44" r="6"/><text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text></svg></div>
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+<div class="transition"><span class="mark">Where To, Crew?</span></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+<div class="drive" aria-hidden="true"><div class="sky"></div><div class="stars"></div><div class="orb"></div><div class="haze"></div></div>
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<nav class="nav">
+  <a class="brand" href="index.html" data-transition><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="poland/plan.html" class="underline hide-sm" data-transition data-cursor="link">The plan</a>
+    <a class="btn" href="poland/sign-up.html" data-transition data-magnetic data-cursor="label" data-label="Join"><span class="fill"></span><span class="lbl">Join Poland</span></a>
+  </div>
+</nav>
+
+<main class="page-top">
+  <div class="wrap cg-head">
+    <p class="eyebrow" data-reveal data-reveal-mode="fade">Poland · the long drive</p>
+    <h1 class="display" data-reveal data-reveal="words">Car games for the road.</h1>
+    <p class="lede" data-reveal data-reveal-mode="fade">Every game from the kit — full rules, win conditions and ready-made prompt banks, so nothing has to be invented at 110&nbsp;km/h. Filter to the mood, <b>star</b> the ones you want, share the shortlist, and hit <b>Draw</b> to play on the spot. Built for four · no money on the line.</p>
+
+    <div class="controls">
+      <div class="ctl-row">
+        <label class="search"><span aria-hidden="true">🔎</span>
+          <input id="q" type="search" placeholder="Search games, rules, prompts…" aria-label="Search games">
+        </label>
+        <select class="ctl" id="fEnergy" aria-label="Energy"><option value="">Any energy</option><option>Low</option><option>Medium</option><option>High</option></select>
+        <select class="ctl" id="fWhere" aria-label="Where"><option value="">Anywhere</option><option value="car">In the car</option><option value="stop">At a stop</option></select>
+        <select class="ctl" id="fDriver" aria-label="Driver"><option value="">Any driver role</option><option value="plays">Driver can play</option><option value="limited">Driver limited</option><option value="excluded">Driver excluded</option></select>
+        <select class="ctl" id="fType" aria-label="Type"><option value="">Any type</option></select>
+      </div>
+      <div class="ctl-row">
+        <div class="chips" id="groups"></div>
+        <span class="ctl-spacer"></span>
+        <button class="chip-g" id="surprise" data-cursor="label" data-label="Roll">🎲 Surprise me</button>
+        <button class="chip-g" id="reset">Reset</button>
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="cg-grid" id="grid"></div>
+    <div class="cg-empty" id="empty" hidden>No games match those filters. <button id="clear2" style="background:none;border:0;color:var(--terra-2);cursor:pointer;font:inherit;text-decoration:underline">Clear filters</button></div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="index.html" data-transition>
+        <svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg>
+        Where To, Crew?
+      </a>
+      <p class="muted" style="margin-top:14px; max-width:30ch;">Plan the trip. Bring the crew.</p>
+    </div>
+    <div style="max-width:32ch;"><small>56 road-trip games · pick, share &amp; play. © 2026. · <a href="emergency.html" data-transition style="color:var(--terra-2);">🆘 Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<button class="btn btn--solid picks-fab" id="openPicks" data-magnetic data-cursor="label" data-label="Open"><span class="fill"></span><span class="lbl">★ Our picks · <span id="fabCount">0</span></span></button>
+
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer" aria-label="Our shortlist">
+  <header><h2>Our picks</h2><button class="close" id="closeDrawer" aria-label="Close">×</button></header>
+  <div class="body" id="picksBody"></div>
+  <footer>
+    <button class="btn" id="copyLink"><span class="fill"></span><span class="lbl">🔗 Copy share link</span></button>
+    <button class="btn" id="printPicks"><span class="fill"></span><span class="lbl">🖨 Print rules sheet</span></button>
+    <button class="chip-g" id="clearPicks" style="align-self:flex-start">Clear all</button>
+  </footer>
+</aside>
+
+<div id="printArea"></div>
+
+<!-- libs (CDN, pinned, no build) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });</script>
+<script src="assets/car-games-data.js"></script>
+<script>
+window.WTCM_onReady = function (ctx) {
+  var GAMES = window.CAR_GAMES || [], GROUPS = window.CAR_GROUPS || [];
+  var grid = document.getElementById('grid');
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function fields(g){
+    var m = g.meta;
+    var en = /high/i.test(m.energy) ? 'High' : /medium/i.test(m.energy) ? 'Medium' : 'Low';
+    var carW = /car/i.test(m.where), stopW = /stop/i.test(m.where);
+    var where = carW && stopW ? 'both' : stopW ? 'stop' : 'car';
+    var driver = 'plays';
+    if (/excluded/i.test(m.driver)) driver = 'excluded';
+    else if (/judges|sets up|draws|listens|moderat/i.test(m.driver)) driver = 'limited';
+    var type = m.type.split('·')[0].trim();
+    return { en:en, where:where, driver:driver, type:type };
+  }
+
+  /* type dropdown */
+  var fType = document.getElementById('fType');
+  var types = GAMES.map(function(g){ return fields(g).type; }).filter(function(v,i,a){ return a.indexOf(v)===i; }).sort();
+  types.forEach(function(t){ var o=document.createElement('option'); o.textContent=t; fType.appendChild(o); });
+
+  /* group chips */
+  var groupsEl = document.getElementById('groups'); var activeGroup = '';
+  GROUPS.forEach(function(gr){
+    var b=document.createElement('button'); b.className='chip-g'; b.textContent=gr.label; b.title=gr.hint;
+    b.setAttribute('aria-pressed','false'); b.dataset.key=gr.key;
+    b.addEventListener('click', function(){
+      activeGroup = activeGroup===gr.key ? '' : gr.key;
+      [].forEach.call(groupsEl.children, function(c){ c.setAttribute('aria-pressed', c.dataset.key===activeGroup); });
+      render();
+    });
+    groupsEl.appendChild(b);
+  });
+
+  /* picks state (localStorage + shareable URL) */
+  var KEY='wtc-car-picks'; var picks;
+  try{ picks=new Set(JSON.parse(localStorage.getItem(KEY)||'[]')); }catch(e){ picks=new Set(); }
+  var urlPicks=new URLSearchParams(location.search).get('picks');
+  if(urlPicks){ urlPicks.split(',').forEach(function(id){ if(GAMES.some(function(g){return g.id===id;})) picks.add(id); }); savePicks(); }
+  function savePicks(){ try{ localStorage.setItem(KEY, JSON.stringify(Array.from(picks))); }catch(e){} updatePickUI(); }
+  function togglePick(id){ picks.has(id)?picks.delete(id):picks.add(id); savePicks(); }
+
+  function bankHTML(g){
+    if(!g.banks) return '';
+    return g.banks.map(function(b,i){
+      var items=b.items.map(function(it){ return '<li>'+esc(it)+'</li>'; }).join('');
+      return '<details class="bank"><summary>'+esc(b.label)+' <button class="draw" data-draw="'+g.id+'|'+i+'" type="button">🎲 Draw</button></summary>'
+        +'<div class="drawn" data-drawn="'+g.id+'|'+i+'"></div><ul>'+items+'</ul></details>';
+    }).join('');
+  }
+  function card(g){
+    var f=fields(g);
+    var howInner = g.how.length>1 ? '<ol>'+g.how.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ol>' : '<p>'+esc(g.how[0])+'</p>';
+    var picked=picks.has(g.id);
+    return '<article class="game" id="g-'+g.id+'" data-id="'+g.id+'">'
+      +'<div class="game-top"><div><div class="sec">'+esc(g.section)+'</div><h3>'+esc(g.name)+'</h3></div>'
+      +'<button class="pick-btn" data-pick="'+g.id+'" aria-pressed="'+picked+'" aria-label="Add '+esc(g.name)+' to picks" title="Add to our picks">'+(picked?'★':'☆')+'</button></div>'
+      +'<div class="meta"><span><b>'+esc(g.meta.players)+'</b> players</span><span>'+esc(g.meta.where)+'</span><span>'+f.en+' energy</span>'
+      +'<span>Driver: '+esc(g.meta.driver)+'</span><span>'+esc(g.meta.setup)+'</span><span>'+esc(g.meta.type)+'</span></div>'
+      +'<div class="how">'+howInner+'</div>'
+      +'<div class="win"><b>Win/lose:</b> '+esc(g.win)+'</div>'
+      +(g.example?'<div class="note"><b>Example:</b> '+esc(g.example)+'</div>':'')
+      +(g.note?'<div class="note">'+esc(g.note)+'</div>':'')
+      +bankHTML(g)+'</article>';
+  }
+
+  var q=document.getElementById('q'), fEnergy=document.getElementById('fEnergy'), fWhere=document.getElementById('fWhere'), fDriver=document.getElementById('fDriver');
+  function matches(g){
+    var f=fields(g);
+    if(activeGroup && (g.tags||[]).indexOf(activeGroup)<0) return false;
+    if(fEnergy.value && f.en!==fEnergy.value) return false;
+    if(fWhere.value && f.where!==fWhere.value && f.where!=='both') return false;
+    if(fDriver.value && f.driver!==fDriver.value) return false;
+    if(fType.value && f.type!==fType.value) return false;
+    var term=q.value.trim().toLowerCase();
+    if(term){
+      var hay=(g.name+' '+g.section+' '+g.meta.type+' '+g.how.join(' ')+' '+g.win+' '+(g.note||'')+' '
+        +(g.banks||[]).map(function(b){return b.label+' '+b.items.join(' ');}).join(' ')).toLowerCase();
+      if(hay.indexOf(term)<0) return false;
+    }
+    return true;
+  }
+  function render(){
+    var list=GAMES.filter(matches);
+    grid.innerHTML=list.map(card).join('');
+    document.getElementById('count').textContent=list.length+' of '+GAMES.length+' games';
+    document.getElementById('empty').hidden=list.length>0;
+    if(window.WTCM_bindCursor) grid.querySelectorAll('[data-cursor]').forEach(window.WTCM_bindCursor);
+    return list;
+  }
+  [q,fEnergy,fWhere,fDriver,fType].forEach(function(el){ el.addEventListener('input', render); });
+  document.getElementById('reset').addEventListener('click', resetAll);
+  document.getElementById('clear2').addEventListener('click', resetAll);
+  function resetAll(){ q.value=''; fEnergy.value=''; fWhere.value=''; fDriver.value=''; fType.value='';
+    activeGroup=''; [].forEach.call(groupsEl.children, function(c){ c.setAttribute('aria-pressed','false'); }); render(); }
+
+  grid.addEventListener('click', function(e){
+    var pb=e.target.closest('[data-pick]');
+    if(pb){ var id=pb.dataset.pick; togglePick(id); pb.setAttribute('aria-pressed', picks.has(id)); pb.textContent=picks.has(id)?'★':'☆'; return; }
+    var db=e.target.closest('[data-draw]');
+    if(db){ e.preventDefault();
+      var parts=db.dataset.draw.split('|'); var g=GAMES.filter(function(x){return x.id===parts[0];})[0]; var bank=g.banks[+parts[1]];
+      var pick=bank.items[Math.floor(Math.random()*bank.items.length)];
+      var slot=grid.querySelector('[data-drawn="'+parts[0]+'|'+parts[1]+'"]');
+      slot.innerHTML='<span class="k">Drawn</span>'+esc(pick); slot.classList.add('show');
+      var det=db.closest('details'); if(det) det.open=true;
+    }
+  });
+
+  document.getElementById('surprise').addEventListener('click', function(){
+    var list=GAMES.filter(matches); if(!list.length) return;
+    var g=list[Math.floor(Math.random()*list.length)]; var el=document.getElementById('g-'+g.id);
+    if(ctx.lenis) ctx.lenis.scrollTo(el,{offset:-150}); else el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    if(g.banks && g.banks[0]){ var btn=el.querySelector('[data-draw]'); if(btn) setTimeout(function(){ btn.click(); },450); }
+  });
+
+  /* picks drawer */
+  var drawer=document.getElementById('drawer'), drawerBg=document.getElementById('drawerBg');
+  function openDrawer(o){ drawer.classList.toggle('open',o); drawerBg.classList.toggle('open',o); }
+  document.getElementById('openPicks').addEventListener('click', function(){ openDrawer(true); renderPicks(); });
+  document.getElementById('closeDrawer').addEventListener('click', function(){ openDrawer(false); });
+  drawerBg.addEventListener('click', function(){ openDrawer(false); });
+
+  function updatePickUI(){ document.getElementById('fabCount').textContent=picks.size;
+    var dr=document.getElementById('drawer'); if(dr && dr.classList.contains('open')) renderPicks(); }
+  function renderPicks(){
+    var body=document.getElementById('picksBody');
+    var list=GAMES.filter(function(g){ return picks.has(g.id); });
+    if(!list.length){ body.innerHTML='<div class="empty-d">No picks yet.<br>Tap ☆ on any game to build your shortlist, then share or print it.</div>'; return; }
+    body.innerHTML=list.map(function(g){ var f=fields(g);
+      return '<div class="pick-item"><div><div class="nm">'+esc(g.name)+'</div><div class="mt">'+esc(f.type)+' · '+esc(g.meta.players)+' · '+f.en+' energy</div></div><button data-remove="'+g.id+'">remove</button></div>';
+    }).join('');
+    body.querySelectorAll('[data-remove]').forEach(function(b){ b.addEventListener('click', function(){
+      picks.delete(b.dataset.remove); savePicks(); render();
+      var star=grid.querySelector('[data-pick="'+b.dataset.remove+'"]'); if(star){ star.setAttribute('aria-pressed','false'); star.textContent='☆'; }
+    }); });
+  }
+  document.getElementById('clearPicks').addEventListener('click', function(){
+    picks.clear(); savePicks(); render();
+    grid.querySelectorAll('[data-pick]').forEach(function(s){ s.setAttribute('aria-pressed','false'); s.textContent='☆'; });
+  });
+  document.getElementById('copyLink').addEventListener('click', function(){
+    var btn=document.getElementById('copyLink'), lbl=btn.querySelector('.lbl');
+    var url=location.origin+location.pathname+'?picks='+Array.from(picks).join(',');
+    function ok(){ var t=lbl.textContent; lbl.textContent='Copied ✓'; setTimeout(function(){ lbl.textContent=t; }, 1800); }
+    if(navigator.clipboard) navigator.clipboard.writeText(url).then(ok, function(){ prompt('Copy this link:', url); });
+    else prompt('Copy this link:', url);
+  });
+  document.getElementById('printPicks').addEventListener('click', function(){
+    var list=GAMES.filter(function(g){ return picks.has(g.id); });
+    var pa=document.getElementById('printArea');
+    pa.innerHTML='<h2>Our car games — Where To, Crew?</h2>'+(list.length?list.map(function(g){
+      return '<div class="pg"><h3>'+esc(g.name)+'</h3><div class="m">'+esc(g.meta.players)+' players · '+esc(g.meta.where)+' · '+esc(g.meta.type)+' · Driver: '+esc(g.meta.driver)+'</div><p>'+g.how.map(esc).join(' ')+'</p><p><b>Win/lose:</b> '+esc(g.win)+'</p></div>';
+    }).join(''):'<p>No games picked.</p>');
+    window.print();
+  });
+
+  render();
+  updatePickUI();
+  if(window.WTCM && WTCM.initReveals) WTCM.initReveals(document);
+};
+</script>
+<script src="assets/motion.js?v=2"></script>
+<script>if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }</script>
+</body>
+</html>
