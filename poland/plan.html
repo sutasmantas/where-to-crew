@@ -215,6 +215,15 @@
         .gm-btn:hover{ background:var(--terra-2); border-color:var(--terra-2); }
         .gm-btn.ghost{ background:transparent; color:var(--paper); border-color:var(--line); }
         .gm-btn.ghost:hover{ border-color:var(--terra-2); color:var(--paper); }
+        .leg-list{ list-style:none; margin:12px 0 14px; padding:0; display:flex; flex-direction:column; gap:8px; }
+        .leg-list li{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; padding-left:15px; position:relative; }
+        .leg-list li::before{ content:''; position:absolute; left:0; top:.5em; width:7px; height:7px; border-radius:50%; background:var(--terra); }
+        .leg-list li.anchor::before{ background:var(--paper-soft); }
+        .s-nm{ font-weight:700; color:var(--paper); }
+        .s-meta{ font-family:var(--mono); font-size:.72rem; color:var(--paper-soft); }
+        .s-meta .tier{ color:var(--terra-2); }
+        .wtoggle{ display:inline-flex; align-items:center; gap:8px; font-size:.85rem; color:var(--paper-soft); margin:0 0 18px; cursor:pointer; padding:9px 14px; border:1px solid var(--line); border-radius:100px; }
+        .wtoggle input{ accent-color:var(--terra); width:16px; height:16px; }
       </style>
       <div id="route-gmaps" class="route-gmaps"></div>
     </div>
@@ -732,54 +741,82 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       while(start < points.length-1){ var end=Math.min(start+10, points.length-1); links.push(url(points.slice(start,end+1))); start=end; }
       return links;
     }
-    function leg(title, sub, points){
-      points=points.filter(Boolean);
-      if(points.length<2) return '';
-      var links=chunkLinks(points);
+    function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+    // per-stop "worth it" detail: id -> [tier emoji, off-route time, why]
+    var SM={
+      augustow:['👍','~45 min in','lake swim, best leg-stretch'], raj:['⭐','~10 min off S7','Poland’s prettiest cave + hilltop castle'],
+      swietokrzyski:['👍','~30 min off S7','the one real mid-route hike'], krzemionki:['⭐','~45 min off S7','descend 5,000-yr Neolithic shafts'],
+      tykocin:['👍','off S61','baroque town + lunch'], cisowa:['⭐','~25 min off S61','glacial hills, quick photo climb'],
+      wigry:['👍','~20 min off route','clifftop lake monastery'], 'augustow-canal':['👍','in Augustów','historic lock-passage boat'],
+      kadzielnia:['👍','in Kielce','zip-line over a quarry'], debno:['👍','on the Nowy Targ road','15-min UNESCO wooden church'],
+      'warsaw-break':['👍','≈ halfway','Old Town + a milk bar'], 'suwalki-plaza':['🍔','best first PL break','food court + toilets, free parking'],
+      'lomza-veneda':['🍔','best-timed 2nd break','food court + Carrefour'], 'kielce-echo':['🍔','main Leg-B break','big food court, free covered parking'],
+      bonarka:['🍔','before the mountains','30+ eateries, fuel, free parking'], nowytarg:['🍔','last reset before Zakopane','supermarkets, toilets, cheap food']
+    };
+    var HM={ morskie:'the iconic lake + push to Czarny Staw', koscieliska:'prettiest valley + lit cave', rusinowa:'best panorama for least effort', fivelakes:'Poland’s tallest waterfall + 5 lakes', pieniny:'clifftop view + Dunajec gorge raft', slovak:'cable car / treetop walk across the border', strazyska:'short valley + waterfall', chocholowska:'the longest, wildest valley', gesia:'panoramic meadow summit, fewer people', chill:'turquoise quarry swim' };
+    var D4M={ bochnia:'140 m slide + salt-lake boat, fewer crowds', wieliczka:'famous carved salt chapel', warsaw:'split the drive home' };
+
+    function metaOf(id){ var m=SM[id]; return m ? ('<span class="tier">'+m[0]+'</span> '+m[1]+' · '+m[2]) : null; }
+    function nStop(id){ var qq=q(id); return {q:qq,label:qq.split(',')[0],meta:metaOf(id)}; }
+    function nRet(id){ if(id==='rb-warsaw') return {q:PLACE.warsaw,label:'Warsaw',meta:'<span class="tier">🛏️</span> overnight — splits the drive home'}; var b=RB[id]; var qq=PLACE[b]; return {q:qq,label:qq.split(',')[0],meta:metaOf(b)}; }
+    function A(qq,label,meta){ return {q:qq,label:label,meta:meta||null,anchor:true}; }
+
+    function leg(title, sub, nodes){
+      nodes=nodes.filter(Boolean); if(nodes.length<2) return '';
+      var links=chunkLinks(nodes.map(function(n){return n.q;}));
       var btns=links.map(function(u,i){ return '<a class="gm-btn" href="'+u+'" target="_blank" rel="noopener">🗺️ '+(links.length>1?'Open part '+(i+1):'Open in Google Maps')+'</a>'; }).join('');
-      return '<div class="leg"><div class="leg-h">'+title+'</div><div class="leg-sub">'+sub+' · '+points.length+' stops</div>'+
-        '<div class="leg-stops">'+points.map(function(p){return p.split(',')[0];}).join('<span class="arr">→</span>')+'</div><div class="leg-btns">'+btns+'</div></div>';
+      var list=nodes.map(function(n){ return '<li'+(n.anchor?' class="anchor"':'')+'><span class="s-nm">'+esc(n.label)+'</span>'+(n.meta?'<span class="s-meta">'+n.meta+'</span>':'')+'</li>'; }).join('');
+      return '<div class="leg"><div class="leg-h">'+title+'</div><div class="leg-sub">'+sub+' · '+nodes.length+' stops</div>'+
+        '<ol class="leg-list">'+list+'</ol><div class="leg-btns">'+btns+'</div></div>';
     }
 
     var base = sel.base2==='zator' ? 'zator' : 'zakopane';
+    var baseLabel = base==='zator' ? 'Zator' : 'Zakopane';
     var fourDay = sel.length!=='3d';
     var wantWarsaw = sel.breakDrive==='warsaw-night' || sel.day4==='warsaw';
-
-    // LEG 1 — outbound (Kaunas → border → chosen stops N→S → Kraków)
-    var l1=[PLACE.kaunas, PLACE.border];
-    OUT_ORDER.forEach(function(id){ if((sel.stops||[]).indexOf(id)>=0) l1.push(q(id)); });
-    l1.push(PLACE.krakow);
-
-    // LEG 2 — Day 2 (Kraków → Energylandia → Night-2 base)
-    var l2=[PLACE.krakow, PLACE.energylandia, PLACE[base]];
-
-    // LEG 3 — Day 3 (base → chosen mountain day → back to base)
+    var warsawInPlan = wantWarsaw || (sel.stops||[]).indexOf('warsaw-break')>=0 || (sel.returnStops||[]).indexOf('rb-warsaw')>=0;
     var hikeQ = sel.hike==='morskie' ? (sel.mokAccess==='drive-park'?PLACE.morskie:PLACE.morskieBus) : q(sel.hike);
-    var l3=[PLACE[base], hikeQ, PLACE[base]];
 
-    // optional Buffer leg (if it's a real out-and-back place)
-    var bufBase = sel.bufferWhere==='zakopane' ? 'zakopane' : 'krakow';
-    var bufQ = (sel.buffer==='add' && (sel.bufferActivity==='ojcow'||sel.bufferActivity==='auschwitz')) ? q(sel.bufferActivity) : null;
-    var lBuf = bufQ ? [PLACE[bufBase==='krakow'?'krakow':'zakopane'], bufQ, PLACE[bufBase==='krakow'?'krakow':'zakopane']] : [];
+    function build(skipWarsaw){
+      // LEG 1 — outbound
+      var l1=[A(PLACE.kaunas,'Kaunas','🏁 start, dawn'), A(PLACE.border,'Budzisko border','🛂 ID check — cross mid-morning')];
+      OUT_ORDER.forEach(function(id){ if((sel.stops||[]).indexOf(id)>=0){ if(id==='warsaw-break'&&skipWarsaw) return; l1.push(nStop(id)); } });
+      l1.push(A(PLACE.krakow,'Kraków','🛏️ Night 1 — Kazimierz'));
+      // LEG 2
+      var l2=[A(PLACE.krakow,'Kraków',null), A(PLACE.energylandia,'Energylandia','🎢 full thrill day'), A(PLACE[base],baseLabel,'🛏️ mountain base')];
+      // LEG 3
+      var l3=[A(PLACE[base],baseLabel,null), A(hikeQ,hikeQ.split(',')[0], sel.hike?('🏔️ '+(HM[sel.hike]||'your mountain day')):'🏔️ your mountain day'), A(PLACE[base],baseLabel,'back to base')];
+      // Buffer
+      var bufHome = sel.bufferWhere==='zakopane' ? PLACE.zakopane : PLACE.krakow;
+      var bufQ = (sel.buffer==='add' && (sel.bufferActivity==='ojcow'||sel.bufferActivity==='auschwitz')) ? q(sel.bufferActivity) : null;
+      var lBuf = bufQ ? [A(bufHome,bufHome.split(',')[0],null), A(bufQ,bufQ.split(',')[0], sel.bufferActivity==='auschwitz'?'🕯️ full ~7 h — book the free pass':'🏰 castle + canyon + caves'), A(bufHome,bufHome.split(',')[0],'back')] : [];
+      // LEG 4 — home
+      var l4=[A(PLACE[base],baseLabel,null)];
+      if(fourDay && sel.day4 && sel.day4!=='skip' && sel.day4!=='warsaw') l4.push(A(q(sel.day4),q(sel.day4).split(',')[0],'⛏️ '+(D4M[sel.day4]||'')));
+      RET_ORDER.forEach(function(id){
+        if(id==='rb-warsaw'){ if(!skipWarsaw && ((sel.returnStops||[]).indexOf('rb-warsaw')>=0 || wantWarsaw)) l4.push(nRet('rb-warsaw')); return; }
+        if((sel.returnStops||[]).indexOf(id)>=0) l4.push(nRet(id));
+      });
+      l4.push(A(PLACE.kaunas,'Kaunas','🏁 home'));
 
-    // LEG 4 — return home (base → salt mine → chosen return breaks S→N → Kaunas)
-    var l4=[PLACE[base]];
-    if(fourDay && sel.day4 && sel.day4!=='skip' && sel.day4!=='warsaw') l4.push(q(sel.day4));
-    RET_ORDER.forEach(function(id){
-      var picked=(sel.returnStops||[]).indexOf(id)>=0;
-      if(id==='rb-warsaw'){ if(picked||wantWarsaw) l4.push(PLACE.warsaw); return; }
-      if(picked) l4.push(q(id));
-    });
-    l4.push(PLACE.kaunas);
+      var toggle = warsawInPlan ?
+        '<label class="wtoggle"><input type="checkbox" id="skipWarsaw"'+(skipWarsaw?' checked':'')+'> Skip Warsaw (drop the overnight + the Warsaw stop)</label>' : '';
 
-    host.innerHTML =
-      '<p class="rg-h">🚗 Drive it — Google Maps</p>'+
-      '<p class="rg-sub">Your chosen plan as a turn-by-turn route, one link per day (Google caps stops per route, so it’s split by leg — open the day you’re driving). Every stop you picked is in here, including the food/bathroom breaks on the way down <em>and</em> the way home.</p>'+
-      leg('Day 1 · Kaunas → Kraków', 'drive down + your outbound stops', l1)+
-      leg('Day 2 · Kraków → Energylandia → '+(base==='zator'?'Zator':'Zakopane'), 'thrill day, then to the mountain base', l2)+
-      leg('Day 3 · the mountain day', 'base → '+ (l3[1]||'').split(',')[0] +' → back', l3)+
-      (lBuf.length?leg('Buffer day', 'the slack day', lBuf):'')+
-      leg('Day '+(fourDay?'4 · ':'')+'drive home'+(wantWarsaw?' (Warsaw overnight)':''), 'return + your bathroom/food stops home', l4);
+      host.innerHTML =
+        '<p class="rg-h">🚗 Drive it — Google Maps</p>'+
+        '<p class="rg-sub">Your chosen plan as a turn-by-turn route, one link per day (Google caps stops per route, so it’s split by leg — open the day you’re driving). Every stop you picked is here with why it’s worth it: <span class="tier">⭐</span> worth the detour · <span class="tier">👍</span> grab if passing · 🍔 food + toilets break.</p>'+
+        toggle+
+        leg('Day 1 · Kaunas → Kraków', 'drive down + your stops', l1)+
+        leg('Day 2 · Kraków → Energylandia → '+baseLabel, 'thrill day, then to the base', l2)+
+        leg('Day 3 · the mountain day', 'base → your hike → back', l3)+
+        (lBuf.length?leg('Buffer day', 'the slack day', lBuf):'')+
+        leg('Day '+(fourDay?'4 · ':'')+'drive home'+(!skipWarsaw&&wantWarsaw?' (Warsaw overnight)':''), 'return + your food/toilet stops home', l4);
+
+      var sw=document.getElementById('skipWarsaw');
+      if(sw) sw.addEventListener('change', function(){ build(sw.checked); });
+    }
+    build(false);
   })();
   if(m.dep) document.getElementById('cd-dateline').textContent='Counting down to '+m.dep.label+' — book the sell-out things first.';
 
