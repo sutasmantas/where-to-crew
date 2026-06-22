@@ -199,6 +199,24 @@
       <div id="map" role="img" aria-label="Route map from Kaunas to the Tatra Mountains"></div>
       <div id="map-legend" class="map-legend"></div>
       <p class="muted" style="font-family:var(--mono); font-size:.72rem; margin-top:10px;">Needs a connection to draw the map tiles. Tip: print or screenshot the plan + emergency page so they're reachable with no signal in the Tatras.</p>
+
+      <style>
+        .route-gmaps{ margin-top:34px; }
+        .route-gmaps > .rg-h{ font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--terra-2); }
+        .route-gmaps > .rg-sub{ color:var(--paper-soft); margin:8px 0 18px; max-width:60ch; }
+        .leg{ border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--forest-2); }
+        .leg-h{ font-family:var(--display); font-weight:800; font-size:1.05rem; }
+        .leg-sub{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); margin-top:3px; }
+        .leg-stops{ font-size:.9rem; color:var(--paper); margin:10px 0 12px; line-height:1.5; }
+        .leg-stops .arr{ color:var(--terra-2); padding:0 .25em; }
+        .leg-btns{ display:flex; flex-wrap:wrap; gap:8px; }
+        .gm-btn{ display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-family:var(--mono); font-weight:700;
+          font-size:.74rem; color:var(--forest); background:var(--terra); border:1px solid var(--terra); border-radius:100px; padding:9px 15px; transition:.25s var(--ease); }
+        .gm-btn:hover{ background:var(--terra-2); border-color:var(--terra-2); }
+        .gm-btn.ghost{ background:transparent; color:var(--paper); border-color:var(--line); }
+        .gm-btn.ghost:hover{ border-color:var(--terra-2); color:var(--paper); }
+      </style>
+      <div id="route-gmaps" class="route-gmaps"></div>
     </div>
   </section>
 
@@ -677,6 +695,91 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       '<span class="lg"><span class="dotm" style="background:#c0613f"></span>The drive (route spine)</span>'+
       '<span class="lg"><span class="dotm" style="background:#e7a877"></span>In your plan</span>'+
       '<span class="lg"><span class="dotm" style="background:#8c9a8c"></span>Available — add on the draft</span>';
+  })();
+
+  /* ---- full driving route → Google Maps, leg by leg (every chosen stop) ---- */
+  (function(){
+    var host=document.getElementById('route-gmaps'); if(!host) return;
+    // place query strings that resolve cleanly in Google Maps
+    var PLACE={
+      kaunas:'Kaunas, Lithuania', border:'Budzisko, Poland', warsaw:'Warsaw, Poland', krakow:'Kazimierz, Kraków, Poland',
+      energylandia:'Energylandia, Zator', zakopane:'Zakopane, Poland', zator:'Zator, Poland',
+      'suwalki-plaza':'Suwałki Plaza, Suwałki', augustow:'Lake Necko, Augustów', 'lomza-veneda':'Galeria Veneda, Łomża',
+      tykocin:'Tykocin, Poland', cisowa:'Cisowa Góra, Poland', wigry:'Wigry Monastery, Poland', 'augustow-canal':'Augustów, Poland',
+      'kielce-echo':'Galeria Echo, Kielce', raj:'Jaskinia Raj, Chęciny', swietokrzyski:'Łysa Góra, Nowa Słupia',
+      krzemionki:'Krzemionki Prehistoric Mines', kadzielnia:'Kadzielnia, Kielce', bonarka:'Bonarka City Center, Kraków',
+      nowytarg:'Nowy Targ, Poland', debno:'Kościół św. Michała Archanioła, Dębno',
+      morskie:'Palenica Białczańska parking', morskieBus:'Bar Fis, Zakopane',
+      koscieliska:'Dolina Kościeliska', rusinowa:'Rusinowa Polana', fivelakes:'Dolina Pięciu Stawów Polskich',
+      pieniny:'Sromowce Niżne (spływ Dunajcem)', slovak:'Tatranská Lomnica, Slovakia', strazyska:'Dolina Strążyska',
+      chocholowska:'Dolina Chochołowska', gesia:'Gęsia Szyja', chill:'Zakrzówek, Kraków',
+      bochnia:'Kopalnia Soli Bochnia', wieliczka:'Kopalnia Soli Wieliczka',
+      ojcow:'Ojców National Park', auschwitz:'Auschwitz-Birkenau Memorial, Oświęcim'
+    };
+    var OUT_ORDER=['cisowa','wigry','suwalki-plaza','augustow','augustow-canal','tykocin','lomza-veneda','warsaw-break','krzemionki','swietokrzyski','kielce-echo','kadzielnia','raj','bonarka','nowytarg','debno'];
+    var RET_ORDER=['rb-bonarka','rb-kielce','rb-warsaw','rb-lomza','rb-augustow','rb-suwalki'];
+    var RB={ 'rb-bonarka':'bonarka','rb-kielce':'kielce-echo','rb-warsaw':'warsaw','rb-lomza':'lomza-veneda','rb-augustow':'augustow','rb-suwalki':'suwalki-plaza' };
+    function q(id){ if(id==='warsaw-break') return PLACE.warsaw; if(RB[id]) return PLACE[RB[id]]||id; return PLACE[id]||id; }
+    function url(points){
+      var enc=points.map(encodeURIComponent), o=enc[0], d=enc[enc.length-1], w=enc.slice(1,-1);
+      var u='https://www.google.com/maps/dir/?api=1&origin='+o+'&destination='+d+'&travelmode=driving';
+      if(w.length) u+='&waypoints='+w.join('%7C');
+      return u;
+    }
+    function chunkLinks(points){            // Maps caps ~9 waypoints/route → split long legs, sharing the boundary stop
+      if(points.length<=11) return [url(points)];
+      var links=[], start=0;
+      while(start < points.length-1){ var end=Math.min(start+10, points.length-1); links.push(url(points.slice(start,end+1))); start=end; }
+      return links;
+    }
+    function leg(title, sub, points){
+      points=points.filter(Boolean);
+      if(points.length<2) return '';
+      var links=chunkLinks(points);
+      var btns=links.map(function(u,i){ return '<a class="gm-btn" href="'+u+'" target="_blank" rel="noopener">🗺️ '+(links.length>1?'Open part '+(i+1):'Open in Google Maps')+'</a>'; }).join('');
+      return '<div class="leg"><div class="leg-h">'+title+'</div><div class="leg-sub">'+sub+' · '+points.length+' stops</div>'+
+        '<div class="leg-stops">'+points.map(function(p){return p.split(',')[0];}).join('<span class="arr">→</span>')+'</div><div class="leg-btns">'+btns+'</div></div>';
+    }
+
+    var base = sel.base2==='zator' ? 'zator' : 'zakopane';
+    var fourDay = sel.length!=='3d';
+    var wantWarsaw = sel.breakDrive==='warsaw-night' || sel.day4==='warsaw';
+
+    // LEG 1 — outbound (Kaunas → border → chosen stops N→S → Kraków)
+    var l1=[PLACE.kaunas, PLACE.border];
+    OUT_ORDER.forEach(function(id){ if((sel.stops||[]).indexOf(id)>=0) l1.push(q(id)); });
+    l1.push(PLACE.krakow);
+
+    // LEG 2 — Day 2 (Kraków → Energylandia → Night-2 base)
+    var l2=[PLACE.krakow, PLACE.energylandia, PLACE[base]];
+
+    // LEG 3 — Day 3 (base → chosen mountain day → back to base)
+    var hikeQ = sel.hike==='morskie' ? (sel.mokAccess==='drive-park'?PLACE.morskie:PLACE.morskieBus) : q(sel.hike);
+    var l3=[PLACE[base], hikeQ, PLACE[base]];
+
+    // optional Buffer leg (if it's a real out-and-back place)
+    var bufBase = sel.bufferWhere==='zakopane' ? 'zakopane' : 'krakow';
+    var bufQ = (sel.buffer==='add' && (sel.bufferActivity==='ojcow'||sel.bufferActivity==='auschwitz')) ? q(sel.bufferActivity) : null;
+    var lBuf = bufQ ? [PLACE[bufBase==='krakow'?'krakow':'zakopane'], bufQ, PLACE[bufBase==='krakow'?'krakow':'zakopane']] : [];
+
+    // LEG 4 — return home (base → salt mine → chosen return breaks S→N → Kaunas)
+    var l4=[PLACE[base]];
+    if(fourDay && sel.day4 && sel.day4!=='skip' && sel.day4!=='warsaw') l4.push(q(sel.day4));
+    RET_ORDER.forEach(function(id){
+      var picked=(sel.returnStops||[]).indexOf(id)>=0;
+      if(id==='rb-warsaw'){ if(picked||wantWarsaw) l4.push(PLACE.warsaw); return; }
+      if(picked) l4.push(q(id));
+    });
+    l4.push(PLACE.kaunas);
+
+    host.innerHTML =
+      '<p class="rg-h">🚗 Drive it — Google Maps</p>'+
+      '<p class="rg-sub">Your chosen plan as a turn-by-turn route, one link per day (Google caps stops per route, so it’s split by leg — open the day you’re driving). Every stop you picked is in here, including the food/bathroom breaks on the way down <em>and</em> the way home.</p>'+
+      leg('Day 1 · Kaunas → Kraków', 'drive down + your outbound stops', l1)+
+      leg('Day 2 · Kraków → Energylandia → '+(base==='zator'?'Zator':'Zakopane'), 'thrill day, then to the mountain base', l2)+
+      leg('Day 3 · the mountain day', 'base → '+ (l3[1]||'').split(',')[0] +' → back', l3)+
+      (lBuf.length?leg('Buffer day', 'the slack day', lBuf):'')+
+      leg('Day '+(fourDay?'4 · ':'')+'drive home'+(wantWarsaw?' (Warsaw overnight)':''), 'return + your bathroom/food stops home', l4);
   })();
   if(m.dep) document.getElementById('cd-dateline').textContent='Counting down to '+m.dep.label+' — book the sell-out things first.';
 
