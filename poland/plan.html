@@ -679,7 +679,9 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     var LF=window.L;   // (outer `L` is the label helper — use Leaflet via window.L)
     var map=LF.map('map',{scrollWheelZoom:false}).setView([51.6,21.2],6);
     LF.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:18,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
-    function chosen(p){ return p.t==='anchor' || (p.t==='stop'&&(sel.stops||[]).indexOf(p.val)>=0) || (p.t==='hike'&&sel.hike===p.val) || (p.t==='day4'&&sel.day4===p.val); }
+    var RBV={ 'rb-bonarka':'bonarka','rb-kielce':'kielce-echo','rb-warsaw':'warsaw','rb-lomza':'lomza-veneda','rb-augustow':'augustow','rb-suwalki':'suwalki-plaza' };
+    var retVals=(sel.returnStops||[]).map(function(rb){ return RBV[rb]; });   // also light up drive-home stops
+    function chosen(p){ return p.t==='anchor' || (p.t==='stop'&&((sel.stops||[]).indexOf(p.val)>=0||retVals.indexOf(p.val)>=0)) || (p.t==='hike'&&sel.hike===p.val) || (p.t==='day4'&&sel.day4===p.val); }
     var spine=[[54.8985,23.9036],[54.3590,23.0470],[52.2297,21.0122],[50.0614,19.9372],[49.9881,19.4569],[49.2992,19.9496]];
     PTS.forEach(function(p){ if(p.t==='hike'&&sel.hike===p.val) spine.push(p.ll); });
     LF.polyline(spine,{color:'#c0613f',weight:3,opacity:.85,dashArray:'1,9',lineCap:'round'}).addTo(map);
