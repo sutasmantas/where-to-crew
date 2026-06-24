@@ -226,6 +226,7 @@
         .wtoggle input{ accent-color:var(--terra); width:16px; height:16px; }
       </style>
       <div id="route-gmaps" class="route-gmaps"></div>
+      <div id="route-access" class="route-gmaps"></div>
     </div>
   </section>
 
@@ -840,6 +841,62 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       if(sw) sw.addEventListener('change', function(){ build(sw.checked); });
     }
     build(false);
+
+    /* ---- Getting around: what you'll ride / book / the path (from the picks) ---- */
+    (function(){
+      var ah=document.getElementById('route-access'); if(!ah) return;
+      var ACCESS={
+        morskie:{ get:(sel.mokAccess==='drive-park'?'Drive to Palenica Białczańska + a TPN parking e-ticket (~70 PLN · 📌 prebook, sells out, no cash on site).':'Minibus from Bar Fis, Zakopane (~10–15 PLN, leaves when full) — skip the parking lottery.'), path:'On foot: the paved road ~8 km each way to the lake, then push +2.2 km to Czarny Staw for the best views. ~18 km round — dawn start.' },
+        fivelakes:{ get:'Drive to Palenica Białczańska + TPN parking e-ticket (~70 PLN · 📌 prebook), or the Bar Fis minibus (~10–15 PLN).', path:'On foot: Palenica → Dolina Roztoki → Pięciu Stawów hut → Wielka Siklawa (tallest waterfall) → Morskie Oko → back. ~20+ km, hard.' },
+        koscieliska:{ get:'Drive to the Kiry car park (Dolina Kościeliska).', path:'On foot: easy valley track to Hala Ornak; optional lit Mroźna show-cave. Half-day, quiet.' },
+        rusinowa:{ get:'Drive to Wierch Poroniec car park (fills early — arrive before 8).', path:'On foot: easy ~1 h to Rusinowa Polana — best High-Tatra panorama for least effort.' },
+        strazyska:{ get:'Walkable or a short drive from Zakopane (Dolina Strążyska).', path:'On foot: valley to the Siklawica waterfall; optional climb to Sarnia Skała. ~3 h.' },
+        chocholowska:{ get:'Drive to the Siwa Polana car park.', path:'On foot: the long valley to the Chochołowska hut. ~5 h easy–moderate (spring crocuses).' },
+        gesia:{ get:'Drive to Wierch Poroniec.', path:'On foot: via Rusinowa Polana to the Gęsia Szyja summit. ~4 h, far fewer people.' },
+        pieniny:{ get:'Drive ~1 h east to Sromowce (the raft pier).', path:'🛶 Highlanders pole you down the Dunajec gorge on a wooden raft (~2 h); pair with the Trzy Korony clifftop walk.' },
+        slovak:{ get:'Cross the border (passport/ID), ~1 h each way.', path:'🚠 Lomnický štít cable car (vt.sk · 📌 sells out) / Bachledka treetop walk / Belianska cave — a whole Slovak-side day.' },
+        chill:{ get:'Drive to Zakrzówek (Kraków) — lifeguarded quarry pools.', path:'No hike — turquoise swim + chill; SUP optional.' }
+      };
+      var ADDON={ kasprowy:'🚠 Kasprowy Wierch cable car — pkl.pl, ~160–190 PLN, timed slot · 📌 sells out, book ahead.', gubalowka:'🚞 Gubałówka funicular + 700 m gravity slide + zipline.', dunajec:'🛶 Dunajec gorge — wooden raft (~49 PLN) or self-paddle kayak; ~1 h drive.', 'czorsztyn-toboggan':'🛷 Czorsztyn 1000 m summer toboggan (~15–20 PLN/ride).', skijump:'🎿 Wielka Krokiew ski-jump gravity slide.' };
+      var EVE={ baths:'♨️ Thermal baths — drive to Chochołowskie / Bukowina Termy (open late).', 'cook-bacowka':'🧀 Grill oscypek at a bacówka or a lodge BBQ (groceries).', karczma:'🍲 Karczma dinner one street off Krupówki.', 'gubalowka-dusk':'🚞 Gubałówka funicular at dusk for the view.' };
+      var ADL={ kasprowy:'kasprowy', gubalowka:'gubalowka', dunajec:'dunajec', 'czorsztyn-toboggan':'czorsztyn-toboggan', skijump:'skijump' };
+      function card(title, rows){ rows=rows.filter(Boolean); if(!rows.length) return ''; return '<div class="leg"><div class="leg-h">'+title+'</div><ol class="leg-list">'+rows.map(function(r){ return '<li><span class="s-nm">'+r[0]+'</span><span class="s-meta">'+r[1]+'</span></li>'; }).join('')+'</ol></div>'; }
+      var inB=function(g,v){ return (sel[g]||[]).indexOf(v)>=0; };
+      var fourDay = sel.length!=='3d';
+      var wantWarsaw = sel.breakDrive==='warsaw-night' || sel.day4==='warsaw';
+      var a = ACCESS[sel.hike] || {get:'Drive from the base to the trailhead and park.',path:'On foot for the day.'};
+
+      var road=[
+        ['🚗 Your own car — the whole loop','≈1,700 km on free expressway (S61 Via Baltica → S7). The only toll is the A4 Balice gate (~18 PLN) on the Energylandia leg. Swap drivers ~every 2 h; the day’s driver stays dry (limit ~0).'],
+        ['🛂 Border · Budzisko','ID/passport on you — random checks to Oct 2026. Cross weekday mid-morning; if it jams, fall back to Ogrodniki–Lazdijai.'],
+        ['🅿️ Kraków — never drive the Old Town','It’s a Limited-Traffic Zone. Park & Ride at a tram terminus (~10 PLN/day) and tram in, or a guarded Kazimierz lot (~50 PLN/night).']
+      ];
+      var d2=[
+        ['🎢 Energylandia','Drive in; gate car park ~30 PLN/day; everything inside is on foot. 📌 Buy e-tickets online — cheaper than the gate.'],
+        sel.pass==='fast'?['🎟️ Fast Pass','~199 PLN — one skip on 5 big coasters.']:(sel.pass==='energy'?['🎟️ Energy Pass','~239 PLN — ~14 attractions.']:['🎟️ No queue pass','Rope-drop the back of the park first; ride big coasters early, eat off-peak.']),
+        inB('aqualantis','aqualantis')?['🩳 Aqualantis water park','Included in the ticket — bring swimwear, towel, flip-flops.']:null,
+        ['🌄 Evening drive to base','Energylandia → '+baseLabel+' (~1.5–2 h). Avoid the Zakopianka Fri/Sun 14:00–20:00.']
+      ];
+      var d3=[
+        ['🚐 Getting to the trail', a.get],
+        ['🥾 On foot · the path', a.path]
+      ];
+      ['kasprowy','gubalowka','dunajec','czorsztyn-toboggan','skijump'].forEach(function(k){ if(inB('addons',k)) d3.push([ADDON[k].split(' ')[0]+' Add-on', ADDON[k].replace(/^\S+\s/,'')]); });
+      ['baths','cook-bacowka','karczma','gubalowka-dusk'].forEach(function(k){ if(inB('mtnEvening',k)) d3.push([EVE[k].split(' ')[0]+' Evening', EVE[k].replace(/^\S+\s/,'')]); });
+
+      var d4=[];
+      if(fourDay && sel.day4==='bochnia') d4.push(['⛏️ Bochnia Salt Mine','Guided tour — 140 m underground slide + a salt-lake boat. English tour 10:30 only · 📌. Drive ~1 h from the base.']);
+      else if(fourDay && sel.day4==='wieliczka') d4.push(['⛏️ Wieliczka Salt Mine','Guided ~2.5 h tour, the famous carved chapel · 📌 book a slot. Drive from the base.']);
+      d4.push(['🚗 Drive home','~10–11 h from the mountains'+(wantWarsaw?' — split it with a Warsaw overnight (one cheap night, ~halfway).':'. Consider a Warsaw overnight if everyone’s spent.')]);
+
+      ah.innerHTML =
+        '<p class="rg-h">🚍 Getting around — what you’ll ride, book &amp; the path</p>'+
+        '<p class="rg-sub">Pulled from your picks: how you actually move on each leg (car · minibus · cable car · raft · on foot), where to park, what to book ahead (📌), and the trail you take.</p>'+
+        card('On the road &amp; the cities', road)+
+        card('Day 2 · Energylandia', d2)+
+        card('Day 3 · the mountains', d3)+
+        card('Day '+(fourDay?'4 · ':'')+'home', d4);
+    })();
   })();
   if(m.dep) document.getElementById('cd-dateline').textContent='Counting down to '+m.dep.label+' — book the sell-out things first.';
 
