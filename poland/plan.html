@@ -731,16 +731,16 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     var RET_ORDER=['rb-bonarka','rb-kielce','rb-warsaw','rb-lomza','rb-augustow','rb-suwalki'];
     var RB={ 'rb-bonarka':'bonarka','rb-kielce':'kielce-echo','rb-warsaw':'warsaw','rb-lomza':'lomza-veneda','rb-augustow':'augustow','rb-suwalki':'suwalki-plaza' };
     function q(id){ if(id==='warsaw-break') return PLACE.warsaw; if(RB[id]) return PLACE[RB[id]]||id; return PLACE[id]||id; }
-    function url(points){
+    function url(points, mode){
       var enc=points.map(encodeURIComponent), o=enc[0], d=enc[enc.length-1], w=enc.slice(1,-1);
-      var u='https://www.google.com/maps/dir/?api=1&origin='+o+'&destination='+d+'&travelmode=driving';
+      var u='https://www.google.com/maps/dir/?api=1&origin='+o+'&destination='+d+'&travelmode='+(mode||'driving');
       if(w.length) u+='&waypoints='+w.join('%7C');
       return u;
     }
-    function chunkLinks(points){            // Maps caps ~9 waypoints/route → split long legs, sharing the boundary stop
-      if(points.length<=11) return [url(points)];
+    function chunkLinks(points, mode){      // Maps caps ~9 waypoints/route → split long legs, sharing the boundary stop
+      if(points.length<=11) return [url(points, mode)];
       var links=[], start=0;
-      while(start < points.length-1){ var end=Math.min(start+10, points.length-1); links.push(url(points.slice(start,end+1))); start=end; }
+      while(start < points.length-1){ var end=Math.min(start+10, points.length-1); links.push(url(points.slice(start,end+1), mode)); start=end; }
       return links;
     }
     function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -758,23 +758,39 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     };
     var HM={ morskie:'the iconic lake + push to Czarny Staw', koscieliska:'prettiest valley + lit cave', rusinowa:'best panorama for least effort', fivelakes:'Poland’s tallest waterfall + 5 lakes', pieniny:'clifftop view + Dunajec gorge raft', slovak:'cable car / treetop walk across the border', strazyska:'short valley + waterfall', chocholowska:'the longest, wildest valley', gesia:'panoramic meadow summit, fewer people', chill:'turquoise quarry swim' };
     var D4M={ bochnia:'140 m slide + salt-lake boat, fewer crowds', wieliczka:'famous carved salt chapel', warsaw:'split the drive home' };
+    // where you DRIVE to (the trailhead car park) for each mountain day
+    var HIKE_TRAIL={ morskie:'Palenica Białczańska parking', fivelakes:'Palenica Białczańska parking', koscieliska:'Dolina Kościeliska parking, Kiry', rusinowa:'Wierch Poroniec parking', strazyska:'Dolina Strążyska, Zakopane', chocholowska:'Siwa Polana parking', gesia:'Wierch Poroniec parking', pieniny:'Sromowce Wyżne przystań flisacka', slovak:'Tatranská Lomnica', chill:'Zakrzówek, Kraków' };
+    // the ON-FOOT route (walking mode) for the real hikes
+    var HIKE_WALK={
+      fivelakes:['Palenica Białczańska','Wodogrzmoty Mickiewicza','Schronisko w Dolinie Pięciu Stawów Polskich','Wielka Siklawa','Morskie Oko','Palenica Białczańska'],
+      morskie:['Palenica Białczańska','Morskie Oko','Czarny Staw pod Rysami','Palenica Białczańska'],
+      koscieliska:['Dolina Kościeliska parking, Kiry','Jaskinia Mroźna','Schronisko PTTK na Hali Ornak','Dolina Kościeliska parking, Kiry'],
+      rusinowa:['Wierch Poroniec','Rusinowa Polana','Sanktuarium Wiktorówki','Wierch Poroniec'],
+      strazyska:['Dolina Strążyska','Wodospad Siklawica','Polana Strążyska'],
+      chocholowska:['Siwa Polana','Schronisko na Polanie Chochołowskiej','Siwa Polana'],
+      gesia:['Wierch Poroniec','Rusinowa Polana','Gęsia Szyja','Wierch Poroniec']
+    };
+    var WALK_META={ 'Wielka Siklawa':'💦 Poland’s tallest waterfall','Morskie Oko':'🏔️ the iconic lake','Czarny Staw pod Rysami':'🏔️ the higher, quieter lake','Schronisko w Dolinie Pięciu Stawów Polskich':'🛖 the hut among the five lakes','Wodogrzmoty Mickiewicza':'💦 waterfalls — trail splits here','Jaskinia Mroźna':'🕳️ lit show-cave','Wodospad Siklawica':'💦 waterfall' };
 
     function metaOf(id){ var m=SM[id]; return m ? ('<span class="tier">'+m[0]+'</span> '+m[1]+' · '+m[2]) : null; }
     function nStop(id){ var qq=q(id); return {q:qq,label:qq.split(',')[0],meta:metaOf(id)}; }
     function nRet(id){ if(id==='rb-warsaw') return {q:PLACE.warsaw,label:'Warsaw',meta:'<span class="tier">🛏️</span> overnight — splits the drive home'}; var b=RB[id]; var qq=PLACE[b]; return {q:qq,label:qq.split(',')[0],meta:metaOf(b)}; }
     function A(qq,label,meta){ return {q:qq,label:label,meta:meta||null,anchor:true}; }
 
-    function leg(title, sub, nodes){
+    function leg(title, sub, nodes, mode){
       nodes=nodes.filter(Boolean); if(nodes.length<2) return '';
-      var links=chunkLinks(nodes.map(function(n){return n.q;}));
-      var btns=links.map(function(u,i){ return '<a class="gm-btn" href="'+u+'" target="_blank" rel="noopener">🗺️ '+(links.length>1?'Open part '+(i+1):'Open in Google Maps')+'</a>'; }).join('');
+      var links=chunkLinks(nodes.map(function(n){return n.q;}), mode);
+      var ico=mode==='walking'?'🥾':'🗺️', verb=mode==='walking'?'Open the hike (walking)':'Open in Google Maps';
+      var btns=links.map(function(u,i){ return '<a class="gm-btn" href="'+u+'" target="_blank" rel="noopener">'+ico+' '+(links.length>1?'Open part '+(i+1):verb)+'</a>'; }).join('');
       var list=nodes.map(function(n){ return '<li'+(n.anchor?' class="anchor"':'')+'><span class="s-nm">'+esc(n.label)+'</span>'+(n.meta?'<span class="s-meta">'+n.meta+'</span>':'')+'</li>'; }).join('');
       return '<div class="leg"><div class="leg-h">'+title+'</div><div class="leg-sub">'+sub+' · '+nodes.length+' stops</div>'+
         '<ol class="leg-list">'+list+'</ol><div class="leg-btns">'+btns+'</div></div>';
     }
 
+    var LODGING='Harenda 41, 34-500 Zakopane, Poland';   // the crew's actual base — every Zakopane leg starts/ends here
     var base = sel.base2==='zator' ? 'zator' : 'zakopane';
-    var baseLabel = base==='zator' ? 'Zator' : 'Zakopane';
+    var baseQ = base==='zator' ? PLACE.zator : LODGING;
+    var baseLabel = base==='zator' ? 'Zator' : 'Zakopane · Harenda 41';
     var fourDay = sel.length!=='3d';
     var wantWarsaw = sel.breakDrive==='warsaw-night' || sel.day4==='warsaw';
     var warsawInPlan = wantWarsaw || (sel.stops||[]).indexOf('warsaw-break')>=0 || (sel.returnStops||[]).indexOf('rb-warsaw')>=0;
@@ -786,15 +802,19 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       OUT_ORDER.forEach(function(id){ if((sel.stops||[]).indexOf(id)>=0){ if(id==='warsaw-break'&&skipWarsaw) return; l1.push(nStop(id)); } });
       l1.push(A(PLACE.krakow,'Kraków','🛏️ Night 1 — Kazimierz'));
       // LEG 2
-      var l2=[A(PLACE.krakow,'Kraków',null), A(PLACE.energylandia,'Energylandia','🎢 full thrill day'), A(PLACE[base],baseLabel,'🛏️ mountain base')];
-      // LEG 3
-      var l3=[A(PLACE[base],baseLabel,null), A(hikeQ,hikeQ.split(',')[0], sel.hike?('🏔️ '+(HM[sel.hike]||'your mountain day')):'🏔️ your mountain day'), A(PLACE[base],baseLabel,'back to base')];
+      var l2=[A(PLACE.krakow,'Kraków',null), A(PLACE.energylandia,'Energylandia','🎢 full thrill day'), A(baseQ,baseLabel,'🛏️ where you sleep')];
+      // LEG 3 — drive to the trailhead, then the hike on foot
+      var trail = HIKE_TRAIL[sel.hike] || hikeQ;
+      var driveTrail = (sel.hike==='morskie' && sel.mokAccess==='minibus') ? PLACE.morskieBus : trail;
+      var l3=[A(baseQ,baseLabel,'🛏️ from where you sleep'), A(driveTrail, driveTrail.split(',')[0], (sel.hike==='morskie'&&sel.mokAccess==='minibus')?'🚐 minibus leaves from here':'🅿️ park here — the trail starts'), A(baseQ,baseLabel,'back after the hike')];
+      var walk = HIKE_WALK[sel.hike];
+      var l3walk = walk ? walk.map(function(p,i){ return A(p, p.split(',')[0], WALK_META[p] || (i===0?'🥾 trailhead':(i===walk.length-1?'back to the car':null))); }) : null;
       // Buffer
       var bufHome = sel.bufferWhere==='zakopane' ? PLACE.zakopane : PLACE.krakow;
       var bufQ = (sel.buffer==='add' && (sel.bufferActivity==='ojcow'||sel.bufferActivity==='auschwitz')) ? q(sel.bufferActivity) : null;
       var lBuf = bufQ ? [A(bufHome,bufHome.split(',')[0],null), A(bufQ,bufQ.split(',')[0], sel.bufferActivity==='auschwitz'?'🕯️ full ~7 h — book the free pass':'🏰 castle + canyon + caves'), A(bufHome,bufHome.split(',')[0],'back')] : [];
       // LEG 4 — home
-      var l4=[A(PLACE[base],baseLabel,null)];
+      var l4=[A(baseQ,baseLabel,null)];
       if(fourDay && sel.day4 && sel.day4!=='skip' && sel.day4!=='warsaw') l4.push(A(q(sel.day4),q(sel.day4).split(',')[0],'⛏️ '+(D4M[sel.day4]||'')));
       RET_ORDER.forEach(function(id){
         if(id==='rb-warsaw'){ if(!skipWarsaw && ((sel.returnStops||[]).indexOf('rb-warsaw')>=0 || wantWarsaw)) l4.push(nRet('rb-warsaw')); return; }
@@ -811,7 +831,8 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
         toggle+
         leg('Day 1 · Kaunas → Kraków', 'drive down + your stops', l1)+
         leg('Day 2 · Kraków → Energylandia → '+baseLabel, 'thrill day, then to the base', l2)+
-        leg('Day 3 · the mountain day', 'base → your hike → back', l3)+
+        leg('Day 3 · drive to the trail', 'from Harenda to where the trail starts', l3)+
+        (l3walk?leg('Day 3 · the hike, on foot', (HM[sel.hike]||'the mountain day'), l3walk, 'walking'):'')+
         (lBuf.length?leg('Buffer day', 'the slack day', lBuf):'')+
         leg('Day '+(fourDay?'4 · ':'')+'drive home'+(!skipWarsaw&&wantWarsaw?' (Warsaw overnight)':''), 'return + your food/toilet stops home', l4);
 
