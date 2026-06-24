@@ -759,8 +759,20 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     };
     var HM={ morskie:'the iconic lake + push to Czarny Staw', koscieliska:'prettiest valley + lit cave', rusinowa:'best panorama for least effort', fivelakes:'Poland’s tallest waterfall + 5 lakes', pieniny:'clifftop view + Dunajec gorge raft', slovak:'cable car / treetop walk across the border', strazyska:'short valley + waterfall', chocholowska:'the longest, wildest valley', gesia:'panoramic meadow summit, fewer people', chill:'turquoise quarry swim' };
     var D4M={ bochnia:'140 m slide + salt-lake boat, fewer crowds', wieliczka:'famous carved salt chapel', warsaw:'split the drive home' };
-    // where you DRIVE to (the trailhead car park) for each mountain day
-    var HIKE_TRAIL={ morskie:'Palenica Białczańska parking', fivelakes:'Palenica Białczańska parking', koscieliska:'Dolina Kościeliska parking, Kiry', rusinowa:'Wierch Poroniec parking', strazyska:'Dolina Strążyska, Zakopane', chocholowska:'Siwa Polana parking', gesia:'Wierch Poroniec parking', pieniny:'Sromowce Wyżne przystań flisacka', slovak:'Tatranská Lomnica', chill:'Zakrzówek, Kraków' };
+    // where you DRIVE to (the trailhead car park) — pinned by exact coords so Maps can't mis-resolve
+    var TRAIL={
+      morskie:{q:'49.25594,20.10307',label:'Palenica Białczańska — TPN car park'},
+      fivelakes:{q:'49.25594,20.10307',label:'Palenica Białczańska — TPN car park'},
+      koscieliska:{q:'49.27600,19.86700',label:'Dolina Kościeliska car park, Kiry'},
+      rusinowa:{q:'49.29340,20.09505',label:'Wierch Poroniec car park'},
+      gesia:{q:'49.29340,20.09505',label:'Wierch Poroniec car park'},
+      strazyska:{q:'49.27500,19.93500',label:'Dolina Strążyska, Zakopane'},
+      chocholowska:{q:'49.27986,19.83928',label:'Siwa Polana car park'},
+      pieniny:{q:'49.40542,20.36924',label:'Sromowce — Dunajec raft pier'},
+      slovak:{q:'Tatranská Lomnica, Slovakia',label:'Tatranská Lomnica'},
+      chill:{q:'Zakrzówek, Kraków',label:'Zakrzówek, Kraków'}
+    };
+    var MINIBUS={q:'49.29983,19.95274',label:'Bar Fis — Morskie Oko minibus, Zakopane'};
     // the ON-FOOT route (walking mode) for the real hikes
     var HIKE_WALK={
       fivelakes:['Palenica Białczańska','Wodogrzmoty Mickiewicza','Schronisko w Dolinie Pięciu Stawów Polskich','Wielka Siklawa','Morskie Oko','Palenica Białczańska'],
@@ -805,9 +817,9 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       // LEG 2
       var l2=[A(PLACE.krakow,'Kraków',null), A(PLACE.energylandia,'Energylandia','🎢 full thrill day'), A(baseQ,baseLabel,'🛏️ where you sleep')];
       // LEG 3 — drive to the trailhead, then the hike on foot
-      var trail = HIKE_TRAIL[sel.hike] || hikeQ;
-      var driveTrail = (sel.hike==='morskie' && sel.mokAccess==='minibus') ? PLACE.morskieBus : trail;
-      var l3=[A(baseQ,baseLabel,'🛏️ from where you sleep'), A(driveTrail, driveTrail.split(',')[0], (sel.hike==='morskie'&&sel.mokAccess==='minibus')?'🚐 minibus leaves from here':'🅿️ park here — the trail starts'), A(baseQ,baseLabel,'back after the hike')];
+      var trailT = TRAIL[sel.hike] || {q:hikeQ, label:hikeQ.split(',')[0]};
+      var driveDest = (sel.hike==='morskie' && sel.mokAccess==='minibus') ? MINIBUS : trailT;
+      var l3=[A(baseQ,baseLabel,'🛏️ from where you sleep'), A(driveDest.q, driveDest.label, (sel.hike==='morskie'&&sel.mokAccess==='minibus')?'🚐 minibus leaves from here':'🅿️ park here — the trail starts'), A(baseQ,baseLabel,'back after the hike')];
       var walk = HIKE_WALK[sel.hike];
       var l3walk = walk ? walk.map(function(p,i){ return A(p, p.split(',')[0], WALK_META[p] || (i===0?'🥾 trailhead':(i===walk.length-1?'back to the car':null))); }) : null;
       // Buffer
