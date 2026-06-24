@@ -775,7 +775,7 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     var MINIBUS={q:'49.29983,19.95274',label:'Bar Fis — Morskie Oko minibus, Zakopane'};
     // the ON-FOOT route (walking mode) for the real hikes
     var HIKE_WALK={
-      fivelakes:['Palenica Białczańska','Wodogrzmoty Mickiewicza','Schronisko w Dolinie Pięciu Stawów Polskich','Wielka Siklawa','Morskie Oko','Palenica Białczańska'],
+      fivelakes:['Palenica Białczańska','Wodogrzmoty Mickiewicza','Wielka Siklawa','Schronisko w Dolinie Pięciu Stawów Polskich','Przedni Staw Polski','Mały Staw Polski','Wielki Staw Polski','Czarny Staw Polski','Zadni Staw Polski','Morskie Oko','Palenica Białczańska'],
       morskie:['Palenica Białczańska','Morskie Oko','Czarny Staw pod Rysami','Palenica Białczańska'],
       koscieliska:['Dolina Kościeliska parking, Kiry','Jaskinia Mroźna','Schronisko PTTK na Hali Ornak','Dolina Kościeliska parking, Kiry'],
       rusinowa:['Wierch Poroniec','Rusinowa Polana','Sanktuarium Wiktorówki','Wierch Poroniec'],
@@ -783,7 +783,7 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       chocholowska:['Siwa Polana','Schronisko na Polanie Chochołowskiej','Siwa Polana'],
       gesia:['Wierch Poroniec','Rusinowa Polana','Gęsia Szyja','Wierch Poroniec']
     };
-    var WALK_META={ 'Wielka Siklawa':'💦 Poland’s tallest waterfall','Morskie Oko':'🏔️ the iconic lake','Czarny Staw pod Rysami':'🏔️ the higher, quieter lake','Schronisko w Dolinie Pięciu Stawów Polskich':'🛖 the hut among the five lakes','Wodogrzmoty Mickiewicza':'💦 waterfalls — trail splits here','Jaskinia Mroźna':'🕳️ lit show-cave','Wodospad Siklawica':'💦 waterfall' };
+    var WALK_META={ 'Wielka Siklawa':'💦 Poland’s tallest waterfall','Morskie Oko':'🏔️ the iconic lake','Czarny Staw pod Rysami':'🏔️ the higher, quieter lake','Schronisko w Dolinie Pięciu Stawów Polskich':'🛖 the valley hut','Wodogrzmoty Mickiewicza':'💦 waterfalls — trail splits here','Jaskinia Mroźna':'🕳️ lit show-cave','Wodospad Siklawica':'💦 waterfall','Przedni Staw Polski':'🏔️ lake 1 (by the hut)','Mały Staw Polski':'🏔️ lake 2','Wielki Staw Polski':'🏔️ lake 3 — the biggest','Czarny Staw Polski':'🏔️ lake 4','Zadni Staw Polski':'🏔️ lake 5 — the highest' };
 
     function metaOf(id){ var m=SM[id]; return m ? ('<span class="tier">'+m[0]+'</span> '+m[1]+' · '+m[2]) : null; }
     function nStop(id){ var qq=q(id); return {q:qq,label:qq.split(',')[0],meta:metaOf(id)}; }
@@ -859,7 +859,7 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
       var ah=document.getElementById('route-access'); if(!ah) return;
       var ACCESS={
         morskie:{ get:(sel.mokAccess==='drive-park'?'Drive to Palenica Białczańska + a TPN parking e-ticket (~70 PLN · 📌 prebook, sells out, no cash on site).':'Minibus from Bar Fis, Zakopane (~10–15 PLN, leaves when full) — skip the parking lottery.'), path:'On foot: the paved road ~8 km each way to the lake, then push +2.2 km to Czarny Staw for the best views. ~18 km round — dawn start.' },
-        fivelakes:{ get:'Drive to Palenica Białczańska + TPN parking e-ticket (~70 PLN · 📌 prebook), or the Bar Fis minibus (~10–15 PLN).', path:'On foot: Palenica → Dolina Roztoki → Pięciu Stawów hut → Wielka Siklawa (tallest waterfall) → Morskie Oko → back. ~20+ km, hard.' },
+        fivelakes:{ get:'Drive to Palenica Białczańska + TPN parking e-ticket (~70 PLN · 📌 prebook), or the Bar Fis minibus (~10–15 PLN).', path:'On foot: Palenica → Roztoka valley → Wielka Siklawa → into Dolina Pięciu Stawów past all five lakes (Przedni · Mały · Wielki · Czarny · Zadni) → down via Świstówka to Morskie Oko → back. ~22 km, hard — dawn start. No raft — pure hiking.' },
         koscieliska:{ get:'Drive to the Kiry car park (Dolina Kościeliska).', path:'On foot: easy valley track to Hala Ornak; optional lit Mroźna show-cave. Half-day, quiet.' },
         rusinowa:{ get:'Drive to Wierch Poroniec car park (fills early — arrive before 8).', path:'On foot: easy ~1 h to Rusinowa Polana — best High-Tatra panorama for least effort.' },
         strazyska:{ get:'Walkable or a short drive from Zakopane (Dolina Strążyska).', path:'On foot: valley to the Siklawica waterfall; optional climb to Sarnia Skała. ~3 h.' },
