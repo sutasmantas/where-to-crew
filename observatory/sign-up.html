@@ -153,7 +153,7 @@
         <a class="btn btn--solid" href="plan-draft.html" data-transition data-magnetic data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Go to the plan draft →</span></a>
         <a class="btn" href="#" id="edit-again"><span class="fill"></span><span class="lbl">Edit my answers</span></a>
       </div>
-      <p class="muted" style="margin-top:26px; font-family:var(--mono); font-size:.72rem;">Your answers are in — the crew can see them on the plan.</p>
+      <p class="muted" id="signup-sync" style="margin-top:26px; font-family:var(--mono); font-size:.72rem;">Saved on this device. Checking crew sync…</p>
     </div>
 
   </div>
@@ -264,7 +264,8 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
     WTC.save('wtc-observatory-signup', state);
     if(window.Store){ window.Store.setMe(state.name);
       window.Store.saveMine({ going:state.going, signup:{ dates:state.dates, stops:state.stops, vibes:state.vibes, activities:state.activities, anchor:state.anchor, season:state.season, notes:state.notes } })
-        .then(function(){ renderCrew(); }); }
+        .then(function(result){ renderCrew(); document.getElementById('signup-sync').textContent=result&&result.synced?'Saved with the crew.':'Saved on this device; crew sync will retry when the connection returns.'; }); }
+    else document.getElementById('signup-sync').textContent='Saved on this device; crew sharing is unavailable right now.';
     document.body.classList.add('sent');
     if(window.WTCM && window.WTCM.lenis) window.WTCM.lenis.scrollTo(0); else window.scrollTo({top:0,behavior:'smooth'});
   });

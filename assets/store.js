@@ -35,7 +35,7 @@
   function fetchAll(){
     if(!API) return Promise.resolve(readCache());
     return fetch(API + '?trip=' + encodeURIComponent(TRIP), { headers:{ 'Accept':'application/json' } })
-      .then(function(r){ return r.ok ? r.json() : {}; })
+      .then(function(r){ if(!r.ok) throw new Error('store read failed: '+r.status); return r.json(); })
       .then(function(o){ var crew = (o && o.crew) || o || {}; writeCache(crew); return crew; })
       .catch(function(){ return readCache(); });            // offline → last-known cache
   }
@@ -49,10 +49,10 @@
     var crew = readCache();
     var entry = Object.assign({}, crew[k], patch, { name:name, updated:Date.now() });
     crew[k] = entry; writeCache(crew);                      // optimistic local update
-    if(!API) return Promise.resolve(crew);
+    if(!API) return Promise.resolve({crew:crew,synced:false});
     return postEntry(k, entry)
-      .then(function(){ flushPending(); return crew; })
-      .catch(function(){ queuePending(k, entry); return crew; });   // offline → queue
+      .then(function(){ clearPending(k); flushPending(); return {crew:crew,synced:true}; })
+      .catch(function(){ queuePending(k, entry); return {crew:crew,synced:false}; });   // offline → queue
   }
 
   function postEntry(k, entry){
@@ -61,6 +61,7 @@
       .then(function(r){ if(!r.ok) throw new Error('bad'); return r; });
   }
   function queuePending(k, entry){ var p=ls(PENDKEY,{})||{}; p[k]=entry; save(PENDKEY,p); }
+  function clearPending(k){ var p=ls(PENDKEY,{})||{}; if(p[k]){ delete p[k]; save(PENDKEY,p); } }
   function flushPending(){
     if(!API) return; var p=ls(PENDKEY,{})||{}; var keys=Object.keys(p); if(!keys.length) return;
     keys.forEach(function(k){
@@ -77,7 +78,7 @@
     key: keyFor,
     all: fetchAll,        // → Promise(crewObj)  (network, falls back to cache)
     cached: readCache,    // → crewObj  (synchronous, last-known)
-    saveMine: saveMine,   // → Promise
+    saveMine: saveMine,   // → Promise({crew,synced}) or null when no name is set
     flush: flushPending
   };
 

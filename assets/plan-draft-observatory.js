@@ -289,11 +289,17 @@
   /* ---------- persistence ---------- */
   function persistTotals(total){ var p=WTC.load('wtc-observatory-plan',{})||{}; p.total=total; WTC.save('wtc-observatory-plan',p); }
   var saveTimer=null;
+  var syncSeq=0;
   function pushShared(){
-    if(!window.Store||!window.Store.me()) return;
+    var foot=document.getElementById('draft-sync');
+    if(!window.Store||!window.Store.me()){ if(foot) foot.textContent='Saved on this device. Add your name to share with the crew.'; return; }
     clearTimeout(saveTimer);
+    var seq=++syncSeq;
+    if(foot) foot.textContent='Saved on this device. Syncing with the crew…';
     saveTimer=setTimeout(function(){ var p=WTC.load('wtc-observatory-plan',{})||{};
-      window.Store.saveMine({ going:'in', plan:{ sel:sel, total:p.total, bookings:p.bookings, bookingStatus:bookingStatus, meters:p.meters } }); }, 900);
+      window.Store.saveMine({ going:'in', plan:{ sel:sel, total:p.total, bookings:p.bookings, bookingStatus:bookingStatus, meters:p.meters } }).then(function(result){
+        if(foot&&seq===syncSeq) foot.textContent=result&&result.synced?'Saved on this device and with the crew.':'Saved on this device; crew sync will retry when the connection returns.';
+      }); }, 900);
   }
 
   /* ---------- master render ---------- */
