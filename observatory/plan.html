@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
 <title>The night plan · Observatory — Where To, Crew?</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/motion.css?v=19">
 <link rel="stylesheet" href="../assets/observatory.css">
 <style>
   main{ position:relative; z-index:2; }
@@ -43,6 +43,11 @@
   .bk .bk-where{ font-family:var(--mono); font-size:.68rem; color:var(--paper-soft); margin-top:3px; display:block; }
   .bk .bk-st{ font-family:var(--mono); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; margin-top:6px; display:inline-block; padding:.2em .6em; border-radius:100px; }
   .bk .bk-st.booked{ color:var(--forest-3); background:var(--sage); } .bk .bk-st.todo{ color:var(--star-warm); border:1px solid var(--star-warm); }
+  .panel a,.bk a{ color:var(--sage); text-decoration:underline; }
+  .plan-photo{ margin:0 0 24px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--forest-2); }
+  .plan-photo img{ width:100%; height:clamp(220px,32vw,360px); object-fit:cover; display:block; }
+  .plan-photo figcaption{ padding:9px 16px; font-size:.74rem; color:var(--paper-soft); }
+  .plan-photo a{ color:var(--sage); text-decoration:underline; }
 
   .feas{ font-family:var(--mono); font-size:.74rem; margin-top:10px; }
   .feas.green{ color:var(--sage); } .feas.amber{ color:var(--amber); } .feas.red{ color:var(--danger); }
@@ -103,7 +108,7 @@
     <header class="trip-head" data-journey="Plan" style="padding:34px 0 8px;">
       <p class="route-eyebrow" data-reveal data-reveal-mode="fade">The night-observation mission plan</p>
       <h1 class="display" data-reveal data-reveal="words">The night we're planning.</h1>
-      <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Saturday 10 October is our new-moon target for the 80 cm telescope. The booking and program time still need museum confirmation; the schedule below is a planning estimate.</p>
+      <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Saturday 10 October is our new-moon target for the 80 cm telescope. Keep the museum confirmation handy; the day sequence uses the entered start time when available, with driving and visit durations as estimates.</p>
     </header>
 
     <div id="planRoot"></div>
@@ -131,10 +136,12 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
 window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'observatory' };
 </script>
 <script src="../assets/config.js"></script>
-<script src="../assets/store.js"></script>
-<script src="../assets/crew.js"></script>
-<script src="../assets/share.js"></script>
-<script src="../assets/checklist-observatory.js"></script>
+<script src="../assets/trip-facts.js?v=19"></script>
+<script src="../assets/store.js?v=19"></script>
+<script src="../assets/crew.js?v=19"></script>
+<script src="../assets/trip-tools.js?v=19"></script>
+<script src="../assets/share.js?v=19"></script>
+<script src="../assets/checklist-observatory.js?v=19"></script>
 <script>
 (function(){
   var plan = WTC.load('wtc-observatory-plan', null);
@@ -152,13 +159,15 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
     document.querySelectorAll('a[href="plan-draft.html"]').forEach(function(a){ if(a!==own) a.style.display='none'; });
   }
 
-  if(!plan || !plan.sel){ plan={sel:{routeStyle:'direct',mainStop:'none',dayProgram:'outdoor',food:'picnic'},total:27,bookings:[
+  if(!plan || !plan.sel){ plan={sel:{routeStyle:'direct',mainStop:'none',dayProgram:'outdoor',food:'picnic'},bookings:[
     {id:'telescope',name:'80 cm telescope night observation',where:'Museum registration · +370 6 152 0688',must:true},
     {id:'weathercall',name:'Weather confirmation by 14:00',where:'Same-day SMS or phone',must:true}
   ]}; }
 
   var m = window.WTC_obsModel(plan);
+  plan.sel=m.sel; plan.total=m.total; plan.bookings=m.bookings;
   var s = m.sel;
+  var facts=window.WTC_tripFacts(), sources=facts.sources;
 
   // time-orbit
   var tl = m.timeline.map(function(t){
@@ -168,13 +177,14 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   // bookings sidebar
   var bk = m.bookings.length ? m.bookings.map(function(b){
     var st=(plan.bookingStatus&&plan.bookingStatus[b.id])||'todo';
-    return '<div class="bk'+(b.must?' anchor':'')+'"><span class="bk-name">'+esc(b.name)+'</span><span class="bk-where">'+esc(b.where)+'</span><span class="bk-st '+(st==='booked'?'booked':'todo')+'">'+(st==='booked'?'Booked ✓':'To-do')+'</span></div>';
+    var links={telescope:'<a href="tel:+37061520688">Call ↗</a> · <a href="mailto:registracija@lemuziejus.lt?subject=80%20cm%20observation%2010%20October%202026">Email ↗</a>',dayprogram:'<a href="tel:+37061520688">Call ↗</a>',rumsiskes:'<a href="'+sources.rumsiskesTickets+'" target="_blank" rel="noopener">Buy tickets ↗</a>',taujenai:'<a href="'+sources.taujenaiTickets+'" target="_blank" rel="noopener">Buy event tickets ↗</a>'};
+    return '<div class="bk'+(b.must?' anchor':'')+'"><span class="bk-name">'+esc(b.name)+'</span><span class="bk-where">'+esc(b.where)+'</span>'+(links[b.id]?'<span class="bk-where">'+links[b.id]+'</span>':'')+'<span class="bk-st '+(st==='booked'?'booked':'todo')+'">'+(st==='booked'?(b.id==='weathercall'?'Confirmed ✓':'Booked ✓'):'To-do')+'</span></div>';
   }).join('') : '<p class="muted" style="font-size:.86rem;">No bookings yet.</p>';
 
   var data = '<div class="data-grid" style="margin-bottom:22px;">'+
-    '<div class="data-card"><div class="dk">Telescope</div><div class="dv">80<span class="u"> cm</span></div><div class="ds">€12 · group cap 16 · booking unconfirmed</div></div>'+
-    '<div class="data-card"><div class="dk">Drive each way</div><div class="dv">~2<span class="u"> h</span></div><div class="ds">Kaunas → Kulionys ≈ 128 km'+(s.routeStyle&&s.routeStyle!=='direct'?' + '+esc(s.routeStyle)+' detour':'')+'.</div></div>'+
-    '<div class="data-card"><div class="dk">Program starts</div><div class="dv">TBC</div><div class="ds">Confirm actual time with museum; clear skies required.</div></div>'+
+    '<div class="data-card"><div class="dk">Telescope</div><div class="dv">80<span class="u"> cm</span></div><div class="ds">€12 · group cap 16 · '+((plan.bookingStatus||{}).telescope==='booked'?'marked booked; check confirmation':'booking unconfirmed')+'</div></div>'+
+    '<div class="data-card"><div class="dk">Drive up via selected stop</div><div class="dv">~'+Math.round(m.route.upMinutes/60*10)/10+'<span class="u"> h</span></div><div class="ds">Kaunas → Kulionys ≈ '+m.route.upKm+' km; return direct ≈ 128 km.</div></div>'+
+    '<div class="data-card"><div class="dk">Program starts</div><div class="dv">'+(m.slotTime?esc(m.slotTime):'TBC')+'</div><div class="ds">'+(m.slotTime?'Entered from museum confirmation; weather still pending.':'Museum says ~1.5 h after sunset; confirm actual slot.')+'</div></div>'+
     '<div class="data-card"><div class="dk">Target date</div><div class="dv">10<span class="u"> Oct</span></div><div class="ds">Saturday · new moon · 2026</div></div>'+
   '</div>';
 
@@ -186,16 +196,18 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
 
   root.innerHTML =
     badges + data +
+    '<figure class="plan-photo"><img src="../assets/img/observatory-museum.jpg" alt="Lithuanian Museum of Ethnocosmology in Kulionys" loading="lazy"><figcaption>The museum in Kulionys · <a href="https://commons.wikimedia.org/wiki/File:Lithuanian_Museum_of_Ethnocosmology_in_Spring_2012.jpg" target="_blank" rel="noopener">Daugilas, CC BY-SA 3.0 ↗</a></figcaption></figure>'+
     '<section class="panel route-map" aria-labelledby="map-title"><p class="lab">Kaunas → Kulionys</p><h2 id="map-title">The night route, mapped.</h2>'+
       '<p class="muted">The dashed line marks the direction to the museum. Crew suggestions are pinned separately; open Google Maps for live driving directions through your chosen stop.</p>'+
       '<div id="map" role="img" aria-label="Map from Kaunas to the Museum of Ethnocosmology, including crew suggested stops"></div>'+
       '<div id="map-legend" class="map-legend"></div>'+
+      '<div class="crew-sec"><p class="lab" style="margin-top:18px;">Crew stops and ideas</p><div class="crew-suggestions" id="crewSuggestions" aria-live="polite"></div></div>'+
       '<div id="route-gmaps" class="route-links"></div>'+
       '<p class="muted" style="font-family:var(--mono);font-size:.72rem;margin-top:13px;">Map tiles and Google Maps directions need a connection.</p></section>'+
     '<div class="plan-grid"><div>'+
-      '<div class="panel"><p class="lab">Illustrative timeline</p><h2>Confirm the museum start time before using this schedule</h2><div class="timeorbit" style="margin-top:18px;">'+tl+'</div><p class="feas '+m.feas+'" style="margin-top:14px;">Planning estimate only. Adjust departure once the 80 cm slot is booked.</p></div>'+
+      '<div class="panel"><p class="lab">Day sequence</p><h2>'+(m.slotTime?'Based on the entered '+esc(m.slotTime)+' telescope time':'Ask the museum for the actual start time')+'</h2><div class="timeorbit" style="margin-top:18px;">'+tl+'</div><p class="feas '+m.feas+'" style="margin-top:14px;">'+(m.openWarning?'Your selected stop falls outside its published opening hours. Move it earlier or choose another stop.':'Driving and visit durations are estimates. Allow for traffic and the venue opening hours.')+'</p></div>'+
       '<div class="panel"><p class="lab">Route &amp; driving</p><ul>'+
-        '<li><b>Kaunas → Museum of Ethnocosmology:</b> ~128 km / ~2 h 04 each way (direct).</li>'+
+        '<li><b>Kaunas → Museum of Ethnocosmology:</b> direct ~128 km / ~2 h 05. Via '+esc(m.lab(s.mainStop))+': ~'+m.route.upKm+' km / ~'+m.route.upMinutes+' min up. Return ~128 km direct.</li>'+
         '<li><b>Lithuania rules:</b> dipped headlights day &amp; night; normal passenger cars need no road toll/vignette.</li></ul></div>'+
       '<div class="panel"><p class="lab">Observatory game-plan</p><ul>'+
         '<li><b>Telescope:</b> '+esc(m.lab(s.anchor))+' — clear-sky dependent, register ahead.</li>'+
@@ -215,12 +227,26 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       '<div class="panel"><p class="lab">Emergency one-pager</p><ul>'+
         '<li><b>112</b> — emergency.</li>'+
         '<li><b>Museum registration:</b> +370 6 152 0688 · registracija@lemuziejus.lt.</li>'+
-        '<li><b>Meeting point:</b> museum entrance / the car. Pin the route-home address.</li></ul></div>'+
+        '<li><b>Meeting point:</b> museum entrance, Kulionys.</li></ul></div>'+
+      '<div class="panel"><p class="lab">Sources and booking</p><h2>Checked 18 September 2026</h2><ul>'+
+        '<li><a href="'+sources.telescope+'" target="_blank" rel="noopener">80 cm program, weather rule and group limit ↗</a></li>'+
+        '<li><a href="'+sources.nightPrograms+'" target="_blank" rel="noopener">Night tour timing and 1–1.5 h duration ↗</a></li>'+
+        '<li><a href="'+sources.museumPrices+'" target="_blank" rel="noopener">Museum adult prices ↗</a> · <a href="'+sources.registration+'" target="_blank" rel="noopener">Registration details ↗</a></li>'+
+        (s.mainStop==='mindunai'?'<li><a href="'+sources.mindunai+'" target="_blank" rel="noopener">Mindūnai tower details ↗</a></li>':'')+
+        (s.mainStop==='dubingiai'?'<li><a href="'+sources.dubingiai+'" target="_blank" rel="noopener">Dubingiai outdoor trail ↗</a> · <a href="'+sources.dubingiaiVisitor+'" target="_blank" rel="noopener">Visitor centre October hours ↗</a></li>':'')+
+        (s.mainStop==='rumsiskes'?'<li><a href="'+sources.rumsiskes+'" target="_blank" rel="noopener">Rumšiškės hours and prices ↗</a> · <a href="'+sources.rumsiskesTickets+'" target="_blank" rel="noopener">Tickets ↗</a></li>':'')+
+        (s.mainStop==='taujenai'?'<li><a href="'+sources.taujenaiEvent+'" target="_blank" rel="noopener">Taujėnai event price and hours ↗</a> · <a href="'+sources.taujenaiTickets+'" target="_blank" rel="noopener">Event tickets ↗</a></li>':'')+
+        '<li>Fuel: ~'+esc(facts.fuel.litresPer100Km)+' L/100 km at <a href="'+facts.fuel.source+'" target="_blank" rel="noopener">€'+esc(facts.fuel.perLitre)+'/L ↗</a>, shared by three. Food is a budget allowance, not a menu quote.</li></ul></div>'+
     '</div>'+
-    '<aside><div class="sidecard"><p class="lab">Per person · est.</p><div class="total">'+(m.total!=null?'€'+esc(m.total):'—')+'</div><p class="sub">One fall day · 3 sharing</p>'+
-      '<hr><p class="lab" style="margin-bottom:10px;">Your bookings</p>'+bk+
+    '<aside><div class="sidecard"><p class="lab">Per person · est.</p><div class="total">€'+esc(m.total)+'</div><p class="sub">Tickets + fuel + food allowance · 3 sharing</p>'+
+      '<hr><p class="lab" style="margin-bottom:10px;">Bookings &amp; confirmations</p>'+bk+
       '<hr><a class="btn btn--solid" href="#" id="dlSide" data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download checklist</span></a>'+
+      '<button type="button" class="btn" id="sharePlan"><span class="fill"></span><span class="lbl">Share this plan ↗</span></button>'+
+      '<button type="button" class="btn" data-share-trip><span class="fill"></span><span class="lbl">Invite the crew ↗</span></button>'+
       '<a class="btn" href="plan-draft.html" data-transition data-cursor="label" data-label="Edit"><span class="fill"></span><span class="lbl">Edit the draft</span></a></div></aside></div>';
+
+  document.getElementById('sharePlan').addEventListener('click',function(){ if(window.WTC_sharePlan) window.WTC_sharePlan(plan); });
+  document.querySelectorAll('[data-share-trip]').forEach(function(b){ b.addEventListener('click',window.WTC_shareTrip); });
 
   function arr(x){ return Array.isArray(x)?x:[]; }
   bindDownload();
@@ -228,10 +254,10 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   function buildMap(){
     var start=[54.8985,23.9036], museum=[55.31539,25.55488];
     var host=document.getElementById('route-gmaps');
-    var stopNames={ 'moletai-food':'Molėtai, Lithuania', mindunai:'Mindūnai Observation Tower, Lithuania', dubingiai:'Dubingiai, Lithuania', rumsiskes:'Open-Air Museum of Lithuania, Rumšiškės', taujenai:'Taujėnai Manor, Lithuania', ukmerge:'Ukmergė, Lithuania' };
+    var stopNames={ mindunai:'Mindūnai Observation Tower, Lithuania', dubingiai:'Dubingiai, Lithuania', rumsiskes:'Open-Air Museum of Lithuania, Rumšiškės', taujenai:'Taujėnai Manor, Lithuania' };
     var points=['Kaunas, Lithuania'];
     if(stopNames[s.mainStop]) points.push(stopNames[s.mainStop]);
-    if(s.food==='moletai-cafe' && s.mainStop!=='moletai-food') points.push('Molėtai, Lithuania');
+    if(s.food==='moletai-cafe') points.push('Molėtai, Lithuania');
     points.push('Lithuanian Museum of Ethnocosmology, Kulionys');
     function directions(places){
       var url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(places[0])+'&destination='+encodeURIComponent(places[places.length-1])+'&travelmode=driving';
@@ -239,7 +265,10 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       return url;
     }
     host.innerHTML='<a class="btn btn--solid" target="_blank" rel="noopener" href="'+directions(points)+'"><span class="fill"></span><span class="lbl">Open route to museum ↗</span></a>';
-    if(!window.L){ document.getElementById('map').textContent='Map unavailable right now. Use the route links below.'; return; }
+    if(!window.L){ document.getElementById('map').textContent='Map unavailable right now. Use the route links below.';
+      if(window.CREW) window.CREW.onChange(function(){window.CREW.renderSuggestions(document.getElementById('crewSuggestions'));});
+      if(window.Store&&window.Store.all) window.Store.all();
+      return; }
     var map=L.map('map',{scrollWheelZoom:false}).setView([55.15,24.7],9);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:19}).addTo(map);
     L.polyline([start,museum],{color:'#e7a877',weight:3,opacity:.9,dashArray:'4,8'}).addTo(map);
@@ -261,9 +290,10 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       });
       map.fitBounds(bounds,{padding:[42,42],maxZoom:10});
       document.getElementById('map-legend').innerHTML='<span><i class="map-dot" style="background:#e09a63"></i>Kaunas</span><span>✦ Museum anchor</span><span><i class="map-dot" style="background:#a9c5a0"></i>Crew suggested stops ('+count+')</span><span>··· Direction guide</span>';
+      if(window.CREW) window.CREW.renderSuggestions(document.getElementById('crewSuggestions'));
     }
-    showCrew();
-    if(window.Store && window.Store.all) window.Store.all().then(showCrew);
+    if(window.CREW) window.CREW.onChange(showCrew);
+    if(window.Store && window.Store.all) window.Store.all();
     setTimeout(function(){map.invalidateSize();},250);
   }
   function bindDownload(){ ['dlTop','dlSide'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click', function(e){ e.preventDefault(); if(window.WTC_obsDownload) window.WTC_obsDownload(plan); }); }); }

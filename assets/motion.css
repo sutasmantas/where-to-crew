@@ -285,3 +285,11 @@ textarea{ resize:vertical; min-height:92px; line-height:1.5; }
   .section-pad::before{ animation:none; }
   *{ scroll-behavior:auto; }
 }
+/* Shared crew suggestions and trip invitation feedback, used by every trip. */
+.crew-suggestions{display:grid;gap:10px;margin-top:14px;}
+.crew-suggestion{border:1px solid var(--line);border-radius:10px;padding:13px 15px;background:var(--forest-3);}
+.crew-suggestion h4{font:700 .85rem var(--sans);color:var(--paper);margin:0 0 7px;}
+.crew-suggestion ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;}
+.crew-suggestion li{font-size:.82rem;line-height:1.45;color:var(--paper-soft);overflow-wrap:anywhere;}
+.crew-suggestion li b{color:var(--paper);}
+.trip-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:9999;background:var(--forest-3);color:var(--paper);border:1px solid var(--line);border-radius:9px;padding:12px 16px;box-shadow:0 10px 34px rgba(0,0,0,.4);font:.78rem var(--mono);}

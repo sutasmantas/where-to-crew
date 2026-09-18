@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
 <title>Sign up · Observatory — Where To, Crew?</title>
-<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/motion.css?v=19">
 <link rel="stylesheet" href="../assets/observatory.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
@@ -84,6 +84,8 @@
       <p class="lab">The crew so far</p>
       <div class="stat-row" id="crewStats" style="display:flex; gap:12px; margin-top:14px;"></div>
       <div class="crew-sec" id="crewVibes"><div class="t">Top vibes</div><div class="chips" id="crewVibesBody"></div></div>
+      <div class="crew-sec"><div class="t">Stops and ideas everyone can see</div><div class="crew-suggestions" id="crewSuggestions" aria-live="polite"></div></div>
+      <button type="button" class="btn" data-share-trip style="margin-top:18px;"><span class="fill"></span><span class="lbl">Invite the crew ↗</span></button>
     </section>
 
     <form class="form-card" id="signup" novalidate>
@@ -153,6 +155,7 @@
       <div class="success-next">
         <a class="btn btn--solid" href="plan-draft.html" data-transition data-magnetic data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Go to the plan draft →</span></a>
         <a class="btn" href="#" id="edit-again"><span class="fill"></span><span class="lbl">Edit my answers</span></a>
+        <button type="button" class="btn" data-share-trip><span class="fill"></span><span class="lbl">Invite the crew ↗</span></button>
       </div>
       <p class="muted" id="signup-sync" style="margin-top:26px; font-family:var(--mono); font-size:.72rem;">Saved on this device. Checking crew sync…</p>
     </div>
@@ -182,8 +185,9 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
 window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'observatory' };
 </script>
 <script src="../assets/config.js"></script>
-<script src="../assets/store.js"></script>
-<script src="../assets/crew.js"></script>
+<script src="../assets/store.js?v=19"></script>
+<script src="../assets/crew.js?v=19"></script>
+<script src="../assets/trip-tools.js?v=19"></script>
 <script>
 (function(){
   var state = { name:'', going:'', dates:['Oct 10'], stops:[], vibes:[], activities:[], anchor:'80cm', season:'October 2026', notes:'' };
@@ -213,26 +217,36 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
     var vibes = window.CREW.tally(people, function(p){ return p.vibes; }).slice(0,6);
     document.getElementById('crewVibes').style.display = vibes.length ? '' : 'none';
     document.getElementById('crewVibesBody').innerHTML = vibes.map(function(v){ return '<span class="pop-pill">'+v[0]+' <b>'+v[1]+'</b></span>'; }).join('');
+    window.CREW.renderSuggestions(document.getElementById('crewSuggestions'),people);
+    renderOthers(); drawCrewPins();
   }
 
   var OBS={lat:55.31539,lng:25.55488};   // Museum of Ethnocosmology, Kulionys
   var KAUNAS={lat:54.8985,lng:23.9036};
-  var map, myStops=[];
+  var map, crewPins, myStops=[];
+  function drawCrewPins(){
+    if(!crewPins) return;
+    crewPins.clearLayers();
+    people.forEach(function(p){ (p.stops||[]).forEach(function(s){
+      var lat=Number(s.lat),lng=Number(s.lng);
+      if(!Number.isFinite(lat)||!Number.isFinite(lng)) return;
+      L.circleMarker([lat,lng],{radius:7,color:'#a9c5a0',weight:2,fillColor:'#a9c5a0',fillOpacity:.5})
+        .addTo(crewPins).bindPopup('<b>'+esc(p.name)+'</b> suggested:<br>'+esc(s.label||''));
+    }); });
+  }
   function initMap(){
     map=L.map('map',{scrollWheelZoom:false}).setView([55.15,24.7], 9);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors', maxZoom:19}).addTo(map);
     var star=L.divIcon({className:'', html:'<div class="star-pin">✦</div>', iconSize:[26,26], iconAnchor:[13,13]});
     L.marker([OBS.lat,OBS.lng],{icon:star}).addTo(map).bindPopup('<b>Museum of Ethnocosmology</b><br>Night telescope — the anchor');
     L.circleMarker([KAUNAS.lat,KAUNAS.lng],{radius:6,color:'#e09a63',weight:2,fillColor:'#e7a877',fillOpacity:.7}).addTo(map).bindPopup('<b>Kaunas</b><br>Start');
-    people.forEach(function(p){ (p.stops||[]).forEach(function(s){ if(!s.lat) return;
-      L.circleMarker([s.lat,s.lng],{radius:7,color:'#a9c5a0',weight:2,fillColor:'#a9c5a0',fillOpacity:.5})
-        .addTo(map).bindPopup('<b>'+esc(p.name)+'</b> suggested:<br>'+esc(s.label||'')); }); });
+    crewPins=L.layerGroup().addTo(map); drawCrewPins();
     map.on('click', function(e){ addStop(e.latlng.lat,e.latlng.lng); });
     setTimeout(function(){ map.invalidateSize(); }, 200);
   }
-  function addStop(lat,lng){ var marker=L.marker([lat,lng]).addTo(map); var stop={lat:lat,lng:lng,label:'Looking up…',marker:marker};
+  function addStop(lat,lng){ var marker=L.marker([lat,lng]).addTo(map); var stop={lat:lat,lng:lng,label:lat.toFixed(3)+', '+lng.toFixed(3),marker:marker};
     myStops.push(stop); marker.bindPopup(stop.label).openPopup(); marker.on('click', function(){ removeStop(stop); }); renderStops();
-    revGeocode(lat,lng).then(function(lbl){ stop.label=lbl; marker.setPopupContent(lbl); renderStops(); }); }
+    stop.lookup=revGeocode(lat,lng).then(function(lbl){ stop.label=lbl; marker.setPopupContent(lbl); renderStops(); }); }
   function removeStop(stop){ map.removeLayer(stop.marker); var i=myStops.indexOf(stop); if(i>=0) myStops.splice(i,1); renderStops(); }
   function renderStops(){ var el=document.getElementById('stopsList');
     el.innerHTML = myStops.length ? myStops.map(function(s,i){ return '<div class="stop-row"><span>📍 '+esc(s.label)+'</span><button type="button" class="rm" data-i="'+i+'">remove</button></div>'; }).join('') : '';
@@ -250,16 +264,19 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   function addAct(){ var inp=document.getElementById('actInput'); var v=inp.value.trim(); if(!v) return; state.activities.push(v); inp.value=''; renderActs(); inp.focus(); }
   document.getElementById('actAdd').addEventListener('click', addAct);
   document.getElementById('actInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); addAct(); } });
-  (function(){ var others=[]; people.forEach(function(p){ (p.activities||[]).forEach(function(a){ others.push({name:p.name, idea:a}); }); });
-    if(others.length){ document.getElementById('actOthers').style.display=''; document.getElementById('actOthersList').innerHTML=others.map(function(o){ return '<div class="act-other">• '+esc(o.idea)+' <span class="by">— '+esc(o.name)+'</span></div>'; }).join(''); } })();
+  function renderOthers(){ var others=[]; people.forEach(function(p){ (p.activities||[]).forEach(function(a){ others.push({name:p.name, idea:a}); }); });
+    document.getElementById('actOthers').style.display=others.length?'':'none';
+    document.getElementById('actOthersList').innerHTML=others.map(function(o){ return '<div class="act-other">• '+esc(o.idea)+' <span class="by">— '+esc(o.name)+'</span></div>'; }).join(''); }
 
-  document.getElementById('signup').addEventListener('submit', function(e){
+  document.getElementById('signup').addEventListener('submit', async function(e){
     e.preventDefault();
     state.name=document.getElementById('f-name').value.trim();
     state.notes=document.getElementById('f-notes').value.trim();
     var status=document.getElementById('form-status');
     if(!state.name){ status.textContent='↑ pop your name in first'; status.style.color='var(--sage)'; document.getElementById('f-name').focus(); return; }
     if(!state.going){ status.textContent='↑ let us know if you\u2019re in'; status.style.color='var(--sage)'; return; }
+    status.textContent='Saving your stops and ideas…';
+    await Promise.allSettled(myStops.map(function(s){return s.lookup||Promise.resolve();}));
     state.dates=['Oct 10']; state.anchor='80cm'; state.season='October 2026';
     state.stops=myStops.map(function(s){ return {lat:s.lat,lng:s.lng,label:s.label}; });
     WTC.save('wtc-observatory-signup', state);
@@ -287,7 +304,7 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   var localSig=WTC.load('wtc-observatory-signup', null);
   if(localSig && localSig.name) prefill(localSig);
 
-  renderCrew();
+  window.CREW.onChange(renderCrew);
   if(window.Store && window.Store.all){ window.Store.all().then(function(){
     renderCrew();
     var meKey=window.Store.key(window.Store.me());

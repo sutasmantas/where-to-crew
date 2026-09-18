@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
 <title>Plan draft · Observatory — Where To, Crew?</title>
-<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/motion.css?v=19">
 <link rel="stylesheet" href="../assets/observatory.css">
 <style>
   main{ position:relative; z-index:2; }
@@ -122,6 +122,15 @@
   .wcall .wt{ font-size:.9rem; color:var(--paper); } .wcall .wt b{ color:var(--amber); }
 
   .draft-finish{ margin:28px 0 8px; padding:24px; border:1px solid var(--sage); border-radius:14px; background:rgba(169,197,160,.09); }
+  .stop-photos{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:18px; }
+  .stop-photos figure{ margin:0; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--forest-3); }
+  .stop-photos img{ display:block; width:100%; height:150px; object-fit:cover; }
+  .stop-photos figcaption{ padding:9px 11px; font-size:.77rem; line-height:1.4; color:var(--paper-soft); }
+  .stop-photos a,.evidence a{ color:var(--sage); text-decoration:underline; }
+  .evidence{ margin:18px 0; padding:18px; border:1px solid var(--line); border-radius:12px; color:var(--paper-soft); font-size:.85rem; line-height:1.6; }
+  .evidence h3{ color:var(--paper); margin:0 0 8px; }
+  .slot-input{ width:100%; max-width:190px; margin:8px 0; padding:9px; background:var(--forest-2); color:var(--paper); border:1px solid var(--line); border-radius:8px; font:inherit; }
+  @media(max-width:600px){ .stop-photos{ grid-template-columns:1fr; } }
   .draft-finish h2{ color:var(--paper); font-size:clamp(1.4rem,2.5vw,1.8rem); margin:0 0 8px; }
   .draft-finish p{ color:var(--paper-soft); font-size:.92rem; line-height:1.5; max-width:48ch; margin:0 0 18px; }
   .draft-finish .btn{ justify-content:center; min-width:230px; }
@@ -166,7 +175,7 @@
     <header class="trip-head" data-journey="Decide" style="padding:34px 0 22px;">
       <p class="route-eyebrow" data-reveal data-reveal-mode="fade">Decide the night together · stop by stop</p>
       <h1 class="display" data-reveal data-reveal="words">Build the night. Protect the slot.</h1>
-      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">The target is <b>Saturday 10 October 2026</b> with the <b>80 cm telescope</b>. Choose the route, a stop, the day program and food — the per-person total and a <b>time meter that guards the night slot</b> update live, and every booking lands in <b>Your bookings</b>. Evenings are about the sky, not the bar.</p>
+      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">The target is <b>Saturday 10 October 2026</b> with the <b>80 cm telescope</b>. Compare one optional stop, the daytime museum visit and food. Prices and drive times update with your choices. The museum must confirm availability and the night start time before we can set a departure time.</p>
     </header>
 
     <div class="wcall" data-reveal data-reveal-mode="fade">
@@ -178,20 +187,20 @@
       <div class="opts">
 
         <section class="dayblock" data-day="0">
-          <div class="day-head"><span class="day-tag">The fixed plan</span><h2>Saturday 10 October · 80 cm telescope</h2><p class="tradeoff">A new-moon target for darker skies. The museum slot is not booked yet; confirm availability and its actual start time with the museum. Night observations depend on clear skies and a same-day weather call by 14:00.</p></div>
+          <div class="day-head"><span class="day-tag">The fixed plan</span><h2>Saturday 10 October · 80 cm telescope</h2><p class="tradeoff">A new-moon target for darker skies. The museum says <a href="https://etnokosmomuziejus.lt/en/night-programs/" target="_blank" rel="noopener">night tours begin about 1.5 hours after sunset ↗</a>; that is guidance, not a confirmed October 10 slot. Ask the museum for availability and the actual time. Clear skies are required; expect a same-day weather decision by 14:00.</p></div>
         </section>
 
         <!-- THE WAY UP -->
         <section class="dayblock" data-day="1">
-          <div class="day-head"><span class="day-tag">The way up</span><h2>Route &amp; one stop</h2><p class="tradeoff">Every stop pushes the day earlier or later — the meter shows when a stop starts eating the buffer before the night slot.</p></div>
+          <div class="day-head"><span class="day-tag">The way up</span><h2>Route &amp; one stop</h2><p class="tradeoff">Compare extra driving, visit time, opening hours and entry price. The latest departure appears only after you enter the museum's confirmed start time.</p></div>
 
           <div class="opt" data-group="routeStyle" data-type="single">
             <div class="opt-head"><h3>Route style</h3><span class="cmp-toggle-wrap"></span></div>
             <p class="opt-sub">Direct is the safe default. Nature or culture reveal the stops that fit that road.</p>
             <div class="choices">
-              <button type="button" class="choice" data-val="direct" data-price="9" data-drive="0" data-suggest="Direct keeps the whole day in hand. If the weather looks marginal or the group's slow to leave Kaunas, this is the one that never risks the slot."><span class="mark"></span><span class="ctext"><span class="clabel">Direct · observatory-first</span><span class="cmeta"><span>fuel ~€9</span><span>~2 h 04 each way</span><span class="m-why">Shortest, safest. Reveals food + day-tour stops.</span></span></span><span class="price up">~€9</span></button>
-              <button type="button" class="choice" data-val="nature" data-price="12" data-drive="0.4"><span class="mark"></span><span class="ctext"><span class="clabel">Nature route</span><span class="cmeta"><span>fuel ~€12</span><span>+ a little detour</span><span class="m-why">Reveals Mindūnai tower, Dubingiai/Asveja, Molėtai food.</span></span></span><span class="price up">~€12</span></button>
-              <button type="button" class="choice" data-val="culture" data-price="13" data-drive="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Culture route</span><span class="cmeta"><span>fuel ~€13</span><span>longer day</span><span class="m-why">Reveals Rumšiškės, Taujėnai, Ukmergė.</span></span></span><span class="price up">~€13</span></button>
+              <button type="button" class="choice" data-val="direct" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Direct · museum first</span><span class="cmeta"><span>128 km / ~2 h 05 up</span><span class="m-why">No separate stop; more time at the museum.</span></span></span></button>
+              <button type="button" class="choice" data-val="nature" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Nature stop</span><span class="cmeta"><span>tower or lake</span><span class="m-why">Compare Mindūnai and Dubingiai below.</span></span></span></button>
+              <button type="button" class="choice" data-val="culture" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Culture stop</span><span class="cmeta"><span>museum or manor</span><span class="m-why">Compare Rumšiškės and Taujėnai below.</span></span></span></button>
             </div>
           </div>
 
@@ -200,12 +209,16 @@
             <p class="lodge-prompt" data-mainstop-prompt>Pick a route style first.</p>
             <div class="choices">
               <button type="button" class="choice ms-any" data-val="none" data-price="0" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">None · arrive early at the observatory</span><span class="cmeta"><span>€0</span><span class="m-why">Most buffer before the night slot — outdoor exhibition is free anytime.</span></span></span><span class="price free">€0</span></button>
-              <button type="button" class="choice ms-nature ms-direct" data-val="moletai-food" data-price="0" data-hours="1" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Molėtai food / warm-up</span><span class="cmeta"><span>food below</span><span>~1 h</span><span class="cbook">📌 reserve if weekend</span></span><span class="cnote">Arrive fed and warm — protects the late slot.</span></span><span class="price free">€0</span></button>
-              <button type="button" class="choice ms-nature" data-val="mindunai" data-price="1" data-hours="1.25" data-suggest="The most on-theme add-on and the safest: forest, lakes and a 36 m tower right next to Kulionys, so it barely touches your buffer."><span class="mark"></span><span class="ctext"><span class="clabel">Mindūnai tower + Labanoras lakes</span><span class="cmeta"><span>+€0–1</span><span>~45–90 min</span><span class="m-why">Best fall-photo stop, close to the observatory. No booking.</span></span></span><span class="price up">~€1</span></button>
-              <button type="button" class="choice ms-nature" data-val="dubingiai" data-price="1" data-hours="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Dubingiai + Asveja lake route</span><span class="cmeta"><span>+€0–1</span><span>~1–2 h</span><span class="m-why">Scenic castle mound + Lithuania's longest lake. Daylight only.</span></span></span><span class="price up">~€1</span></button>
-              <button type="button" class="choice ms-culture" data-val="rumsiskes" data-price="0" data-hours="2.5" data-book="rumsiskes"><span class="mark"></span><span class="ctext"><span class="clabel">Rumšiškės Open-Air Museum</span><span class="cmeta"><span>check ticket</span><span>~1.5–3 h</span><span class="cbook">📌 check fall hours/tickets</span></span><span class="cnote">Culture + stars — only if fall hours fit. Just 28 min from Kaunas.</span></span><span class="price up">check</span></button>
-              <button type="button" class="choice ms-culture" data-val="taujenai" data-price="0" data-hours="1.5" data-book="taujenai"><span class="mark"></span><span class="ctext"><span class="clabel">Taujėnai Manor + park</span><span class="cmeta"><span>check ticket</span><span>~1–2 h</span><span class="cbook">📌 verify hours/events</span></span></span><span class="price up">check</span></button>
-              <button type="button" class="choice ms-culture" data-val="ukmerge" data-price="0" data-hours="1.25" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Ukmergė food / photo stop</span><span class="cmeta"><span>food below</span><span>~45–90 min</span><span class="m-why">Easy midpoint on the Taujėnai road.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice ms-nature" data-val="mindunai" data-price="0" data-hours="1.25" data-suggest="A 36 m observation tower near the museum; a short daylight stop if the weather is good."><span class="mark"></span><span class="ctext"><span class="clabel">Mindūnai observation tower</span><span class="cmeta"><span>146 km / ~2 h 29 up</span><span>+18 km / +24 min vs direct</span><span>~75 min visit</span><span class="m-why">36 m viewpoint over Labanoras. No timed booking; check weather.</span></span></span><span class="price free">€0 entry</span></button>
+              <button type="button" class="choice ms-nature" data-val="dubingiai" data-price="0" data-hours="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Dubingiai + Asveja lake</span><span class="cmeta"><span>169 km / ~2 h 25 up</span><span>+41 km / +20 min vs direct</span><span>~90 min visit</span><span class="m-why">Castle-site trail and lake view. Visitor centre requires advance guide booking on October weekends; plan is the outdoor walk only.</span></span></span><span class="price free">€0 walk</span></button>
+              <button type="button" class="choice ms-culture" data-val="rumsiskes" data-price="10" data-hours="2.5" data-book="rumsiskes"><span class="mark"></span><span class="ctext"><span class="clabel">Rumšiškės Open-Air Museum</span><span class="cmeta"><span>165 km / ~2 h 20 up</span><span>+37 km / +15 min vs direct</span><span>10:00–17:00</span><span class="m-why">Large outdoor heritage museum; October interiors partly open. Allow ~2.5 h.</span></span></span><span class="price up">+€10 adult</span></button>
+              <button type="button" class="choice ms-culture" data-val="taujenai" data-price="8" data-hours="1.5" data-book="taujenai"><span class="mark"></span><span class="ctext"><span class="clabel">Taujėnai Manor autumn event</span><span class="cmeta"><span>162 km / ~2 h 33 up</span><span>+34 km / +28 min vs direct</span><span>11:00–21:00</span><span class="m-why">Decorated manor park, pumpkins and animal enclosure. Event runs 9 Oct–2 Nov; official ticket range €4–8, so budget €8.</span></span></span><span class="price up">plan €8</span></button>
+            </div>
+            <div class="stop-photos" aria-label="Photos of the optional stops">
+              <figure class="photo-nature"><img src="../assets/img/mindunai-tower.jpg" alt="Mindūnai observation tower above the forest" loading="lazy"><figcaption>Mindūnai · <a href="https://www.saugoma.lt/en/objects/labanoras-regional-park-mindunai-observation-tower" target="_blank" rel="noopener">Official details ↗</a> · <a href="https://commons.wikimedia.org/wiki/File:Mind%C5%ABn%C5%B3_bok%C5%A1tas.jpg" target="_blank" rel="noopener">photo: Italas, CC BY-SA 4.0 ↗</a></figcaption></figure>
+              <figure class="photo-nature"><img src="../assets/img/asveja-lake.jpg" alt="Asveja lake near Dubingiai" loading="lazy"><figcaption>Dubingiai · <a href="https://saugoma.lt/en/objects/objects-dubingiai-castle-site-cognitive-trail" target="_blank" rel="noopener">Official trail ↗</a> · <a href="https://commons.wikimedia.org/wiki/File:Asveja_nuo_%C5%BDalktyn%C4%97s.JPG" target="_blank" rel="noopener">photo: public domain ↗</a></figcaption></figure>
+              <figure class="photo-culture"><img src="../assets/img/rumsiskes-museum.jpg" alt="Traditional farmhouse at the Rumšiškės open-air museum" loading="lazy"><figcaption>Rumšiškės · <a href="https://lemu.lt/lankytojams/susiplanuokite-apsilankyma/" target="_blank" rel="noopener">Official hours ↗</a> · <a href="https://commons.wikimedia.org/wiki/File:House_in_rumsiskes_museum.jpg" target="_blank" rel="noopener">photo: Jess &amp; Peter, CC BY 2.0 ↗</a></figcaption></figure>
+              <figure class="photo-culture"><img src="../assets/img/taujenai-manor.jpg" alt="Taujėnai Manor exterior" loading="lazy"><figcaption>Taujėnai · <a href="https://taujenudvaras.lt/event/siurpnakcio-pasakos/" target="_blank" rel="noopener">Official event ↗</a> · <a href="https://commons.wikimedia.org/wiki/File:Tauj%C4%97n%C5%B3_dvaras.jpg" target="_blank" rel="noopener">photo: KrivisKrivaitis, CC BY-SA 4.0 ↗</a></figcaption></figure>
             </div>
           </div>
 
@@ -224,7 +237,6 @@
             <div class="choices">
               <button type="button" class="choice" data-val="picnic" data-price="6" data-hours="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Pack snacks / picnic from Kaunas</span><span class="cmeta"><span>+€5–8</span><span>fastest</span><span class="m-why">Cheapest, quickest, weather-proof.</span></span></span><span class="price up">~€6</span></button>
               <button type="button" class="choice" data-val="moletai-cafe" data-price="14" data-hours="1" data-book="restaurant" data-suggest="A warm sit-down dinner in Molėtai before the night slot is the comfort move — everyone arrives fed and warm for a cold tower."><span class="mark"></span><span class="ctext"><span class="clabel">Molėtai café / restaurant</span><span class="cmeta"><span>+€8–20</span><span>~1 h</span><span class="cbook">📌 reserve if weekend</span></span><span class="cnote">Warm and safer before a cold late observation.</span></span><span class="price up">~€14</span></button>
-              <button type="button" class="choice" data-val="route-meal" data-price="14" data-hours="1" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Ukmergė / Taujėnai route meal</span><span class="cmeta"><span>+€8–20</span><span>~1 h</span><span class="cbook">📌 culture route only</span></span></span><span class="price up">~€14</span></button>
             </div>
           </div>
         </section>
@@ -232,6 +244,10 @@
         <section class="dayblock" data-day="2">
           <div class="day-head"><span class="day-tag">Before the trip</span><h2>Book, then check the sky</h2><p class="tradeoff">Register the 80 cm observation for 10 October. Keep the phone reachable on the day; if the museum cancels for weather, reschedule the telescope visit.</p></div>
         </section>
+
+        <div class="evidence"><h3>What these estimates use · checked 18 September 2026</h3>
+          <p>Adult tickets: <a href="https://etnokosmomuziejus.lt/en/tickets-info/" target="_blank" rel="noopener">museum €12 night telescope / €8 guided day tour</a>, <a href="https://lemu.lt/lankytojams/susiplanuokite-apsilankyma/" target="_blank" rel="noopener">Rumšiškės €10</a>. <a href="https://taujenudvaras.lt/event/siurpnakcio-pasakos/" target="_blank" rel="noopener">Taujėnai's Oct 10 event lists €4–8 and 11:00–21:00</a>; the estimate uses €8. Driving distances and times are car route estimates via each stop, with return direct; traffic can change them. Fuel uses 6.5 L/100 km, three people and <a href="https://www.ena.lt/Naujiena/kdk-20260918/" target="_blank" rel="noopener">Lithuanian petrol average €1.94/L</a>. Food is an allowance, not a menu quote. Check ticket class and opening again when booking.</p>
+        </div>
 
         <div class="draft-finish">
           <h2>Ready to see the plan?</h2>
@@ -255,10 +271,12 @@
 
           <hr class="sum-line">
           <div class="sum-h">Time meter · protect the slot</div>
+          <label for="slotTime" class="muted" style="display:block;font-size:.82rem;line-height:1.5;">Museum-confirmed telescope start time (leave blank until confirmed)</label>
+          <input id="slotTime" class="slot-input" type="time" aria-describedby="slotHelp"><p id="slotHelp" class="muted" style="font-size:.76rem;">An estimate cannot confirm a booking. <a href="tel:+37061520688" style="color:var(--sage);">Call +370 6 152 0688</a>.</p>
           <div class="daymeter" id="daymeter"></div>
 
           <hr class="sum-line">
-          <div class="sum-h">Your bookings <span id="bk-count" style="color:var(--star-warm);"></span></div>
+          <div class="sum-h">Bookings &amp; confirmations <span id="bk-count" style="color:var(--star-warm);"></span></div>
           <div class="bookings" id="bookings"></div>
 
           <hr class="sum-line">
@@ -269,9 +287,14 @@
           <div class="sum-h">Crew leaning</div>
           <div class="lean" id="lean"></div>
 
+          <hr class="sum-line">
+          <div class="sum-h">Crew stops and ideas</div>
+          <div class="crew-suggestions" id="crewSuggestions" aria-live="polite"></div>
+
           <a class="btn btn--solid" href="plan.html" id="lock-btn" data-transition data-cursor="label" data-label="View plan"><span class="fill"></span><span class="lbl">Go to the plan</span></a>
           <button type="button" class="btn dlmini" id="dlMini"><span class="fill"></span><span class="lbl">Download checklist</span></button>
           <button type="button" class="btn dlmini" id="shareMini"><span class="fill"></span><span class="lbl">Share my plan ↗</span></button>
+          <button type="button" class="btn dlmini" data-share-trip><span class="fill"></span><span class="lbl">Invite the crew ↗</span></button>
           <p class="foot" id="draft-sync">Saved on this device. Add your name to share with the crew.</p>
         </div>
       </aside>
@@ -301,11 +324,13 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
 window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'observatory' };
 </script>
 <script src="../assets/config.js"></script>
-<script src="../assets/store.js"></script>
-<script src="../assets/crew.js"></script>
-<script src="../assets/share.js"></script>
-<script src="../assets/checklist-observatory.js"></script>
-<script src="../assets/plan-draft-observatory.js"></script>
+<script src="../assets/trip-facts.js?v=19"></script>
+<script src="../assets/store.js?v=19"></script>
+<script src="../assets/crew.js?v=19"></script>
+<script src="../assets/trip-tools.js?v=19"></script>
+<script src="../assets/share.js?v=19"></script>
+<script src="../assets/checklist-observatory.js?v=19"></script>
+<script src="../assets/plan-draft-observatory.js?v=19"></script>
 <script src="../assets/motion.js?v=2"></script>
 <script src="../assets/sky.js"></script>
 <script>/* service worker disabled in this build — purge any stale one so the page never auto-reloads or serves stale */

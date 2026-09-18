@@ -7,7 +7,7 @@
   function encodePlan(plan){
     plan=plan || WTC.load(key,{}) || {};
     var who=plan.who || (window.Store && window.Store.me && window.Store.me()) || '';
-    return enc(JSON.stringify({v:1,who:who,sel:plan.sel||{},total:plan.total||null,bookings:plan.bookings||[],bookingStatus:plan.bookingStatus||{},night:plan.night||null}));
+    return enc(JSON.stringify({v:1,who:who,sel:plan.sel||{},total:plan.total||null,bookings:plan.bookings||[],bookingStatus:plan.bookingStatus||{},slotTime:plan.slotTime||''}));
   }
   function decodePlan(value){
     try{
@@ -19,7 +19,7 @@
         return {id:String(b.id||'').slice(0,80),name:String(b.name||'').slice(0,200),where:String(b.where||'').slice(0,300),must:!!b.must};
       }) : [];
       plan.bookingStatus=plan.bookingStatus && typeof plan.bookingStatus==='object' ? plan.bookingStatus : {};
-      plan.night=typeof plan.night==='number' && Number.isFinite(plan.night) ? plan.night : null;
+      plan.slotTime=/^([01]\d|2[0-3]):[0-5]\d$/.test(plan.slotTime||'')?plan.slotTime:'';
       return plan;
     }
     catch(e){ return null; }

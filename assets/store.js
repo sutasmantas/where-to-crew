@@ -15,7 +15,8 @@
 */
 (function(){
   var CFG  = window.WTC_CFG || {};
-  var TRIP = CFG.trip || 'poland';
+  var TRIP = CFG.trip;
+  if(!/^[a-z0-9-]+$/.test(TRIP||'')) throw new Error('Trip namespace missing: load config.js before store.js');
   var API  = (CFG.apiUrl && CFG.apiUrl.indexOf('<') < 0) ? CFG.apiUrl : '';   // '' until a real URL is set
   var CACHEKEY = 'wtc-crew-' + TRIP;
   var PENDKEY  = 'wtc-pending-' + TRIP;
@@ -29,14 +30,17 @@
   function keyFor(n){ return (n||'').trim().toLowerCase().replace(/\s+/g,' '); }
 
   function readCache(){ return ls(CACHEKEY, {}) || {}; }
-  function writeCache(o){ save(CACHEKEY, o||{}); }
+  function changed(){ window.dispatchEvent(new CustomEvent('wtc:crew-updated', {detail:{trip:TRIP}})); }
+  function writeCache(o){ save(CACHEKEY, o||{}); changed(); }
 
   /* ---- reads ---- */
   function fetchAll(){
     if(!API) return Promise.resolve(readCache());
     return fetch(API + '?trip=' + encodeURIComponent(TRIP), { headers:{ 'Accept':'application/json' } })
       .then(function(r){ if(!r.ok) throw new Error('store read failed: '+r.status); return r.json(); })
-      .then(function(o){ var crew = (o && o.crew) || o || {}; writeCache(crew); return crew; })
+      .then(function(o){ var crew = (o && o.crew) || o || {}, local=readCache();
+        Object.keys(local).forEach(function(k){ if(local[k] && (!crew[k] || Number(local[k].updated)>Number(crew[k].updated||0))) crew[k]=local[k]; });
+        writeCache(crew); return crew; })
       .catch(function(){ return readCache(); });            // offline → last-known cache
   }
 
@@ -69,6 +73,8 @@
     });
   }
   window.addEventListener('online', flushPending);
+  window.addEventListener('focus', fetchAll);
+  window.addEventListener('storage', function(e){ if(e.key===CACHEKEY) changed(); });
 
   window.Store = {
     enabled: !!API,
