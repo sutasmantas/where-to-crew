@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{if(sessionStorage.getItem('wtc-trans'))document.documentElement.classList.add('via-trans');}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<title>Poland · Energylandia Thrill Road Trip — Where To, Crew?</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<style>
+  /* ---------- the continuous drive environment ---------- */
+  .drive{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .drive .sky{ position:absolute; inset:0; background:linear-gradient(180deg, var(--sky-top,#10201a) 0%, var(--sky-bot,#16241c) 100%); }
+  .drive .stars{ position:absolute; inset:0; opacity:0;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 18%, rgba(243,237,225,.9), transparent),
+      radial-gradient(1.2px 1.2px at 28% 32%, rgba(243,237,225,.7), transparent),
+      radial-gradient(1.4px 1.4px at 44% 12%, rgba(243,237,225,.85), transparent),
+      radial-gradient(1px 1px at 58% 26%, rgba(243,237,225,.7), transparent),
+      radial-gradient(1.5px 1.5px at 72% 16%, rgba(243,237,225,.9), transparent),
+      radial-gradient(1.1px 1.1px at 84% 30%, rgba(243,237,225,.7), transparent),
+      radial-gradient(1.3px 1.3px at 36% 44%, rgba(243,237,225,.7), transparent),
+      radial-gradient(1.2px 1.2px at 66% 40%, rgba(243,237,225,.65), transparent),
+      radial-gradient(1.5px 1.5px at 92% 10%, rgba(243,237,225,.85), transparent),
+      radial-gradient(1px 1px at 6% 38%, rgba(243,237,225,.6), transparent);
+  }
+  .drive .orb{ position:absolute; width:130px; height:130px; left:var(--orb-x,12%); top:var(--orb-y,72%); transform:translate(-50%,-50%);
+    border-radius:50%; background:radial-gradient(circle at 50% 50%, var(--orb,#d98c5f) 0%, transparent 66%); filter:blur(3px); opacity:.85; }
+  .drive .orb::after{ content:''; position:absolute; inset:42px; border-radius:50%; background:var(--orb-core,#e7a877);
+    box-shadow:0 0 60px 16px var(--orb-core,#e7a877); }
+  .drive .haze{ position:absolute; left:-12%; right:-12%; bottom:-4%; height:62%; will-change:transform;
+    background:radial-gradient(120% 100% at 50% 118%, var(--glow,rgba(192,97,63,.26)) 0%, transparent 70%); }
+</style>
+<style>
+  /* ---------- preloader route shape ---------- */
+  .preload svg{ width:min(340px,64vw); }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; min-height:100svh; display:flex; align-items:center; overflow:hidden; }
+  .hero .bg-amb{ z-index:0; }
+  .hero .hero-photo{ position:absolute; inset:0; z-index:0; opacity:.34; background-size:cover; background-position:center; will-change:transform; }
+  .hero .hero-veil{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(15,24,19,.55), rgba(22,36,28,.35) 45%, rgba(15,24,19,.85)); }
+  .hero .inner{ position:relative; z-index:3; width:100%; padding-top:90px; }
+  .hero .eyebrow{ margin-bottom:22px; }
+  .hero h1{ max-width:15ch; }
+  .hero .hero-sub{ margin-top:26px; max-width:44ch; }
+  .hero .row{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-top:38px; }
+  .scrollcue{ position:absolute; left:var(--pad); bottom:30px; z-index:3; font-family:var(--mono); font-size:.64rem; letter-spacing:.24em; text-transform:uppercase; color:var(--paper-soft); display:flex; flex-direction:column; gap:12px; }
+  .scrollcue .bar{ width:1px; height:46px; background:linear-gradient(var(--terra-2),transparent); animation:cue 1.9s var(--ease) infinite; transform-origin:top; }
+  @keyframes cue{ 0%,100%{ transform:scaleY(.4); opacity:.4; } 50%{ transform:scaleY(1); opacity:1; } }
+
+  /* ---------- intro statement ---------- */
+  .intro{ position:relative; z-index:2; }
+  .intro .h2{ max-width:20ch; }
+  .intro .stat-row{ display:flex; flex-wrap:wrap; gap:clamp(28px,5vw,72px); margin-top:clamp(44px,6vw,80px); }
+  .stat .n{ font-family:var(--display); font-weight:800; font-size:clamp(2.4rem,4.5vw,3.6rem); line-height:1; }
+  .stat .l{ font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-soft); margin-top:10px; max-width:18ch; }
+
+  /* ---------- SIGNATURE: route map ---------- */
+  .mapsec{ position:relative; }
+  .mapstage{ height:100svh; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(15,24,19,.4); }
+  .maptag{ position:absolute; top:clamp(78px,11vh,120px); left:0; right:0; z-index:4; text-align:center; }
+  .map-svg{ width:100%; height:100%; display:block; }
+  .route{ fill:none; stroke:var(--terra); stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+  .route-ghost{ fill:none; stroke:var(--paper); stroke-opacity:.09; stroke-width:4; stroke-linecap:round; }
+  .wp{ transform-box:fill-box; transform-origin:center; }
+  .wp .dot{ fill:var(--paper); stroke:var(--terra); stroke-width:3; }
+  .wp .label{ fill:var(--paper); font-family:var(--display); font-weight:700; font-size:21px; }
+  .wp .sub{ fill:var(--paper-soft); font-family:var(--mono); font-size:12px; letter-spacing:.04em; }
+  /* postcards that pop at each waypoint */
+  .pc{ transform-box:fill-box; transform-origin:center; }
+  .pc .frame{ fill:var(--forest-2); stroke:var(--line); stroke-width:1.5; }
+  .pc image{ }
+  #marker .ring{ fill:none; stroke:var(--terra-2); stroke-width:2; transform-box:fill-box; transform-origin:center; animation:pulse 1.8s ease-out infinite; }
+  #marker .core{ fill:var(--terra); }
+  #marker .glint{ fill:var(--paper); }
+  @keyframes pulse{ 0%{ transform:scale(.5); opacity:.9; } 70%{ transform:scale(2); opacity:0; } 100%{ opacity:0; } }
+  @media(prefers-reduced-motion:reduce){ #marker .ring{ animation:none; } .scrollcue .bar{ animation:none; } }
+
+  /* ---------- destinations: postcards ---------- */
+  .board{ position:relative; z-index:2; }
+  .board-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:clamp(40px,5vw,68px); }
+  @media(max-width:920px){ .board-grid{ grid-template-columns:1fr; max-width:460px; margin-inline:auto; } }
+  .postcard{ position:relative; display:block; text-decoration:none; color:var(--paper); border-radius:4px; overflow:hidden; background:var(--forest-2); border:1px solid var(--line); }
+  .postcard .ph{ position:relative; aspect-ratio:4/4.6; overflow:hidden; }
+  .postcard .ph .img{ position:absolute; inset:-6%; background-size:cover; background-position:center; transition:transform .9s var(--ease); will-change:transform; }
+  .postcard:hover .ph .img{ transform:scale(1.07); }
+  .postcard .grad{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(15,24,19,.05) 35%,rgba(15,24,19,.86)); }
+  .postcard .stamp{ position:absolute; top:14px; right:14px; z-index:3; font-family:var(--mono); font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; padding:.5em .7em; border-radius:3px; border:1px solid; }
+  .postcard .stamp.active{ background:var(--terra); border-color:var(--terra); color:var(--forest); }
+  .postcard .stamp.lock{ background:rgba(15,24,19,.55); border-color:rgba(243,237,225,.3); color:var(--paper); }
+  .postcard .meta{ position:absolute; left:20px; right:20px; bottom:20px; z-index:3; }
+  .postcard .season{ font-family:var(--mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--paper-soft); }
+  .postcard .name{ font-family:var(--display); font-weight:800; font-size:1.65rem; line-height:1.02; margin:8px 0 0; }
+  .postcard .route-min{ font-family:var(--mono); font-size:.72rem; color:var(--paper-soft); margin-top:8px; }
+  .postcard.locked{ }
+  .postcard.locked .img{ filter:grayscale(.55) brightness(.7); }
+  .reg{ margin-top:12px; }
+  .reg form{ display:none; gap:8px; margin-top:8px; }
+  .reg.open form{ display:flex; } .reg.open .reg-trigger{ display:none; }
+  .reg .ok{ display:none; font-family:var(--mono); font-size:.72rem; color:var(--terra-2); margin-top:8px; }
+  .reg.done .ok{ display:block; } .reg.done form,.reg.done .reg-trigger{ display:none; }
+  .reg input{ flex:1; background:rgba(243,237,225,.08); border:1px solid var(--line); color:var(--paper); border-radius:6px; padding:.6em .7em; font-family:var(--sans); font-size:.85rem; }
+  .reg .mini{ border:1px solid var(--terra); background:var(--terra); color:var(--forest); border-radius:6px; padding:.5em .8em; font-family:var(--mono); font-size:.72rem; cursor:pointer; }
+
+  /* ---------- how it works ---------- */
+  .how-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(20px,3vw,48px); margin-top:clamp(40px,5vw,68px); }
+  @media(max-width:760px){ .how-grid{ grid-template-columns:1fr; gap:28px; } }
+  .how-step{ border-top:1px solid var(--line); padding-top:20px; }
+  .how-step .n{ font-family:var(--mono); font-size:.8rem; letter-spacing:.16em; color:var(--terra-2); }
+  .how-step h3{ font-size:1.5rem; margin:14px 0 10px; }
+  .how-step p{ color:var(--paper-soft); }
+
+  /* ---------- on the road band ---------- */
+  .roadband{ position:relative; z-index:2; background:var(--forest); border-block:1px solid var(--line); overflow:hidden; }
+  .roadband .marquee{ border:0; padding:24px 0 4px; background:transparent; }
+  .road-dashes{ height:6px; margin:10px 0 16px; background:repeating-linear-gradient(90deg, var(--terra) 0 26px, transparent 26px 52px); opacity:.45; }
+  @media(prefers-reduced-motion:no-preference){ .road-dashes{ animation:roadmove 1.05s linear infinite; } }
+  @keyframes roadmove{ from{ background-position:0 0; } to{ background-position:-52px 0; } }
+  .roadband .mq-track .dot{ color:var(--terra); padding:0 .18em; }
+
+  /* ---------- end CTA ---------- */
+  .endcta{ position:relative; z-index:2; min-height:84svh; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+  .endcta .img{ position:absolute; inset:-8% 0; z-index:0; background-size:cover; background-position:center; opacity:.4; will-change:transform; }
+  .endcta .veil{ position:absolute; inset:0; z-index:1; background:rgba(15,24,19,.55); }
+  .endcta .inner{ position:relative; z-index:2; }
+</style>
+</head>
+<body>
+
+<!-- preloader: route draws into the logo -->
+<div class="preload" aria-hidden="true">
+  <svg viewBox="0 0 340 120">
+    <path class="pl-line" d="M14,86 C70,40 120,40 170,64 C220,88 270,88 326,44"/>
+    <circle class="pl-dot" cx="14" cy="86" r="6"/>
+    <circle class="pl-dot" cx="170" cy="64" r="6"/>
+    <circle class="pl-dot" cx="326" cy="44" r="6"/>
+    <text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text>
+  </svg>
+</div>
+
+<!-- route-line progress motif -->
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+
+<!-- page transition panel -->
+<div class="transition"><span class="mark">Where To, Crew?</span></div>
+
+<!-- journey spine: the route line through the whole page -->
+<div class="journey" aria-hidden="true">
+  <div class="j-track"></div>
+  <div class="j-fill"></div>
+  <div class="j-marker"></div>
+</div>
+
+<!-- page-wide ambient (subtle drift everywhere, never dead) -->
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<!-- the continuous drive: one journey through a day on the road (dawn → night) -->
+<div class="drive" aria-hidden="true">
+  <div class="sky"></div>
+  <div class="stars"></div>
+  <div class="orb"></div>
+  <div class="haze"></div>
+</div>
+
+<!-- film grain -->
+<svg class="grain" aria-hidden="true">
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#grain)"/>
+</svg>
+
+<nav class="nav">
+  <a class="brand" href="../index.html">
+    <svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg>
+    Where To, Crew?
+  </a>
+  <div class="nav-links">
+    <a href="#route" class="underline hide-sm" data-cursor="link">The route</a>
+    <a href="#board" class="underline hide-sm" data-cursor="link">Trips</a>
+    <a href="../index.html" class="underline hide-sm" data-transition data-cursor="link">✦ Observatory</a>
+    <a class="btn" href="sign-up.html" data-transition data-magnetic data-cursor="label" data-label="Let's go"><span class="fill"></span><span class="lbl">Join Poland</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" data-screen-label="Home — hero">
+  <div class="hero-photo" id="heroPhoto" data-img="../assets/img/tatra.jpg"></div>
+  <div class="hero-veil"></div>
+  <div class="inner wrap">
+    <p class="eyebrow" data-reveal data-reveal-mode="fade">Friends-only trip planning · no logins, no fuss</p>
+    <h1 class="display" data-reveal data-reveal="words">Where to next, crew?</h1>
+    <p class="lede hero-sub" data-reveal>Pick a trip, sign up, and shape the plan together — however many of you are coming, wherever you're headed. One drawn line, from the first idea to the road.</p>
+    <div class="row">
+      <a class="btn btn--solid" href="#route" data-magnetic data-cursor="label" data-label="Drive"><span class="fill"></span><span class="lbl">Follow the route ↓</span></a>
+      <a class="btn" href="sign-up.html" data-transition data-magnetic data-cursor="label" data-label="Plan"><span class="fill"></span><span class="lbl">Join the Poland trip</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- INTRO STATEMENT -->
+<section class="section section-pad intro">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal data-reveal-mode="fade">The idea</p>
+    <h2 class="h2" data-reveal style="margin-top:18px;">One crew. A wishlist of places. We plan them together — until the trip books itself.</h2>
+    <div class="stat-row">
+      <div class="stat"><div class="n tnum" data-count="3">3</div><div class="l" data-reveal data-reveal-mode="fade">friends, one shared plan</div></div>
+      <div class="stat"><div class="n tnum" data-count="4">4</div><div class="l" data-reveal data-reveal-mode="fade">days, Kaunas to the Tatras</div></div>
+      <div class="stat"><div class="n tnum" data-count="1700" data-suffix=" km">1700 km</div><div class="l" data-reveal data-reveal-mode="fade">round-trip, free expressway</div></div>
+      <div class="stat"><div class="n tnum" data-count="250" data-prefix="€" data-suffix="+">€250+</div><div class="l" data-reveal data-reveal-mode="fade">per person, split three ways</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE ROUTE MAP -->
+<section class="mapsec" id="route" data-screen-label="The route">
+  <div class="mapstage" id="mapstage">
+    <p class="eyebrow maptag">The route · Kaunas → Tatras</p>
+    <svg class="map-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <g id="camera">
+        <path class="route-ghost" d="M160,120 C300,150 340,250 470,290 C560,318 540,360 600,392 C660,424 700,470 760,300 540,260 C470,235 430,150 300,140 C230,134 200,100 160,120 Z"/>
+        <!-- this ghost above is decorative; real route below -->
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- DESTINATIONS / POSTCARDS -->
+<section class="section section-pad board" id="board" data-screen-label="The board">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal data-reveal-mode="fade">The board</p>
+    <h2 class="h2" data-reveal style="margin-top:16px;">Three trips on the table.</h2>
+    <p class="lede" data-reveal style="margin-top:16px; max-width:52ch;">One's planned and ready — the rest are on the wishlist. Add your name and we'll ping you when each goes live.</p>
+
+    <div class="board-grid">
+      <a class="postcard" href="sign-up.html" data-transition data-cursor="view" data-label="Plan it" data-screen-label="Card — Poland">
+        <div class="ph"><div class="img" data-img="../assets/img/energylandia.jpg"></div><div class="grad"></div></div>
+        <span class="stamp active">Active · ready</span>
+        <div class="stamp-go">Plan<br>this trip</div>
+        <div class="meta">
+          <p class="season">Late June 2026</p>
+          <p class="name">Energylandia<br>Thrill Road Trip</p>
+          <p class="route-min">Kaunas → Kraków → Energylandia → Tatras</p>
+        </div>
+      </a>
+
+      <a class="postcard" href="../index.html" data-transition data-cursor="view" data-label="Open" data-screen-label="Card — Observatory">
+        <div class="ph"><div class="img" data-img="../assets/img/milkyway.jpg"></div><div class="grad"></div></div>
+        <span class="stamp active">✦ Now planning</span>
+        <div class="stamp-go">Open<br>this trip</div>
+        <div class="meta">
+          <p class="season">Fall 2026 · dark-sky</p>
+          <p class="name">Observatory<br>Night Run</p>
+          <p class="route-min">Kaunas → Molėtai → Kulionys telescope</p>
+        </div>
+      </a>
+
+      <div class="postcard locked" data-cursor="link" data-screen-label="Card — Paris">
+        <div class="ph"><div class="img" data-img="../assets/img/paris.jpg"></div><div class="grad"></div></div>
+        <span class="stamp lock">🔒 Coming soon</span>
+        <div class="meta">
+          <p class="season">City break · someday</p>
+          <p class="name">Paris</p>
+          <div class="reg" data-dest="paris">
+            <button type="button" class="mini reg-trigger">Register interest</button>
+            <form><input type="text" required placeholder="Name or email"><button class="mini" type="submit">Add</button></form>
+            <p class="ok">On the list ✦</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ON THE ROAD: route legs scrolling like roadside signs over a moving center-line -->
+<section class="roadband" data-screen-label="On the road">
+  <div class="marquee" data-mq data-words="Kaunas|Kraków · 430 km|Energylandia · 70 km|Zakopane · 100 km|Morskie Oko · 30 km" data-sep="→"><div class="mq-track" data-mqtrack></div></div>
+  <div class="road-dashes"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-pad" data-screen-label="How it works">
+  <div class="wrap">
+    <p class="eyebrow" data-reveal data-reveal-mode="fade">How it works</p>
+    <h2 class="h2" data-reveal style="margin-top:16px; max-width:16ch;">Three steps, start to suitcase.</h2>
+    <div class="how-grid">
+      <div class="how-step"><p class="n">01</p><h3 data-reveal>Sign up</h3><p data-reveal>Tell the crew you're in, your dates, the stops you fancy — drop pins on a real map and see who else is free which days.</p></div>
+      <div class="how-step"><p class="n">02</p><h3 data-reveal>Plan draft</h3><p data-reveal>Weigh the options together. The per-person price and trip length update live as the crew leans in.</p></div>
+      <div class="how-step"><p class="n">03</p><h3 data-reveal>The plan</h3><p data-reveal>The locked-in itinerary — day by day, route, where to stay, and everything to book before it sells out.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- END CTA -->
+<section class="endcta" data-screen-label="End CTA">
+  <div class="img" data-img="../assets/img/giewont.jpg"></div>
+  <div class="veil"></div>
+  <div class="inner wrap">
+    <h2 class="display" data-reveal data-reveal="words" style="font-size:clamp(2.4rem,6.5vw,5.5rem);">Where to next, crew?</h2>
+    <div style="margin-top:32px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a class="btn btn--solid" href="sign-up.html" data-transition data-magnetic data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Join the Poland trip</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand" href="../index.html">
+        <svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg>
+        Where To, Crew?
+      </a>
+      <p class="muted" style="margin-top:14px; max-width:30ch;">Plan the trip. Bring the crew.</p>
+    </div>
+    <div style="max-width:32ch;"><small>Made by friends, for friends — no bookings taken here, just planning. © 2026. · <a href="../emergency.html?d=poland" data-transition style="color:var(--terra-2);">🆘 Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<!-- libs (CDN, pinned, no build) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+
+<script>
+/* fix data-reveal default + custom modes BEFORE motion.js binds */
+document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
+/* fill background images from data-img (keeps markup clean) */
+document.querySelectorAll('[data-img]').forEach(function(el){ el.style.backgroundImage = "url('"+el.getAttribute('data-img')+"')"; });
+</script>
+
+<!-- the route SVG, written by JS so coords stay in one place -->
+<script>
+window.WTCM_onReady = function(ctx){
+  buildRouteMap(ctx);
+  buildHeroScrub(ctx);
+  buildCounters(ctx);
+  buildJourney(ctx);
+  buildEnvironment(ctx);
+  bindRegister();
+  if(window.ScrollTrigger) ScrollTrigger.refresh();
+};
+
+function buildEnvironment(ctx){
+  var drive=document.querySelector('.drive'); if(!drive) return;
+  var root=document.documentElement;
+  var stars=drive.querySelector('.stars'), haze=drive.querySelector('.haze');
+  // keyframes: [p, skyTop[r,g,b], skyBot[r,g,b], glow rgba, orbColor, orbCore]
+  var KF=[
+    [0.00,[16,32,26],[44,30,22],'rgba(217,140,95,.30)','#d98c5f','#e7a877'],  // pre-dawn / Kaunas
+    [0.42,[20,42,38],[20,38,30],'rgba(150,170,140,.16)','#ead9c2','#f3ede1'], // morning / Kraków
+    [0.72,[40,28,30],[46,26,18],'rgba(224,120,66,.34)','#e0894c','#f1b56f'],  // golden hour / Tatras
+    [1.00,[10,16,30],[8,12,20],'rgba(70,100,160,.22)','#c3cede','#e6ecf5']    // night / arrive
+  ];
+  function L(a,b,t){ return a+(b-a)*t; }
+  function rgb(a){ return 'rgb('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+')'; }
+  function mix(a,b,t){ return [L(a[0],b[0],t),L(a[1],b[1],t),L(a[2],b[2],t)]; }
+  function setEnv(p){
+    var i=0; while(i<KF.length-1 && p>KF[i+1][0]) i++;
+    var a=KF[i], b=KF[Math.min(i+1,KF.length-1)];
+    var span=(b[0]-a[0])||1, t=Math.min(1,Math.max(0,(p-a[0])/span));
+    root.style.setProperty('--sky-top', rgb(mix(a[1],b[1],t)));
+    root.style.setProperty('--sky-bot', rgb(mix(a[2],b[2],t)));
+    root.style.setProperty('--glow', t<0.5?a[3]:b[3]);
+    root.style.setProperty('--orb', t<0.5?a[4]:b[4]);
+    root.style.setProperty('--orb-core', t<0.5?a[5]:b[5]);
+    root.style.setProperty('--orb-x', (10+78*p)+'%');
+    root.style.setProperty('--orb-y', (74-48*Math.sin(p*Math.PI))+'%');
+    if(stars) stars.style.opacity = Math.min(1,Math.max(0,(p-0.7)/0.3))*0.85;
+    if(haze) haze.style.transform = 'translateY('+(p*-46)+'px)';
+  }
+  function docMax(){ return Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
+  function update(y){ setEnv(Math.min(1,Math.max(0, y/docMax()))); }
+  if(ctx.lenis) ctx.lenis.on('scroll', function(e){ update(e.scroll!=null?e.scroll:window.scrollY); });
+  else window.addEventListener('scroll', function(){ update(window.scrollY); }, {passive:true});
+  update(window.scrollY);
+}
+
+function buildJourney(ctx){
+  var rail=document.querySelector('.journey'); if(!rail) return;
+  var fill=rail.querySelector('.j-fill'), marker=rail.querySelector('.j-marker');
+  var stops=[
+    { sel:'.hero',        label:'Start' },
+    { sel:'#route',       label:'The route' },
+    { sel:'#board',       label:'The board' },
+    { sel:'[data-screen-label="How it works"]', label:'How it works' },
+    { sel:'.endcta',      label:'Arrive' }
+  ];
+  var nodes=[];
+  stops.forEach(function(s){
+    var el=document.querySelector(s.sel); if(!el) return;
+    var n=document.createElement('div'); n.className='j-node';
+    var l=document.createElement('span'); l.className='j-lbl'; l.textContent=s.label; n.appendChild(l);
+    rail.appendChild(n);
+    nodes.push({ el:el, node:n, frac:0 });
+  });
+  function docMax(){ return Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
+  function recompute(){ var m=docMax(); nodes.forEach(function(n){ n.frac=Math.min(1,Math.max(0, n.el.offsetTop/m)); n.node.style.top=(n.frac*100)+'%'; }); }
+  function update(y){
+    var m=docMax(); var p=Math.min(1,Math.max(0, y/m));
+    fill.style.height=(p*100)+'%'; marker.style.top=(p*100)+'%';
+    nodes.forEach(function(n){ n.node.classList.toggle('on', p >= n.frac-0.004); });
+  }
+  recompute();
+  if(window.ScrollTrigger) ScrollTrigger.addEventListener('refresh', recompute);
+  window.addEventListener('resize', recompute);
+  if(ctx.lenis) ctx.lenis.on('scroll', function(e){ update(e.scroll!=null?e.scroll:window.scrollY); });
+  else window.addEventListener('scroll', function(){ update(window.scrollY); }, {passive:true});
+  update(window.scrollY);
+}
+
+function buildRouteMap(ctx){
+  var gsapOk = !!window.gsap;
+  var stage = document.getElementById('mapstage');
+  var svg = stage.querySelector('.map-svg');
+  var cam = svg.querySelector('#camera');
+  var W = function(f){ return '../assets/img/'+f+'.jpg'; };  /* local images — see assets/img/ */
+
+  // waypoints along a gentle SW-bound road
+  var d = "M150,90 C320,130 330,250 470,300 C560,330 540,375 600,405 C665,438 705,490 760,540";
+  var waypoints = [
+    { x:150, y:90,  t:0.00, name:'Kaunas',      sub:'start · 05:00',     img:'kaunas',       side:'below' },
+    { x:470, y:300, t:0.36, name:'Kraków',      sub:'old town night',    img:'krakow',       side:'left' },
+    { x:600, y:405, t:0.62, name:'Energylandia', sub:'full thrill day',  img:'energylandia', side:'right' },
+    { x:760, y:540, t:0.92, name:'Tatra Mts',   sub:'Morskie Oko',       img:'morskie-oko',  side:'right' }
+  ];
+
+  // build SVG content
+  var ns='http://www.w3.org/2000/svg';
+  function el(tag,attrs){ var e=document.createElementNS(ns,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
+
+  cam.innerHTML='';
+  cam.appendChild(el('path',{ class:'route-ghost', d:d }));
+  var route=el('path',{ id:'routePath', class:'route', d:d }); cam.appendChild(route);
+
+  // postcards + waypoints — explicit, collision-free placement
+  var pcW=148, pcH=104, GAP=42;
+  waypoints.forEach(function(wp,i){
+    var px,py,labX,labY,subY,anchor;
+    if(wp.side==='right'){ px=wp.x+GAP; py=wp.y-pcH/2; anchor='end'; labX=wp.x-16; labY=wp.y-4; subY=wp.y+18; }
+    else if(wp.side==='left'){ px=wp.x-pcW-GAP; py=wp.y-pcH/2; anchor='start'; labX=wp.x+16; labY=wp.y-4; subY=wp.y+18; }
+    else if(wp.side==='above'){ px=wp.x-pcW/2; py=wp.y-pcH-32; anchor='middle'; labX=wp.x; labY=wp.y+28; subY=wp.y+48; }
+    else { px=wp.x-pcW/2; py=wp.y+30; anchor='middle'; labX=wp.x; labY=wp.y-32; subY=wp.y-14; }
+
+    // postcard (clean framed photo, no caption)
+    var pc=el('g',{ class:'pc pc'+i });
+    var clipId='pcclip'+i;
+    var defs=el('defs',{}); var cp=el('clipPath',{id:clipId}); cp.appendChild(el('rect',{x:px+6,y:py+6,width:pcW-12,height:pcH-12,rx:2})); defs.appendChild(cp); pc.appendChild(defs);
+    pc.appendChild(el('rect',{ class:'frame', x:px, y:py, width:pcW, height:pcH, rx:4 }));
+    var img=el('image',{ x:px+6, y:py+6, width:pcW-12, height:pcH-12, preserveAspectRatio:'xMidYMid slice','clip-path':'url(#'+clipId+')' });
+    img.setAttributeNS('http://www.w3.org/1999/xlink','href', W(wp.img));
+    img.setAttribute('href', W(wp.img));
+    pc.appendChild(img);
+    cam.appendChild(pc);
+
+    // waypoint dot + label (anchored away from the postcard)
+    var g=el('g',{ class:'wp wp'+i });
+    g.appendChild(el('circle',{ class:'dot', cx:wp.x, cy:wp.y, r:8 }));
+    var lab=el('text',{ class:'label', x:labX, y:labY, 'text-anchor':anchor }); lab.textContent=wp.name; g.appendChild(lab);
+    var sub=el('text',{ class:'sub', x:labX, y:subY, 'text-anchor':anchor }); sub.textContent=wp.sub; g.appendChild(sub);
+    cam.appendChild(g);
+  });
+
+  // traveling marker
+  var mk=el('g',{ id:'marker' });
+  mk.appendChild(el('circle',{ class:'ring', cx:0, cy:0, r:11 }));
+  mk.appendChild(el('circle',{ class:'core', cx:0, cy:0, r:8 }));
+  mk.appendChild(el('circle',{ class:'glint', cx:0, cy:0, r:2.6 }));
+  cam.appendChild(mk);
+
+  if(!gsapOk) return;
+
+  var VIEW={ cx:500, cy:310, zoom:1.25 };
+  var END={ zoom:0.82, cx:490, cy:312 };   // zoomed-out frame revealing the whole route
+  var raw=MotionPathPlugin.getRawPath('#routePath'); MotionPathPlugin.cacheRawPathMeasurements(raw);
+  function setCamera(p){
+    p = Math.max(0, Math.min(1, p));
+    var pos=MotionPathPlugin.getPositionOnPath(raw,p,false);
+    var zoom=VIEW.zoom, cx=pos.x, cy=pos.y;
+    if(p>0.84){                                   // ease out + pull back to show the full journey
+      var k=(p-0.84)/0.16; k=k<0?0:k>1?1:k; var e=1-Math.pow(1-k,3);
+      zoom = VIEW.zoom + (END.zoom-VIEW.zoom)*e;
+      cx = pos.x + (END.cx-pos.x)*e;
+      cy = pos.y + (END.cy-pos.y)*e;
+    }
+    cam.setAttribute('transform','translate('+VIEW.cx+','+VIEW.cy+') scale('+zoom+') translate('+(-cx)+','+(-cy)+')');
+  }
+
+  if(ctx.reduce){
+    gsap.set('#routePath',{drawSVG:'0% 100%'});
+    gsap.set('#marker',{motionPath:{path:'#routePath',align:'#routePath',alignOrigin:[.5,.5],end:1}});
+    return;
+  }
+
+  // initial hidden states for waypoints + postcards (held until their tween starts)
+  gsap.set('.wp',{scale:0,opacity:0});
+  gsap.set('.pc',{scale:0,opacity:0});
+
+  var tl=gsap.timeline({ defaults:{ease:'none'}, scrollTrigger:{ trigger:'#route', start:'top top', end:'+=2800', scrub:1, pin:'#mapstage', anticipatePin:1 } });
+  tl.fromTo('#routePath',{drawSVG:'0% 0%'},{drawSVG:'0% 100%',duration:1},0)
+    .to('#marker',{motionPath:{path:'#routePath',align:'#routePath',alignOrigin:[.5,.5],autoRotate:false},duration:1},0);
+  waypoints.forEach(function(wp,i){
+    tl.fromTo('.wp'+i,{scale:0,opacity:0},{scale:1,opacity:1,ease:'back.out(2)',duration:.05,immediateRender:false}, wp.t)
+      .fromTo('.pc'+i,{scale:0,opacity:0},{scale:1,opacity:1,ease:'back.out(1.7)',duration:.06,immediateRender:false}, wp.t+0.01);
+  });
+  tl.eventCallback('onUpdate', function(){ setCamera(tl.progress()); });
+  setCamera(0);
+  ScrollTrigger.addEventListener('refreshInit', function(){ raw=MotionPathPlugin.getRawPath('#routePath'); MotionPathPlugin.cacheRawPathMeasurements(raw); });
+}
+
+function buildHeroScrub(ctx){
+  if(!window.gsap || ctx.reduce) return;
+  // scrubbed hero: photo scales + drifts, content fades up as you leave
+  gsap.fromTo('#heroPhoto',{ scale:1.18, yPercent:-4 },{ scale:1.32, yPercent:6, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
+  gsap.to('.hero .inner',{ yPercent:-18, opacity:0.0, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
+  // mouse-parallax on hero (depth)
+  if(ctx.fine){
+    var mx=0,my=0,cx=0,cy=0;
+    window.addEventListener('mousemove',function(e){ mx=e.clientX/innerWidth-0.5; my=e.clientY/innerHeight-0.5; });
+    (function tick(){ cx+=(mx-cx)*0.06; cy+=(my-cy)*0.06;
+      gsap.set('#heroPhoto',{ x:cx*-30, y:cy*-22 });
+      gsap.set('.hero .inner',{ x:cx*16, y:cy*12 });
+      requestAnimationFrame(tick);
+    })();
+  }
+}
+
+function buildCounters(ctx){
+  if(!window.gsap) return;
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var end=parseFloat(el.getAttribute('data-count'));
+    var pre=el.getAttribute('data-prefix')||''; var suf=el.getAttribute('data-suffix')||'';
+    if(ctx.reduce){ el.textContent=pre+end+suf; return; }
+    var obj={v:0};
+    gsap.to(obj,{ v:end, duration:1.4, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 85%', once:true },
+      onUpdate:function(){ el.textContent=pre+Math.round(obj.v)+suf; } });
+    el.textContent=pre+'0'+suf;
+  });
+}
+
+function bindRegister(){
+  document.querySelectorAll('.reg').forEach(function(reg){
+    var dest=reg.getAttribute('data-dest');
+    try{ if(localStorage.getItem('wtc-interest-'+dest)) reg.classList.add('done'); }catch(e){}
+    var trig=reg.querySelector('.reg-trigger');
+    trig.addEventListener('click', function(e){ e.preventDefault(); reg.classList.add('open'); reg.querySelector('input').focus(); });
+    reg.querySelector('form').addEventListener('submit', function(e){ e.preventDefault();
+      try{ localStorage.setItem('wtc-interest-'+dest, reg.querySelector('input').value||'1'); }catch(err){}
+      reg.classList.remove('open'); reg.classList.add('done');
+    });
+  });
+}
+</script>
+
+<script src="../assets/motion.js?v=2"></script>
+<script>/* service worker disabled in this build — purge any stale one so the page never auto-reloads or serves stale */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+</body>
+</html>

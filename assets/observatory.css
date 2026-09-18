@@ -1,0 +1,239 @@
+/* ============================================================
+   Where To, Crew? — OBSERVATORY theme layer  ("Orbit To The Telescope")
+   Loaded AFTER motion.css on the Observatory default + observatory/* pages.
+   Re-tunes the shared palette from warm forest road-trip → deep fall night,
+   keeping the terracotta accent so it reads as the SAME crew, after dark.
+   Adds the cosmos chrome: starfield stage, reticle cursor, constellation
+   route, sky-status badges, moon/date widget, time-orbit, data cards.
+   ============================================================ */
+
+:root{
+  /* night sky base (was forest greens) — deep green-black, warm-leaning */
+  --forest:#0b1310;
+  --forest-2:#111d17;
+  --forest-3:#070d0b;
+  --line:rgba(243,237,225,.13);
+  --line-soft:rgba(243,237,225,.07);
+  /* warm accent kept from Poland (same crew, after dark) */
+  --terra:#c0613f;
+  --terra-2:#e09a63;
+  /* new sky accents — share chroma, vary hue */
+  --sage:#a9c5a0;          /* clear-sky GO / constellation line */
+  --sky-cool:#8fb6d6;      /* cool star / data */
+  --star:#eef2f4;          /* bright star */
+  --star-warm:#e7a877;     /* warm star / moon */
+  --paper:#f3ede1;
+  --paper-soft:#aeb8b6;
+  --danger:#e0654a;        /* cloud cancel / red */
+  --amber:#e3b85a;
+}
+
+body{ background:var(--forest); }
+::selection{ background:var(--sage); color:var(--forest-3); }
+
+/* ---------- the cosmos stage: permanent deep night (replaces .drive) ---------- */
+.cosmos{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:
+  radial-gradient(120% 90% at 78% 8%, rgba(150,170,150,.12), transparent 60%),
+  radial-gradient(120% 90% at 12% 108%, rgba(192,97,63,.17), transparent 62%),
+  linear-gradient(180deg, #070d0b 0%, #0a130f 50%, #0c1712 100%); }
+.cosmos .field{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.cosmos .band{ position:absolute; inset:0; background-image:url('../assets/img/cosmos.png'); background-size:cover; background-position:center; opacity:.62; mix-blend-mode:screen; }
+.cosmos .haze{ position:absolute; left:-15%; right:-15%; bottom:-6%; height:60%; will-change:transform;
+  background:radial-gradient(120% 100% at 50% 120%, rgba(192,97,63,.18) 0%, transparent 70%); }
+/* observatory uses cosmos.png as the index hero's reduced-motion star layer too */
+@media(prefers-reduced-motion:reduce){ .cosmos .field{ display:none; } .cosmos .band{ opacity:.7; } }
+
+/* on observatory, the page-wide blobs lean warm-night: sage-teal + terracotta */
+.theme-observatory .b1{ background:radial-gradient(circle,#1d3a33,transparent 70%); opacity:.34; }
+.theme-observatory .b2{ background:radial-gradient(circle,var(--terra),transparent 70%); opacity:.2; }
+.theme-observatory .b3{ background:radial-gradient(circle,#283f2e,transparent 70%); opacity:.3; }
+
+/* preloader + transition recolour to night */
+.theme-observatory .preload{ background:var(--forest-3); }
+.theme-observatory .preload .pl-line{ stroke:var(--sage); }
+.theme-observatory .preload .pl-dot{ fill:var(--star); stroke:var(--sage); }
+/* planetary intro loader: a body orbits the route as it draws */
+.theme-observatory .preload::before{ content:''; position:absolute; top:50%; left:50%; width:250px; height:250px; margin:-125px 0 0 -125px; border-radius:50%; border:1px solid rgba(169,197,160,.22); }
+.theme-observatory .preload::after{ content:''; position:absolute; top:50%; left:50%; width:9px; height:9px; margin:-4.5px 0 0 -4.5px; border-radius:50%; background:var(--star-warm); box-shadow:0 0 12px 2px var(--star-warm); transform-origin:50% 50%; animation:ploadOrbit 2.4s linear infinite; }
+@keyframes ploadOrbit{ from{ transform:rotate(0) translateX(125px); } to{ transform:rotate(360deg) translateX(125px); } }
+/* orbiting spark on button hover */
+@keyframes btnOrbit{ from{ transform:rotate(0) translateX(15px); } to{ transform:rotate(360deg) translateX(15px); } }
+.theme-observatory .btn::after{ content:''; position:absolute; top:50%; left:50%; width:3px; height:3px; margin:-1.5px 0 0 -1.5px; border-radius:50%; background:#fff; box-shadow:0 0 6px #fff, 0 0 3px var(--star-warm); opacity:0; transform-origin:50% 50%; pointer-events:none; }
+.theme-observatory .btn:hover::after{ opacity:.95; animation:btnOrbit 1.5s linear infinite; }
+@media(prefers-reduced-motion:reduce){ .theme-observatory .preload::after,.theme-observatory .btn:hover::after{ animation:none; } }
+.theme-observatory .transition{ background:var(--forest-3); }
+.theme-observatory .transition .mark{ color:var(--sage); transform:translateY(74px); }
+.transition .t-orbit{ display:none; }
+.theme-observatory .transition .t-orbit{ display:block; position:absolute; top:50%; left:50%; width:124px; height:124px; margin:-62px 0 0 -62px; }
+.theme-observatory .transition .t-ring{ position:absolute; inset:0; border-radius:50%; border:1.5px solid rgba(169,197,160,.45); box-shadow:0 0 24px rgba(169,197,160,.12) inset; }
+.theme-observatory .transition .t-planet{ position:absolute; top:50%; left:50%; width:11px; height:11px; margin:-5.5px 0 0 -5.5px; border-radius:50%; background:var(--star-warm); box-shadow:0 0 14px 3px var(--star-warm); transform-origin:50% 50%; animation:transOrbit 1.5s linear infinite; }
+@keyframes transOrbit{ from{ transform:rotate(0) translateX(62px); } to{ transform:rotate(360deg) translateX(62px); } }
+@media(prefers-reduced-motion:reduce){ .theme-observatory .transition .t-planet{ animation:none; } }
+/* one loader on internal navigation: hide the green preloader flash, show the orbit cover immediately during the destination's script-load */
+html.via-trans .preload{ display:none !important; }
+html.via-trans .transition{ visibility:visible; }
+.theme-observatory .routebar .fill{ background:var(--sage); box-shadow:0 0 12px rgba(169,197,160,.7); }
+.theme-observatory .routebar .dot{ border-color:var(--sage); }
+.theme-observatory .journey .j-fill{ background:var(--sage); box-shadow:0 0 10px rgba(169,197,160,.6); }
+.theme-observatory .journey .j-node.on{ background:var(--sage); border-color:var(--sage); }
+.theme-observatory .journey .j-marker::before{ background:var(--sage); }
+.theme-observatory .journey .j-marker::after{ border-color:var(--sage); }
+.theme-observatory .section-pad::before{ background:repeating-linear-gradient(90deg, var(--sage) 0 3px, transparent 3px 16px); opacity:.22; animation:none; }
+.theme-observatory .footer::after{ content:'✦'; color:var(--sage); }
+
+/* brand mark + nav recolour */
+.theme-observatory .brand .bl{ stroke:var(--sage); }
+.theme-observatory .brand .bd{ fill:var(--star); }
+.theme-observatory .nav.solid{ background:rgba(7,13,11,.8); }
+.theme-observatory .nav-links a{ color:var(--paper); }
+
+/* buttons: keep terracotta solid; ghost gets a sage edge */
+.theme-observatory .btn{ border-color:var(--sage); }
+.theme-observatory .btn .fill{ background:var(--sage); }
+.theme-observatory .btn:hover{ color:var(--forest-3); }
+.theme-observatory .btn--solid{ background:var(--terra); border-color:var(--terra); color:#1a0f0a; }
+.theme-observatory .btn--solid .fill{ background:var(--star-warm); }
+.theme-observatory .btn--solid:hover{ color:#1a0f0a; }
+
+/* ---------- cursor: stardust comet (canvas) + sparkle-star head ----------
+   The trail + warm 4-point star head are drawn on a full-viewport canvas in
+   sky.js; only the hover label is a DOM node here. */
+.cur-tag{ position:fixed; top:0; left:0; z-index:10001; pointer-events:none; font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--forest-3); background:var(--sage); padding:.42em .7em; border-radius:3px; white-space:nowrap; opacity:0; transform:translateY(4px) scale(.9); transform-origin:left center; transition:opacity .22s var(--ease), transform .22s var(--ease); }
+.cur-tag.show{ opacity:1; transform:none; }
+@media(hover:none),(pointer:coarse){ .cur-fx,.cur-tag{ display:none; } }
+
+/* ---------- destination / theme switcher (orbit) ---------- */
+.switcher{ display:flex; gap:10px; flex-wrap:wrap; }
+.dest{ position:relative; display:flex; flex-direction:column; gap:3px; text-align:left; min-width:150px; flex:1 1 150px;
+  background:var(--forest-2); border:1px solid var(--line); border-radius:14px; padding:14px 16px 13px; cursor:pointer; text-decoration:none; color:inherit;
+  transition:border-color .35s var(--ease), background .35s var(--ease), transform .35s var(--ease); overflow:hidden; }
+.dest:hover{ border-color:var(--sage); transform:translateY(-3px); box-shadow:0 16px 36px rgba(0,0,0,.4), inset 0 0 26px rgba(169,197,160,.05); }
+.dest .dest-orbit{ position:absolute; right:-20px; top:-20px; width:86px; height:86px; border-radius:50%; border:1px solid var(--line); animation:spin 22s linear infinite; }
+.dest .dest-orbit::before{ content:''; position:absolute; inset:17px; border-radius:50%; border:1px solid var(--line-soft); }
+.dest .dest-orbit::after{ content:''; position:absolute; width:6px; height:6px; border-radius:50%; top:-3px; left:50%; margin-left:-3px; background:var(--paper-soft); }
+.dest .d-status{ font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-soft); }
+.dest .d-name{ font-family:var(--display); font-weight:800; font-size:1.18rem; letter-spacing:-.02em; color:var(--paper); }
+.dest .d-sub{ font-family:var(--mono); font-size:.66rem; color:var(--paper-soft); }
+.dest.active{ border-color:var(--sage); background:rgba(169,197,160,.1); box-shadow:inset 0 0 0 1px var(--sage); }
+.dest.active .d-status{ color:var(--sage); }
+.dest.active .dest-orbit{ border-color:var(--sage); }
+.dest.active .dest-orbit::after{ background:var(--star-warm); box-shadow:0 0 9px var(--star-warm); width:8px; height:8px; margin-left:-4px; }
+.dest.active .dest-orbit{ animation:spin 9s linear infinite; }
+@keyframes spin{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+.dest.locked{ cursor:not-allowed; opacity:.66; }
+.dest.locked:hover{ transform:none; border-color:var(--line); }
+.dest.locked .d-status{ color:var(--paper-soft); }
+@media(prefers-reduced-motion:reduce){ .dest .dest-orbit, .dest.active .dest-orbit, .dest.active .dest-orbit::after{ animation:none; } }
+
+/* ---------- sky-status badges ---------- */
+.sky-badges{ display:flex; flex-wrap:wrap; gap:10px; }
+.sky-badge{ display:inline-flex; align-items:center; gap:.6em; background:var(--forest-2); border:1px solid var(--line); border-radius:100px; padding:.55em .95em; font-size:.84rem; color:var(--paper); }
+.sky-badge .ico{ width:9px; height:9px; border-radius:50%; flex:none; }
+.sky-badge .k{ font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--paper-soft); }
+.sky-badge b{ color:var(--paper); font-weight:600; }
+.sky-badge.go{ border-color:rgba(169,197,160,.5); } .sky-badge.go .ico{ background:var(--sage); box-shadow:0 0 8px var(--sage); }
+.sky-badge.wait .ico{ background:var(--amber); box-shadow:0 0 8px var(--amber); }
+.sky-badge.warn{ border-color:rgba(224,101,74,.5); } .sky-badge.warn .ico{ background:var(--danger); box-shadow:0 0 8px var(--danger); }
+.sky-badge.moon .ico{ background:var(--star-warm); box-shadow:0 0 8px var(--star-warm); }
+@keyframes twinkle{ 0%,100%{ opacity:.55; transform:scale(.82); } 50%{ opacity:1; transform:scale(1.1); } }
+@media(prefers-reduced-motion:no-preference){
+  .theme-observatory .sky-badge .ico{ animation:twinkle 3.2s var(--ease) infinite; }
+  .theme-observatory .sky-badge:nth-child(2) .ico{ animation-delay:.8s; }
+  .theme-observatory .sky-badge:nth-child(3) .ico{ animation-delay:1.6s; }
+  .theme-observatory .sky-badge:nth-child(4) .ico{ animation-delay:2.4s; }
+}
+
+/* ---------- moon / date widget ---------- */
+.moonwidget{ display:flex; align-items:center; gap:16px; background:var(--forest-2); border:1px solid var(--line); border-radius:16px; padding:18px 20px; }
+.moondisc{ position:relative; width:58px; height:58px; border-radius:50%; flex:none; overflow:hidden;
+  background:radial-gradient(circle at 38% 36%, #f0e7d4, #cdbfa8 70%, #9c917d); box-shadow:0 0 22px rgba(231,168,119,.3), inset -6px -6px 14px rgba(0,0,0,.4); }
+.moondisc .shadow{ position:absolute; inset:0; border-radius:50%; background:var(--forest-3); transform:translateX(var(--moon-x,40%)); transition:transform .6s var(--ease); }
+.moonwidget .m-meta .k{ font-family:var(--mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--paper-soft); }
+.moonwidget .m-meta .v{ font-family:var(--display); font-weight:700; font-size:1.15rem; color:var(--paper); margin-top:2px; }
+.moonwidget .m-meta .s{ font-size:.82rem; color:var(--paper-soft); margin-top:3px; }
+
+/* ---------- mini sky panel: "tonight over Kulionys" (CAND-018) ---------- */
+.skypanel{ background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:16px 16px 14px; }
+.skypanel .sp-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.skypanel .sp-head .k{ font-family:var(--mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sage); }
+.skypanel .sp-head .loc{ font-family:var(--mono); font-size:.62rem; color:var(--paper-soft); }
+.skypanel .sky-chart{ display:block; width:100%; height:180px; border-radius:10px; background:linear-gradient(180deg,#070d0b,#0c1712); }
+.skypanel .sp-foot{ font-size:.78rem; color:var(--paper-soft); margin-top:10px; line-height:1.4; }
+
+/* ---------- NASA-style data cards ---------- */
+.data-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; }
+.data-card{ position:relative; background:var(--forest-2); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; overflow:hidden; transition:border-color .3s var(--ease), transform .3s var(--ease); }
+.data-card:hover{ border-color:var(--sage); transform:translateY(-3px); }
+.data-card::before{ content:''; position:absolute; top:0; left:0; width:55%; height:1px; background:linear-gradient(90deg,transparent,var(--sage),transparent); opacity:.6; }
+@media(prefers-reduced-motion:no-preference){
+  .theme-observatory .data-card::before{ animation:dcSweep 4.8s var(--ease) infinite; }
+  .theme-observatory .data-card:nth-child(2)::before{ animation-delay:1.2s; }
+  .theme-observatory .data-card:nth-child(3)::before{ animation-delay:2.4s; }
+  .theme-observatory .data-card:nth-child(4)::before{ animation-delay:3.6s; }
+}
+@keyframes dcSweep{ 0%{ transform:translateX(-60%); opacity:0; } 18%{ opacity:.7; } 78%{ opacity:.7; } 100%{ transform:translateX(240%); opacity:0; } }
+.data-card .dk{ font-family:var(--mono); font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sage); }
+.data-card .dk::before{ content:'✦ '; color:var(--star-warm); }
+.data-card .dv{ font-family:var(--display); font-weight:800; font-size:clamp(1.8rem,3vw,2.6rem); line-height:1; color:var(--paper); margin:10px 0 4px; letter-spacing:-.02em; }
+.data-card .dv .u{ font-size:.85rem; color:var(--paper-soft); font-weight:600; }
+.data-card .ds{ font-size:.84rem; color:var(--paper-soft); line-height:1.4; }
+
+/* ---------- constellation route (signature) ---------- */
+.skyroute{ position:relative; }
+.skystage{ height:100svh; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.skytag{ position:absolute; top:clamp(80px,12vh,130px); left:0; right:0; z-index:4; text-align:center; }
+.sky-svg{ width:100%; height:100%; display:block; }
+.sky-svg .ghost{ fill:none; stroke:rgba(243,237,225,.1); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+.sky-svg .conn{ fill:none; stroke:var(--sage); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 7px rgba(169,197,160,.6)); }
+.sky-svg .starnode{ transform-box:fill-box; transform-origin:center; }
+.sky-svg .starnode .glow{ fill:var(--star); opacity:.25; }
+.sky-svg .starnode .pt{ fill:var(--star); }
+.sky-svg .starnode.anchor .pt{ fill:var(--star-warm); }
+.sky-svg .starnode .label{ fill:var(--paper); font-family:var(--display); font-weight:700; font-size:20px; }
+.sky-svg .starnode .sub{ fill:var(--paper-soft); font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+.sky-svg #skyMarker{ filter:drop-shadow(0 0 6px rgba(231,168,119,.6)); }
+.sky-svg #skyMarker .rk-flame{ transform-box:fill-box; transform-origin:right center; }
+@media(prefers-reduced-motion:no-preference){ .sky-svg #skyMarker .rk-flame{ animation:rkFlame .22s ease-in-out infinite alternate; } }
+@keyframes rkFlame{ from{ transform:scaleX(.6); opacity:.65; } to{ transform:scaleX(1.15); opacity:1; } }
+
+/* ---------- board: parallax star cards ---------- */
+.star-card{ position:relative; display:block; text-decoration:none; color:var(--paper); border-radius:14px; overflow:hidden; background:var(--forest-2); border:1px solid var(--line); transition:border-color .4s var(--ease), transform .4s var(--ease), box-shadow .4s var(--ease); }
+.star-card:hover{ border-color:var(--sage); transform:translateY(-4px); box-shadow:0 20px 46px rgba(0,0,0,.45); }
+.star-card .stamp.active{ box-shadow:0 0 14px rgba(169,197,160,.5); }
+/* status row cohesion + hover (A6/A7) */
+.sky-badge{ transition:border-color .3s var(--ease), transform .3s var(--ease); }
+.sky-badge:hover{ transform:translateY(-2px); border-color:var(--sage); }
+.moonwidget, .skypanel{ transition:border-color .3s var(--ease); }
+.moonwidget:hover, .skypanel:hover{ border-color:rgba(169,197,160,.4); }
+.how-step{ transition:border-color .35s var(--ease); }
+.theme-observatory .how-step:hover{ border-top-color:var(--sage); }
+.star-card .ph{ position:relative; aspect-ratio:4/4.3; overflow:hidden; background:var(--forest-3); }
+.star-card .ph .img{ position:absolute; inset:-6%; background-size:cover; background-position:center; transition:transform .9s var(--ease); will-change:transform; }
+.star-card:hover .ph .img{ transform:scale(1.06); }
+.star-card .grad{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(7,13,11,.1) 30%,rgba(7,13,11,.9)); }
+.star-card .stamp{ position:absolute; top:14px; right:14px; z-index:3; font-family:var(--mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; padding:.5em .75em; border-radius:100px; border:1px solid; }
+.star-card .stamp.active{ background:var(--sage); border-color:var(--sage); color:var(--forest-3); }
+.star-card .stamp.lock{ background:rgba(7,13,11,.6); border-color:rgba(243,237,225,.3); color:var(--paper); }
+.star-card .meta{ position:absolute; left:20px; right:20px; bottom:20px; z-index:3; }
+.star-card .season{ font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--paper-soft); }
+.star-card .name{ font-family:var(--display); font-weight:800; font-size:1.6rem; line-height:1.02; margin:8px 0 0; color:var(--star); }
+.star-card .route-min{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); margin-top:8px; }
+.star-card.locked .img{ filter:grayscale(.5) brightness(.6); }
+
+/* ---------- time-orbit (afternoon → night → return) ---------- */
+.timeorbit{ display:flex; flex-direction:column; gap:0; }
+.torow{ position:relative; display:grid; grid-template-columns:84px 1fr; gap:18px; padding:14px 0; }
+.torow + .torow{ border-top:1px solid var(--line-soft); }
+.torow .t-time{ font-family:var(--mono); font-size:.8rem; color:var(--sky-cool); padding-top:2px; }
+.torow .t-body .t-h{ font-family:var(--display); font-weight:700; font-size:1.1rem; color:var(--paper); }
+.torow .t-body .t-d{ font-size:.9rem; color:var(--paper-soft); margin-top:3px; }
+.torow.anchor .t-h{ color:var(--star-warm); }
+.torow .t-dot{ position:absolute; left:84px; transform:translateX(-50%); top:18px; width:10px; height:10px; border-radius:50%; background:var(--paper-soft); }
+.torow.anchor .t-dot{ background:var(--star-warm); box-shadow:0 0 10px var(--star-warm); }
+
+/* image placeholder, night-toned */
+.theme-observatory .ph::before{ content:'◢ PHOTO'; position:absolute; top:12px; left:12px; z-index:2; font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; color:var(--paper-soft); background:rgba(7,13,11,.6); padding:.3em .6em; border-radius:6px; border:1px solid var(--line); }
+.ph.filled::before{ display:none; }
+.ph.striped{ background-image:repeating-linear-gradient(135deg, rgba(243,237,225,.05) 0 2px, transparent 2px 13px); }
+.ph .ph-lbl{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--mono); font-size:.72rem; letter-spacing:.04em; color:var(--paper-soft); padding:1em; }
+.ph.filled .ph-lbl{ display:none; }

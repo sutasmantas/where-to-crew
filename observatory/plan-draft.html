@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{if(sessionStorage.getItem('wtc-trans'))document.documentElement.classList.add('via-trans');}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<title>Plan draft · Observatory — Where To, Crew?</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/observatory.css">
+<style>
+  main{ position:relative; z-index:2; }
+  .page-top{ padding-top:104px; }
+  .route-eyebrow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sage); }
+  .trip-head .display{ font-size:clamp(2.4rem,5.4vw,4.2rem); }
+
+  .draft-grid{ display:grid; grid-template-columns:1fr 374px; gap:clamp(24px,4vw,52px); align-items:start; }
+  @media(max-width:980px){ .draft-grid{ grid-template-columns:1fr; } }
+
+  /* presets */
+  .presets{ margin:8px 0 30px; }
+  .presets .pwrap{ display:flex; flex-wrap:wrap; gap:10px; }
+  .preset{ display:flex; flex-direction:column; gap:2px; text-align:left; background:var(--forest-2); border:1px solid var(--line); border-radius:12px; padding:13px 16px; cursor:pointer; transition:border-color .3s var(--ease), background .3s var(--ease); color:inherit; min-width:150px; flex:1 1 150px; }
+  .preset:hover{ border-color:var(--sage); }
+  .preset.active{ border-color:var(--sage); background:rgba(169,197,160,.12); box-shadow:inset 0 0 0 1px var(--sage); }
+  .preset .pn{ font-weight:700; font-size:1rem; color:var(--paper); }
+  .preset .pp{ font-family:var(--mono); font-size:.74rem; color:var(--sage); }
+  .preset .pd{ font-size:.78rem; color:var(--paper-soft); line-height:1.35; }
+  .presets .pnote{ font-family:var(--mono); font-size:.68rem; color:var(--paper-soft); margin-top:10px; }
+
+  .dayblock{ margin:0 0 18px; padding-top:26px; border-top:1px solid var(--line); }
+  .dayblock:first-of-type{ border-top:0; padding-top:0; }
+  .day-head{ margin-bottom:20px; }
+  .day-head .day-tag{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sage); }
+  .day-head h2{ font-size:clamp(1.5rem,2.6vw,2rem); font-weight:800; letter-spacing:-.02em; margin-top:6px; color:var(--paper); }
+  .day-head .tradeoff{ font-family:var(--serif,Georgia),serif; font-style:italic; font-size:1rem; color:var(--paper-soft); margin-top:8px; max-width:60ch; }
+
+  .choice .cmeta{ display:flex; flex-wrap:wrap; gap:6px 12px; font-family:var(--mono); font-size:.72rem; color:var(--sage); margin-top:5px; }
+  .choice .cmeta .m-why{ color:var(--paper-soft); text-transform:none; letter-spacing:0; }
+  .choice .cbook{ display:inline-flex; align-items:center; gap:4px; color:var(--star-warm); }
+  .choice .cnote{ display:block; font-size:.88rem; color:var(--paper-soft); margin-top:3px; }
+  .suggest-chip{ display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--forest-3); background:var(--sage); border-radius:100px; padding:.25em .6em; margin-left:8px; vertical-align:middle; }
+  .whyi{ display:inline-grid; place-items:center; width:17px; height:17px; border-radius:50%; border:1px solid var(--paper-soft); color:var(--paper-soft); font-family:var(--mono); font-size:.66rem; cursor:help; margin-left:6px; flex:none; position:relative; }
+  .whyi:hover, .whyi:focus{ border-color:var(--sage); color:var(--sage); }
+  .whyi .pop{ position:absolute; bottom:140%; left:50%; transform:translateX(-50%); width:max-content; max-width:240px; background:var(--forest-3); border:1px solid var(--sage); border-radius:8px; padding:9px 12px; font-family:var(--sans); font-size:.78rem; line-height:1.4; color:var(--paper); letter-spacing:0; text-transform:none; box-shadow:0 8px 24px rgba(0,0,0,.5); opacity:0; pointer-events:none; transition:opacity .2s; z-index:30; white-space:normal; text-align:left; }
+  .whyi:hover .pop, .whyi:focus .pop{ opacity:1; }
+  .choice.greyed{ opacity:.42; pointer-events:none; }
+  .choice.greyed .cnote{ color:var(--sage); }
+  .ruled[hidden]{ display:none; }
+  .reveal-anim{ animation:revealIn .45s var(--ease-out); }
+  @keyframes revealIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:none; } }
+  @media(prefers-reduced-motion:reduce){ .reveal-anim{ animation:none; } }
+  .lodge-prompt{ font-size:.88rem; color:var(--paper-soft); font-style:italic; }
+
+  .choice .mark::after{ background:var(--sage); }
+  .choice.sel{ border-color:var(--sage); background:rgba(169,197,160,.1); box-shadow:inset 0 0 0 1px var(--sage); }
+  .choice.sel .mark{ border-color:var(--sage); }
+  .choice:hover{ border-color:var(--sage); }
+  .price.up{ color:var(--star-warm); } .price.down{ color:var(--sage); } .price.free{ color:var(--paper-soft); }
+
+  /* summary */
+  .summary{ position:sticky; top:88px; background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:24px 22px; max-height:calc(100vh - 104px); overflow-y:auto; }
+  .summary::-webkit-scrollbar{ width:8px; } .summary::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
+  .summary .lab{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--paper-soft); }
+  .summary .total{ font-family:var(--display); font-weight:800; letter-spacing:-.03em; line-height:1; margin:8px 0 4px; }
+  .summary .total .num{ font-size:3rem; color:var(--paper); }
+  .summary .days{ font-size:1rem; color:var(--paper-soft); } .summary .days b{ color:var(--paper); }
+  .summary .feasline{ font-family:var(--mono); font-size:.74rem; margin-top:6px; }
+  .feasline.warn{ color:var(--star-warm); } .feasline.ok{ color:var(--sage); }
+  .sum-line{ height:1px; background:var(--line); margin:18px 0; border:0; }
+  .sum-h{ font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-soft); margin-bottom:11px; display:flex; justify-content:space-between; align-items:center; }
+  .breakdown{ display:flex; flex-direction:column; gap:8px; font-size:.9rem; }
+  .breakdown .row{ display:flex; justify-content:space-between; gap:12px; color:var(--paper-soft); }
+  .breakdown .row .v{ font-family:var(--mono); white-space:nowrap; }
+  .breakdown .row.base{ color:var(--paper); font-weight:600; }
+
+  .daymeter{ display:flex; flex-direction:column; gap:12px; }
+  .dm{ font-size:.84rem; }
+  .dm .dm-top{ display:flex; justify-content:space-between; gap:8px; color:var(--paper); margin-bottom:5px; }
+  .dm .dm-top .dm-h{ color:var(--paper-soft); font-family:var(--mono); font-size:.72rem; }
+  .dm .bar{ position:relative; height:7px; border-radius:100px; background:rgba(243,237,225,.13); overflow:hidden; }
+  .dm .bar .fill{ position:absolute; inset:0 auto 0 0; width:0%; border-radius:100px; transition:width .5s var(--ease), background .3s; }
+  .dm .fill.green{ background:var(--sage); } .dm .fill.amber{ background:var(--amber); } .dm .fill.red{ background:var(--danger); }
+  .dm .dm-warn{ font-size:.78rem; color:var(--star-warm); margin-top:6px; line-height:1.4; }
+  .dm .dm-fix{ margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; }
+  .fixbtn{ font-family:var(--mono); font-size:.64rem; letter-spacing:.04em; color:var(--paper); background:rgba(169,197,160,.16); border:1px solid var(--sage); border-radius:100px; padding:.5em .9em; cursor:pointer; }
+  .fixbtn:hover{ background:var(--sage); color:var(--forest-3); }
+
+  .bookings{ display:flex; flex-direction:column; gap:9px; }
+  .bk{ background:var(--forest-2); border:1px solid var(--line); border-radius:9px; padding:11px 12px; font-size:.84rem; }
+  .bk.anchor{ border-color:rgba(231,168,119,.45); }
+  .bk .bk-t{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .bk .bk-name{ font-weight:600; color:var(--paper); }
+  .bk .bk-where{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); margin-top:3px; }
+  .bk .sells{ font-family:var(--mono); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; color:var(--danger); border:1px solid var(--danger); border-radius:100px; padding:.2em .55em; white-space:nowrap; flex:none; }
+  .bk .musthave{ color:var(--star-warm); border-color:var(--star-warm); }
+  .bk .bk-status{ margin-top:8px; display:flex; gap:6px; }
+  .bk .stbtn{ font-family:var(--mono); font-size:.64rem; letter-spacing:.04em; color:var(--paper-soft); background:transparent; border:1px solid var(--line); border-radius:100px; padding:.3em .7em; cursor:pointer; }
+  .bk .stbtn.on{ color:var(--forest-3); background:var(--sage); border-color:var(--sage); }
+  .bookings .empty{ color:var(--paper-soft); font-size:.86rem; }
+
+  .progress .pbar{ height:7px; border-radius:100px; background:rgba(243,237,225,.13); overflow:hidden; margin:6px 0 9px; }
+  .progress .pfill{ height:100%; width:0%; background:var(--sage); border-radius:100px; transition:width .5s var(--ease); }
+  .progress .pct{ font-family:var(--mono); font-size:.74rem; color:var(--paper); }
+  .progress .jump{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+  .progress .jbtn{ font-family:var(--mono); font-size:.64rem; color:var(--paper-soft); background:var(--forest-2); border:1px solid var(--line); border-radius:100px; padding:.3em .7em; cursor:pointer; }
+  .progress .jbtn:hover{ border-color:var(--sage); color:var(--paper); }
+
+  .lean{ display:flex; flex-direction:column; gap:8px; font-size:.86rem; }
+  .lean .lr{ display:flex; justify-content:space-between; gap:10px; color:var(--paper-soft); }
+  .lean .lr .pick{ color:var(--paper); font-weight:600; display:inline-flex; gap:7px; align-items:center; }
+  .lean .agreed{ color:var(--sage); font-family:var(--mono); font-size:.62rem; }
+  .summary .btn{ width:100%; justify-content:center; margin-top:20px; }
+  .summary .dlmini{ width:100%; justify-content:center; margin-top:10px; }
+  .summary .foot{ font-family:var(--mono); font-size:.66rem; color:var(--paper-soft); margin-top:12px; text-align:center; line-height:1.5; }
+  .flash{ animation:flash .6s var(--ease); } @keyframes flash{ 0%{ color:var(--sage); } 100%{} }
+
+  /* weather-call banner */
+  .wcall{ display:flex; align-items:center; gap:12px; background:rgba(227,184,90,.12); border:1px solid rgba(227,184,90,.4); border-radius:12px; padding:14px 16px; margin:2px 0 24px; }
+  .wcall .ico{ width:11px; height:11px; border-radius:50%; background:var(--amber); box-shadow:0 0 10px var(--amber); flex:none; }
+  .wcall .wt{ font-size:.9rem; color:var(--paper); } .wcall .wt b{ color:var(--amber); }
+
+  .minibar{ display:none; }
+  @media(max-width:980px){
+    .summary{ position:static; max-height:none; }
+    .minibar{ display:flex; position:fixed; left:0; right:0; bottom:0; z-index:50; align-items:center; justify-content:space-between; gap:14px; background:var(--forest-3); border-top:1px solid var(--line); color:var(--paper); padding:12px 18px; }
+    .minibar .mb-total{ font-family:var(--display); font-weight:800; font-size:1.5rem; line-height:1; }
+    .minibar .mb-days{ font-family:var(--mono); font-size:.7rem; color:var(--paper-soft); }
+    main{ padding-bottom:84px; }
+  }
+</style>
+</head>
+<body class="theme-observatory" data-screen-label="Observatory — Plan draft" data-cursor-theme="reticle" data-auto-journey>
+
+<div class="preload" aria-hidden="true"><svg viewBox="0 0 340 120"><path class="pl-line" d="M14,92 C70,58 120,70 170,52 C220,34 270,40 326,20"/><circle class="pl-dot" cx="14" cy="92" r="6"/><circle class="pl-dot" cx="170" cy="52" r="6"/><circle class="pl-dot" cx="326" cy="20" r="6"/><text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text></svg></div>
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+<div class="transition"><div class="t-orbit" aria-hidden="true"><span class="t-ring"></span><span class="t-planet"></span></div><span class="mark">Where To, Crew?</span></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+<div class="cosmos" aria-hidden="true"><canvas class="field"></canvas><div class="band"></div><div class="haze"></div></div>
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="journey" aria-hidden="true"><div class="j-track"></div><div class="j-fill"></div><div class="j-marker"></div></div>
+
+<nav class="nav">
+  <a class="brand" href="../index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="sign-up.html" class="underline hide-sm" data-transition data-cursor="link">Sign up</a>
+    <a class="btn" href="plan.html" data-transition data-magnetic data-cursor="label" data-label="Next"><span class="fill"></span><span class="lbl">The plan</span></a>
+  </div>
+</nav>
+
+<main class="page-top">
+  <div class="wrap">
+    <div class="stepper" style="padding-top:22px;">
+      <a href="sign-up.html" class="step-done" data-transition>01 · Sign up ✓</a><span class="sep">———</span>
+      <span class="step-on">02 · Plan draft</span><span class="sep">———</span>
+      <a href="plan.html" data-transition>03 · The plan</a>
+    </div>
+
+    <header class="trip-head" data-journey="Decide" style="padding:34px 0 22px;">
+      <p class="route-eyebrow" data-reveal data-reveal-mode="fade">Decide the night together · stop by stop</p>
+      <h1 class="display" data-reveal data-reveal="words">Build the night. Protect the slot.</h1>
+      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">Nothing's pre-picked except the rule that the <b>telescope is the anchor</b>. Choose the route, a stop, the day program and food — the per-person total and a <b>time meter that guards the night slot</b> update live, and every booking lands in <b>Your bookings</b>. Evenings are about the sky, not the bar.</p>
+    </header>
+
+    <div class="wcall" data-reveal data-reveal-mode="fade">
+      <span class="ico"></span>
+      <span class="wt">The decisive call is the museum's <b>same-day weather confirmation by ~14:00</b>. Everything below plans for a clear night — keep a Plan-B ready.</span>
+    </div>
+
+    <div class="draft-grid">
+      <div class="opts">
+
+        <!-- PRESETS -->
+        <div class="presets" data-reveal>
+          <div class="sum-h" style="color:var(--paper-soft);">Start from a preset <span style="text-transform:none;letter-spacing:0;">— then change anything</span></div>
+          <div class="pwrap" id="presets">
+            <button type="button" class="preset" data-preset="lean"><span class="pn">Observatory-first</span><span class="pp">≈ €30</span><span class="pd">Direct, telescope, snacks. Safest timing.</span></button>
+            <button type="button" class="preset" data-preset="balanced"><span class="pn">Balanced fall day</span><span class="pp">≈ €45 · recommended</span><span class="pd">Mindūnai tower, deck, Molėtai dinner.</span></button>
+            <button type="button" class="preset" data-preset="scenic"><span class="pn">Scenic lake-country</span><span class="pp">≈ €55+</span><span class="pd">Lakes + tower + day tour. Weather-exposed.</span></button>
+            <button type="button" class="preset" data-preset="culture"><span class="pn">Culture stop</span><span class="pp">≈ €55+</span><span class="pd">Rumšiškės / Taujėnai on the way. Can run late.</span></button>
+          </div>
+          <p class="pnote">A preset is a starting point, not a validated plan — the time meter still flags anything that risks the night slot.</p>
+        </div>
+
+        <!-- TRIP-WIDE -->
+        <section class="dayblock" data-day="0">
+          <div class="day-head"><span class="day-tag">Decide first</span><h2>The night &amp; the date</h2><p class="tradeoff">These set the sky: how dark, how early it starts, and which telescope you book.</p></div>
+
+          <div class="opt" data-group="seasonWindow" data-type="single">
+            <div class="opt-head"><h3>Season window</h3></div>
+            <p class="opt-sub">Fall beats summer here — earlier, darker nights. Earlier in the season is warmer; later is darker but colder and wetter.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="sept" data-night="21.25"><span class="mark"></span><span class="ctext"><span class="clabel">Early fall · September</span><span class="cmeta"><span>night ~21:30</span><span class="m-why">Warmer, comfortable, later start.</span></span></span></button>
+              <button type="button" class="choice" data-val="oct" data-night="20.0" data-suggest="Mid-October is the sweet spot: sunset ~18:20 means the program starts ~19:50 — early enough to be home at a sane hour, dark enough to feel like real stargazing."><span class="mark"></span><span class="ctext"><span class="clabel">Mid fall · October</span><span class="cmeta"><span>night ~19:50</span><span class="m-why">Best balance: earlier dark, colder.</span></span></span></button>
+              <button type="button" class="choice" data-val="nov" data-night="18.5"><span class="mark"></span><span class="ctext"><span class="clabel">Late fall · November</span><span class="cmeta"><span>night ~18:30</span><span class="m-why">Earliest dark, but coldest/wettest; the dark return drive matters more.</span></span></span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="dateStrategy" data-type="single">
+            <div class="opt-head"><h3>Date strategy</h3></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="best-sky"><span class="mark"></span><span class="ctext"><span class="clabel">Best sky window</span><span class="cmeta"><span class="m-why">Near new moon — best for faint deep-sky. May not fit everyone's calendar.</span></span></span></button>
+              <button type="button" class="choice" data-val="easy-saturday"><span class="mark"></span><span class="ctext"><span class="clabel">Easiest group Saturday</span><span class="cmeta"><span class="m-why">Crew-first. Moon may be brighter — still great for Moon/planets.</span></span></span></button>
+              <button type="button" class="choice" data-val="custom"><span class="mark"></span><span class="ctext"><span class="clabel">Custom date</span><span class="cmeta"><span class="m-why">Re-check availability, moon and weather close to the day.</span></span></span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="anchor" data-type="single">
+            <div class="opt-head"><h3>The telescope</h3><span class="tag-opt">mandatory · 📌 register</span></div>
+            <p class="opt-sub">The night observation is the anchor. Clear-sky dependent; register ahead; small group capacity; weather call by 14:00.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="80cm" data-price="12" data-book="telescope" data-suggest="The 80 cm is the headline instrument and the better experience — only €2 more than the 40 cm. Book it unless it's full."><span class="mark"></span><span class="ctext"><span class="clabel">80 cm telescope night observation</span><span class="cmeta"><span>+€12</span><span>cap. 16</span><span class="cbook">📌 register · weather call by 14:00</span></span></span><span class="price up">+€12</span></button>
+              <button type="button" class="choice" data-val="40cm" data-price="10" data-book="telescope"><span class="mark"></span><span class="ctext"><span class="clabel">40 cm telescope night observation</span><span class="cmeta"><span>+€10</span><span>cap. 18</span><span class="cbook">📌 backup headline · register</span></span></span><span class="price up">+€10</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- THE WAY UP -->
+        <section class="dayblock" data-day="1">
+          <div class="day-head"><span class="day-tag">The way up</span><h2>Route &amp; one stop</h2><p class="tradeoff">Every stop pushes the day earlier or later — the meter shows when a stop starts eating the buffer before the night slot.</p></div>
+
+          <div class="opt" data-group="routeStyle" data-type="single">
+            <div class="opt-head"><h3>Route style</h3><span class="cmp-toggle-wrap"></span></div>
+            <p class="opt-sub">Direct is the safe default. Nature or culture reveal the stops that fit that road.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="direct" data-price="9" data-drive="0" data-suggest="Direct keeps the whole day in hand. If the weather looks marginal or the group's slow to leave Kaunas, this is the one that never risks the slot."><span class="mark"></span><span class="ctext"><span class="clabel">Direct · observatory-first</span><span class="cmeta"><span>fuel ~€9</span><span>~2 h 04 each way</span><span class="m-why">Shortest, safest. Reveals food + day-tour stops.</span></span></span><span class="price up">~€9</span></button>
+              <button type="button" class="choice" data-val="nature" data-price="12" data-drive="0.4"><span class="mark"></span><span class="ctext"><span class="clabel">Nature route</span><span class="cmeta"><span>fuel ~€12</span><span>+ a little detour</span><span class="m-why">Reveals Mindūnai tower, Dubingiai/Asveja, Molėtai food.</span></span></span><span class="price up">~€12</span></button>
+              <button type="button" class="choice" data-val="culture" data-price="13" data-drive="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Culture route</span><span class="cmeta"><span>fuel ~€13</span><span>longer day</span><span class="m-why">Reveals Rumšiškės, Taujėnai, Ukmergė.</span></span></span><span class="price up">~€13</span></button>
+            </div>
+          </div>
+
+          <div class="opt ruled" data-group="mainStop" data-type="single" hidden>
+            <div class="opt-head"><h3>Main stop on the way</h3><span class="tag-opt">pick one</span></div>
+            <p class="lodge-prompt" data-mainstop-prompt>Pick a route style first.</p>
+            <div class="choices">
+              <button type="button" class="choice ms-any" data-val="none" data-price="0" data-hours="0"><span class="mark"></span><span class="ctext"><span class="clabel">None · arrive early at the observatory</span><span class="cmeta"><span>€0</span><span class="m-why">Most buffer before the night slot — outdoor exhibition is free anytime.</span></span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice ms-nature ms-direct" data-val="moletai-food" data-price="0" data-hours="1" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Molėtai food / warm-up</span><span class="cmeta"><span>food below</span><span>~1 h</span><span class="cbook">📌 reserve if weekend</span></span><span class="cnote">Arrive fed and warm — protects the late slot.</span></span><span class="price free">€0</span></button>
+              <button type="button" class="choice ms-nature" data-val="mindunai" data-price="1" data-hours="1.25" data-suggest="The most on-theme add-on and the safest: forest, lakes and a 36 m tower right next to Kulionys, so it barely touches your buffer."><span class="mark"></span><span class="ctext"><span class="clabel">Mindūnai tower + Labanoras lakes</span><span class="cmeta"><span>+€0–1</span><span>~45–90 min</span><span class="m-why">Best fall-photo stop, close to the observatory. No booking.</span></span></span><span class="price up">~€1</span></button>
+              <button type="button" class="choice ms-nature" data-val="dubingiai" data-price="1" data-hours="1.5"><span class="mark"></span><span class="ctext"><span class="clabel">Dubingiai + Asveja lake route</span><span class="cmeta"><span>+€0–1</span><span>~1–2 h</span><span class="m-why">Scenic castle mound + Lithuania's longest lake. Daylight only.</span></span></span><span class="price up">~€1</span></button>
+              <button type="button" class="choice ms-culture" data-val="rumsiskes" data-price="0" data-hours="2.5" data-book="rumsiskes"><span class="mark"></span><span class="ctext"><span class="clabel">Rumšiškės Open-Air Museum</span><span class="cmeta"><span>check ticket</span><span>~1.5–3 h</span><span class="cbook">📌 check fall hours/tickets</span></span><span class="cnote">Culture + stars — only if fall hours fit. Just 28 min from Kaunas.</span></span><span class="price up">check</span></button>
+              <button type="button" class="choice ms-culture" data-val="taujenai" data-price="0" data-hours="1.5" data-book="taujenai"><span class="mark"></span><span class="ctext"><span class="clabel">Taujėnai Manor + park</span><span class="cmeta"><span>check ticket</span><span>~1–2 h</span><span class="cbook">📌 verify hours/events</span></span></span><span class="price up">check</span></button>
+              <button type="button" class="choice ms-culture" data-val="ukmerge" data-price="0" data-hours="1.25" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Ukmergė food / photo stop</span><span class="cmeta"><span>food below</span><span>~45–90 min</span><span class="m-why">Easy midpoint on the Taujėnai road.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="dayProgram" data-type="single">
+            <div class="opt-head"><h3>Daytime at the museum</h3><span class="tag-opt">saves the day if clouds roll in</span></div>
+            <p class="opt-sub">Same destination, no route risk — and it makes the day worthwhile even if the night is cancelled.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="fulltour" data-price="8" data-hours="1.5" data-book="dayprogram"><span class="mark"></span><span class="ctext"><span class="clabel">Full museum day tour</span><span class="cmeta"><span>+€8</span><span>up to 1.5 h</span><span class="cbook">📌 register/check</span></span><span class="cnote">The story before the telescope; saves the day if clouds win.</span></span><span class="price up">+€8</span></button>
+              <button type="button" class="choice" data-val="deck" data-price="4" data-hours="0.5" data-book="dayprogram" data-suggest="The observation deck is the efficient pick — 30 minutes, 30 m up over the Highlands, and it leaves your buffer almost intact."><span class="mark"></span><span class="ctext"><span class="clabel">Observation deck only</span><span class="cmeta"><span>+€4</span><span>~30 min</span><span class="cbook">📌 check</span></span></span><span class="price up">+€4</span></button>
+              <button type="button" class="choice" data-val="outdoor" data-price="0" data-hours="0.75"><span class="mark"></span><span class="ctext"><span class="clabel">Outdoor exhibition only</span><span class="cmeta"><span>€0</span><span>free, anytime</span><span class="m-why">Good fallback, accessible 24 h.</span></span></span><span class="price free">€0</span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="food" data-type="single">
+            <div class="opt-head"><h3>Food &amp; warm-up</h3></div>
+            <p class="opt-sub">Keep dinner before the night slot — don't rely on late food after the program.</p>
+            <div class="choices">
+              <button type="button" class="choice" data-val="picnic" data-price="6" data-hours="0.5"><span class="mark"></span><span class="ctext"><span class="clabel">Pack snacks / picnic from Kaunas</span><span class="cmeta"><span>+€5–8</span><span>fastest</span><span class="m-why">Cheapest, quickest, weather-proof.</span></span></span><span class="price up">~€6</span></button>
+              <button type="button" class="choice" data-val="moletai-cafe" data-price="14" data-hours="1" data-book="restaurant" data-suggest="A warm sit-down dinner in Molėtai before the night slot is the comfort move — everyone arrives fed and warm for a cold tower."><span class="mark"></span><span class="ctext"><span class="clabel">Molėtai café / restaurant</span><span class="cmeta"><span>+€8–20</span><span>~1 h</span><span class="cbook">📌 reserve if weekend</span></span><span class="cnote">Warm and safer before a cold late observation.</span></span><span class="price up">~€14</span></button>
+              <button type="button" class="choice" data-val="route-meal" data-price="14" data-hours="1" data-book="restaurant"><span class="mark"></span><span class="ctext"><span class="clabel">Ukmergė / Taujėnai route meal</span><span class="cmeta"><span>+€8–20</span><span>~1 h</span><span class="cbook">📌 culture route only</span></span></span><span class="price up">~€14</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- THE NIGHT + HOME -->
+        <section class="dayblock" data-day="2">
+          <div class="day-head"><span class="day-tag">The night &amp; home</span><h2>Safety &amp; weather plan</h2><p class="tradeoff">The real risk isn't the telescope — it's the ~2 h drive home after midnight. Plan the driver and the cloud-cancel before you go.</p></div>
+
+          <div class="opt" data-group="returnSafety" data-type="single">
+            <div class="opt-head"><h3>The drive home</h3><span class="tag-opt">no € — safety</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="one-driver" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">One rested return driver</span><span class="cmeta"><span class="m-why">Required minimum — no alcohol, ~2 h home after the program.</span></span></span></button>
+              <button type="button" class="choice" data-val="driver-swap" data-price="0" data-suggest="A driver swap is the safe call after a midnight finish — two rested people sharing the dark ~2 h back to Kaunas."><span class="mark"></span><span class="ctext"><span class="clabel">Driver swap plan</span><span class="cmeta"><span class="m-why">Safer — two rested drivers share the dark return.</span></span></span></button>
+              <button type="button" class="choice" data-val="emergency-hotel" data-price="0" data-book="hotel"><span class="mark"></span><span class="ctext"><span class="clabel">Emergency nearby stay (fallback)</span><span class="cmeta"><span>not in base €</span><span class="cbook">📌 nearby stay on standby</span></span><span class="cnote">Not the normal plan — a safety net if everyone's too tired to drive.</span></span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="weatherPlan" data-type="single">
+            <div class="opt-head"><h3>Weather plan-B</h3><span class="tag-opt">decide before 14:00</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-val="strict" data-price="0" data-suggest="Agree the rule now and there's no on-the-day argument: if the 14:00 call cancels, you reschedule the night or do a shorter Plan-B."><span class="mark"></span><span class="ctext"><span class="clabel">Strict sky-first</span><span class="cmeta"><span class="m-why">If cancelled by 14:00 → reschedule the night, or do a shorter Plan-B.</span></span></span></button>
+              <button type="button" class="choice" data-val="go-anyway" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Go anyway</span><span class="cmeta"><span class="m-why">Day tour / outdoor exhibition / Mindūnai / food even if the telescope cancels.</span></span></span></button>
+            </div>
+          </div>
+
+          <div class="opt" data-group="rituals" data-type="multi">
+            <div class="opt-head"><h3>Night rituals</h3><span class="tag-opt">pick any</span></div>
+            <div class="choices">
+              <button type="button" class="choice" data-multi data-val="thermos" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Thermos / hot chocolate</span><span class="cmeta"><span class="m-why">The tower is outdoor-cold — this is non-negotiable in fall.</span></span></span></button>
+              <button type="button" class="choice" data-multi data-val="photo" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Photo challenge: tower / dome / night sky</span><span class="cmeta"><span class="m-why">📸 best three shots win.</span></span></span></button>
+              <button type="button" class="choice" data-multi data-val="playlist" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Shared drive playlist</span><span class="cmeta"><span class="m-why">For the dark road home.</span></span></span></button>
+              <button type="button" class="choice" data-multi data-val="bestthing" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">"Best thing today" before driving home</span><span class="cmeta"><span class="m-why">One lap of the outdoor exhibition, then go.</span></span></span></button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <aside>
+        <div class="summary" id="summary">
+          <p class="lab">Per person · est.</p>
+          <div class="total"><span class="num" id="sum-total">≈ €25–70</span></div>
+          <p class="days" id="sum-days">Pick the telescope &amp; route to start your total</p>
+          <p class="feasline" id="feasline"></p>
+
+          <hr class="sum-line">
+          <div class="sum-h">What it's made of</div>
+          <div class="breakdown" id="breakdown"></div>
+
+          <hr class="sum-line">
+          <div class="sum-h">Time meter · protect the slot</div>
+          <div class="daymeter" id="daymeter"></div>
+
+          <hr class="sum-line">
+          <div class="sum-h">Your bookings <span id="bk-count" style="color:var(--star-warm);"></span></div>
+          <div class="bookings" id="bookings"></div>
+
+          <hr class="sum-line">
+          <div class="sum-h progress">Decisions <span class="pct" id="prog-pct">0 / 0</span></div>
+          <div class="progress"><div class="pbar"><div class="pfill" id="prog-fill"></div></div><div class="jump" id="prog-jump"></div></div>
+
+          <hr class="sum-line">
+          <div class="sum-h">Crew leaning</div>
+          <div class="lean" id="lean"></div>
+
+          <a class="btn btn--solid" href="plan.html" id="lock-btn" data-transition data-cursor="label" data-label="Lock in"><span class="fill"></span><span class="lbl">Lock it in → The plan</span></a>
+          <button type="button" class="btn dlmini" id="dlMini"><span class="fill"></span><span class="lbl">Download checklist</span></button>
+          <button type="button" class="btn dlmini" id="shareMini"><span class="fill"></span><span class="lbl">Share my plan ↗</span></button>
+          <p class="foot">Saved to this device + shared with the crew. Come back anytime to edit.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <div style="height:40px;"></div>
+</main>
+
+<div class="minibar"><div><div class="mb-total" id="mb-total">€25–70</div><div class="mb-days" id="mb-days">pick your options</div></div><a class="btn btn--solid" href="plan.html" data-transition><span class="fill"></span><span class="lbl">The plan →</span></a></div>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><a class="brand" href="../index.html"><svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+      <p class="muted" style="margin-top:14px;">Plan the trip. Bring the crew.</p></div>
+    <div style="max-width:32ch;"><small>Made by friends, for friends — no bookings taken here, just planning. © 2026. · <a href="../emergency.html" data-transition style="color:var(--sage);">🆘 Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script>
+document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
+window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
+window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'observatory' };
+</script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
+<script src="../assets/crew.js"></script>
+<script src="../assets/share.js"></script>
+<script src="../assets/checklist-observatory.js"></script>
+<script src="../assets/plan-draft-observatory.js"></script>
+<script src="../assets/motion.js?v=2"></script>
+<script src="../assets/sky.js"></script>
+<script>/* service worker disabled in this build — purge any stale one so the page never auto-reloads or serves stale */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+</body>
+</html>

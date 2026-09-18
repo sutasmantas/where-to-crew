@@ -28,7 +28,7 @@
   /* ---- ONE scroll conductor: Lenis ---- */
   if(hasGSAP && !reduce && window.Lenis){
     lenis = new Lenis({ lerp:0.1, wheelMultiplier:1 });
-    lenis.on('scroll', ScrollTrigger.update);
+    if(window.ScrollTrigger) lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function(t){ lenis.raf(t*1000); });
     gsap.ticker.lagSmoothing(0);
   }
@@ -72,6 +72,8 @@
   /* ---- ONE stateful cursor: the crew marker on the road (compass + breadcrumb trail) ---- */
   function initCursor(){
     if(!fine || reduce || !hasGSAP) return;
+    // Observatory pages install their own telescope reticle (assets/sky.js) — skip the boot cursor.
+    if(document.body.getAttribute('data-cursor-theme')==='reticle'){ return; }
     document.body.classList.add('cursor-on');
     var dot=document.createElement('div'); dot.className='cur'; dot.textContent='\uD83E\uDD7E'; /* hiking boot */
     var tag=document.createElement('div'); tag.className='cur-tag';
@@ -187,7 +189,7 @@
     if(!reduce && sessionStorage.getItem('wtc-trans')){
       sessionStorage.removeItem('wtc-trans');
       gsap.set(ov,{yPercent:0,autoAlpha:1});
-      gsap.to(ov,{yPercent:-100,duration:.7,ease:TOK.easeInOut,delay:.05,onComplete:function(){ gsap.set(ov,{autoAlpha:0}); }});
+      gsap.to(ov,{yPercent:-100,duration:.7,ease:TOK.easeInOut,delay:.2,onComplete:function(){ gsap.set(ov,{autoAlpha:0}); }});
     } else if(!reduce){ gsap.set(ov,{yPercent:100,autoAlpha:1}); }
     document.querySelectorAll('a[data-transition]').forEach(function(a){
       a.addEventListener('click', function(e){
@@ -196,7 +198,7 @@
         e.preventDefault();
         if(lenis) lenis.stop();
         sessionStorage.setItem('wtc-trans','1');
-        gsap.to(ov,{yPercent:0,duration:.6,ease:TOK.easeInOut,onComplete:function(){ location.href=href; }});
+        gsap.to(ov,{yPercent:0,duration:.42,ease:TOK.easeInOut,onComplete:function(){ location.href=href; }});
       });
     });
   }
@@ -208,7 +210,12 @@
     if(lenis) lenis.stop();
     var svgEl=pre.querySelector('svg'), mk=null;
     if(svgEl && window.MotionPathPlugin){ mk=document.createElementNS('http://www.w3.org/2000/svg','circle'); mk.setAttribute('r','5'); mk.setAttribute('fill','#f3ede1'); svgEl.appendChild(mk); }
-    var tl=gsap.timeline({ onComplete:function(){ pre.remove(); if(lenis) lenis.start(); done&&done(); } });
+    // fail-safe: if the timeline ever stalls (e.g. rAF throttled in a background tab),
+    // never leave the full-screen preloader covering + blocking clicks.
+    var finished=false;
+    function finish(){ if(finished) return; finished=true; if(pre&&pre.parentNode) pre.remove(); if(lenis) lenis.start(); done&&done(); }
+    var failSafe=setTimeout(finish, 4200);
+    var tl=gsap.timeline({ onComplete:function(){ clearTimeout(failSafe); finish(); } });
     tl.set('.preload .pl-word',{opacity:0});
     tl.fromTo('.preload .pl-line',{drawSVG:'0%'},{drawSVG:'100%',duration:1.1,ease:TOK.easeInOut});
     if(mk) tl.to(mk,{ motionPath:{ path:'.preload .pl-line', align:'.preload .pl-line', alignOrigin:[.5,.5] }, duration:1.1, ease:TOK.easeInOut }, 0);

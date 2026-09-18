@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{if(sessionStorage.getItem('wtc-trans'))document.documentElement.classList.add('via-trans');}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<title>The night plan · Observatory — Where To, Crew?</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/observatory.css">
+<style>
+  main{ position:relative; z-index:2; }
+  .page-top{ padding-top:104px; }
+  .route-eyebrow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--sage); }
+  .trip-head .display{ font-size:clamp(2.4rem,5.4vw,4.2rem); }
+
+  .plan-grid{ display:grid; grid-template-columns:1fr 340px; gap:clamp(24px,4vw,48px); align-items:start; margin-top:40px; }
+  @media(max-width:980px){ .plan-grid{ grid-template-columns:1fr; } }
+
+  .panel{ background:var(--forest-2); border:1px solid var(--line); border-radius:16px; padding:clamp(22px,3vw,30px); margin-bottom:22px; }
+  .panel h2{ font-size:1.5rem; color:var(--paper); }
+  .panel .lab{ font-family:var(--mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sage); margin-bottom:6px; }
+  .panel ul{ margin:10px 0 0; padding-left:0; list-style:none; }
+  .panel li{ position:relative; padding:8px 0 8px 22px; border-bottom:1px solid var(--line-soft); color:var(--paper-soft); font-size:.95rem; }
+  .panel li:last-child{ border-bottom:0; }
+  .panel li::before{ content:'✦'; position:absolute; left:0; top:8px; color:var(--sage); font-size:.7rem; }
+  .panel li b{ color:var(--paper); }
+
+  .empty-state{ text-align:center; padding:60px 0; }
+
+  .sidecard{ position:sticky; top:88px; background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:24px 22px; }
+  .sidecard .lab{ font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--paper-soft); }
+  .sidecard .total{ font-family:var(--display); font-weight:800; font-size:3rem; line-height:1; color:var(--paper); margin:8px 0 4px; }
+  .sidecard .sub{ font-size:.92rem; color:var(--paper-soft); }
+  .sidecard hr{ height:1px; background:var(--line); border:0; margin:18px 0; }
+  .sidecard .btn{ width:100%; justify-content:center; }
+  .sidecard .btn + .btn{ margin-top:10px; }
+  .bk{ background:var(--forest-2); border:1px solid var(--line); border-radius:9px; padding:11px 12px; font-size:.84rem; margin-bottom:8px; }
+  .bk.anchor{ border-color:rgba(231,168,119,.45); }
+  .bk .bk-name{ font-weight:600; color:var(--paper); display:block; }
+  .bk .bk-where{ font-family:var(--mono); font-size:.68rem; color:var(--paper-soft); margin-top:3px; display:block; }
+  .bk .bk-st{ font-family:var(--mono); font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; margin-top:6px; display:inline-block; padding:.2em .6em; border-radius:100px; }
+  .bk .bk-st.booked{ color:var(--forest-3); background:var(--sage); } .bk .bk-st.todo{ color:var(--star-warm); border:1px solid var(--star-warm); }
+
+  .feas{ font-family:var(--mono); font-size:.74rem; margin-top:10px; }
+  .feas.green{ color:var(--sage); } .feas.amber{ color:var(--amber); } .feas.red{ color:var(--danger); }
+
+  .route-map{ margin:30px 0 4px; }
+  .route-map h2{ margin:4px 0 10px; }
+  #map{ height:390px; border-radius:12px; border:1px solid var(--line); overflow:hidden; z-index:0; margin-top:20px; }
+  .leaflet-container{ font-family:var(--sans); background:#0a130f; }
+  .leaflet-bar a{ background:var(--forest-3); color:var(--paper); border-color:var(--line); }
+  .leaflet-bar a:hover{ background:var(--forest-2); }
+  .leaflet-popup-content-wrapper, .leaflet-popup-tip{ background:var(--forest-3); color:var(--paper); box-shadow:0 8px 24px rgba(0,0,0,.5); }
+  .leaflet-popup-content b{ color:var(--sage); }
+  .star-pin{ font-size:26px; line-height:1; filter:drop-shadow(0 0 6px rgba(231,168,119,.8)); }
+  .map-legend{ display:flex; flex-wrap:wrap; gap:8px 20px; margin:13px 0 0; font-family:var(--mono); font-size:.72rem; color:var(--paper-soft); }
+  .map-legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .map-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .route-links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+  .route-links .btn{ font-size:.78rem; }
+
+  /* interactive day-arc scrubber (CAND-012/015) */
+  .dayarc{ background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:18px 20px 8px; margin-top:34px; }
+  .dayarc .da-head{ display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .dayarc .da-head .k{ font-family:var(--mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--sage); }
+  .dayarc .da-read{ font-family:var(--mono); font-size:.82rem; color:var(--paper); }
+  .dayarc .da-read b{ color:var(--star-warm); }
+  .dayarc .da-svg{ width:100%; height:auto; display:block; touch-action:none; cursor:grab; margin-top:2px; }
+  .dayarc .da-svg:active{ cursor:grabbing; }
+  .dayarc .da-t{ fill:var(--paper-soft); font-family:var(--mono); font-size:11px; }
+</style>
+</head>
+<body class="theme-observatory" data-screen-label="Observatory — The plan" data-cursor-theme="reticle" data-auto-journey>
+
+<div class="preload" aria-hidden="true"><svg viewBox="0 0 340 120"><path class="pl-line" d="M14,92 C70,58 120,70 170,52 C220,34 270,40 326,20"/><circle class="pl-dot" cx="14" cy="92" r="6"/><circle class="pl-dot" cx="170" cy="52" r="6"/><circle class="pl-dot" cx="326" cy="20" r="6"/><text class="pl-word" x="170" y="112" text-anchor="middle">Where To, Crew?</text></svg></div>
+<div class="routebar"><div class="track"></div><div class="fill"></div><div class="dot"></div></div>
+<div class="transition"><div class="t-orbit" aria-hidden="true"><span class="t-ring"></span><span class="t-planet"></span></div><span class="mark">Where To, Crew?</span></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"><animate attributeName="baseFrequency" dur="8s" values="0.9;0.72;0.9" repeatCount="indefinite"/></feTurbulence><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+<div class="cosmos" aria-hidden="true"><canvas class="field"></canvas><div class="band"></div><div class="haze"></div></div>
+<div class="bg-amb bg-amb--page" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="journey" aria-hidden="true"><div class="j-track"></div><div class="j-fill"></div><div class="j-marker"></div></div>
+
+<nav class="nav">
+  <a class="brand" href="../index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+  <div class="nav-links">
+    <a href="plan-draft.html" class="underline hide-sm" data-transition data-cursor="link">Edit draft</a>
+    <a class="btn" href="#" id="dlTop" data-magnetic data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download</span></a>
+  </div>
+</nav>
+
+<main class="page-top">
+  <div class="wrap">
+    <div class="stepper" style="padding-top:22px;">
+      <a href="sign-up.html" class="step-done" data-transition>01 · Sign up ✓</a><span class="sep">———</span>
+      <a href="plan-draft.html" class="step-done" data-transition>02 · Plan draft ✓</a><span class="sep">———</span>
+      <span class="step-on">03 · The plan</span>
+    </div>
+
+    <header class="trip-head" data-journey="Plan" style="padding:34px 0 8px;">
+      <p class="route-eyebrow" data-reveal data-reveal-mode="fade">The night-observation mission plan</p>
+      <h1 class="display" data-reveal data-reveal="words">The night, locked in.</h1>
+      <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Your crew's picks, scheduled backward from the telescope slot so the anchor is always protected. Re-check the date's sunset, moon and the ~14:00 weather call before you drive.</p>
+    </header>
+
+    <div id="planRoot"></div>
+  </div>
+  <div style="height:70px;"></div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><a class="brand" href="../index.html"><svg viewBox="0 0 30 18" style="width:30px;height:18px;overflow:visible;"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
+      <p class="muted" style="margin-top:14px;">Plan the trip. Bring the crew.</p></div>
+    <div style="max-width:32ch;"><small>Made by friends, for friends — no bookings taken here, just planning. © 2026. · <a href="../emergency.html" data-transition style="color:var(--sage);">🆘 Emergency one-pager</a></small></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+document.querySelectorAll('[data-reveal-mode]').forEach(function(el){ el.setAttribute('data-reveal', el.getAttribute('data-reveal-mode')); });
+window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, load:function(k,f){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):f; }catch(e){ return f; } } };
+window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'observatory' };
+</script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
+<script src="../assets/crew.js"></script>
+<script src="../assets/share.js"></script>
+<script src="../assets/checklist-observatory.js"></script>
+<script>
+(function(){
+  var plan = WTC.load('wtc-observatory-plan', null);
+  var root = document.getElementById('planRoot');
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  var encoded=(location.hash.match(/[#&]p=([^&]+)/)||[])[1];
+  var shared=encoded && window.WTC_decodePlan ? window.WTC_decodePlan(encoded) : null;
+  if(shared){
+    plan=shared;
+    var banner=document.createElement('div');
+    banner.style.cssText='position:sticky;top:0;z-index:60;background:var(--star-warm);color:#0b1310;font-family:var(--mono),monospace;font-size:.78rem;padding:.7em 1em;text-align:center;';
+    banner.appendChild(document.createTextNode('📨 You’re viewing '+(shared.who||'a friend')+'’s plan — read-only. '));
+    var own=document.createElement('a'); own.href='plan-draft.html'; own.textContent='Build your own →'; own.style.cssText='color:#0b1310;text-decoration:underline;font-weight:700;'; banner.appendChild(own);
+    document.body.insertBefore(banner, document.body.firstChild);
+    document.querySelectorAll('a[href="plan-draft.html"]').forEach(function(a){ if(a!==own) a.style.display='none'; });
+  }
+
+  if(!plan || !plan.sel || !plan.sel.anchor){
+    root.innerHTML = '<div class="panel empty-state"><p class="lab">No plan yet</p><h2 style="margin:6px 0 12px;">Build the night first.</h2>'+
+      '<p class="muted" style="max-width:42ch;margin:0 auto 22px;">Pick the telescope and route on the plan draft — it schedules the night and lands every booking here.</p>'+
+      '<a class="btn btn--solid" href="plan-draft.html" data-transition data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Open the plan draft →</span></a></div>';
+    bindDownload(); return;
+  }
+
+  var m = window.WTC_obsModel(plan);
+  var s = m.sel;
+
+  // time-orbit
+  var tl = m.timeline.map(function(t){
+    return '<div class="torow'+(t[2]?' anchor':'')+'"><span class="t-dot"></span><div class="t-time">'+t[0]+'</div><div class="t-body"><div class="t-h">'+esc(t[1].split(' — ')[0])+'</div>'+(t[1].indexOf(' — ')>=0?'<div class="t-d">'+esc(t[1].split(' — ').slice(1).join(' — '))+'</div>':'')+'</div></div>';
+  }).join('');
+
+  // bookings sidebar
+  var bk = m.bookings.length ? m.bookings.map(function(b){
+    var st=(plan.bookingStatus&&plan.bookingStatus[b.id])||'todo';
+    return '<div class="bk'+(b.must?' anchor':'')+'"><span class="bk-name">'+esc(b.name)+'</span><span class="bk-where">'+esc(b.where)+'</span><span class="bk-st '+(st==='booked'?'booked':'todo')+'">'+(st==='booked'?'Booked ✓':'To-do')+'</span></div>';
+  }).join('') : '<p class="muted" style="font-size:.86rem;">No bookings yet.</p>';
+
+  var data = '<div class="data-grid" style="margin-bottom:22px;">'+
+    '<div class="data-card"><div class="dk">Telescope</div><div class="dv">'+(s.anchor==='40cm'?'40':'80')+'<span class="u"> cm</span></div><div class="ds">'+(s.anchor==='40cm'?'Backup headline · €10 · cap. 18':'Headline · €12 · cap. 16')+'</div></div>'+
+    '<div class="data-card"><div class="dk">Drive each way</div><div class="dv">~2<span class="u"> h</span></div><div class="ds">Kaunas → Kulionys ≈ 128 km'+(s.routeStyle&&s.routeStyle!=='direct'?' + '+esc(s.routeStyle)+' detour':'')+'.</div></div>'+
+    '<div class="data-card"><div class="dk">Program starts</div><div class="dv">'+m.fmt(m.night)+'</div><div class="ds">~1.5 h after sunset, lasts 1–1.5 h. Clear skies required.</div></div>'+
+    '<div class="data-card"><div class="dk">Home by</div><div class="dv">'+m.fmt(m.home)+'</div><div class="ds">'+(s.returnSafety==='driver-swap'?'Driver swap — share the dark return.':s.returnSafety==='emergency-hotel'?'Or stay over if too tired.':'One rested driver, no alcohol.')+'</div></div>'+
+  '</div>';
+
+  var badges = '<div class="sky-badges" style="margin-bottom:26px;">'+
+    '<span class="sky-badge wait"><span class="ico"></span><span><span class="k">Weather call</span><br><b>By ~14:00 — '+(s.weatherPlan==='go-anyway'?'go anyway plan':'strict sky-first')+'</b></span></span>'+
+    '<span class="sky-badge moon"><span class="ico"></span><span><span class="k">Date</span><br><b>'+esc(m.lab(s.dateStrategy||'easy-saturday'))+'</b></span></span>'+
+    '<span class="sky-badge go"><span class="ico"></span><span><span class="k">Anchor</span><br><b>'+esc(m.lab(s.anchor))+'</b></span></span>'+
+    '<span class="sky-badge warn"><span class="ico"></span><span><span class="k">Return</span><br><b>'+esc(m.lab(s.returnSafety||'one-driver'))+'</b></span></span>'+
+  '</div>';
+
+  root.innerHTML =
+    badges + data +
+    '<div class="dayarc" id="dayArc"></div>'+
+    '<section class="panel route-map" aria-labelledby="map-title"><p class="lab">Kaunas → Kulionys</p><h2 id="map-title">The night route, mapped.</h2>'+
+      '<p class="muted">The dashed line marks the direction to the museum. Crew suggestions are pinned separately; open Google Maps for live driving directions through your chosen stop.</p>'+
+      '<div id="map" role="img" aria-label="Map from Kaunas to the Museum of Ethnocosmology, including crew suggested stops"></div>'+
+      '<div id="map-legend" class="map-legend"></div>'+
+      '<div id="route-gmaps" class="route-links"></div>'+
+      '<p class="muted" style="font-family:var(--mono);font-size:.72rem;margin-top:13px;">Map tiles and Google Maps directions need a connection.</p></section>'+
+    '<div class="plan-grid"><div>'+
+      '<div class="panel"><p class="lab">The night, hour by hour</p><h2>'+esc(m.lab(s.seasonWindow||'oct'))+' · scheduled to protect the slot</h2><div class="timeorbit" style="margin-top:18px;">'+tl+'</div><p class="feas '+m.feas+'" style="margin-top:14px;">'+(m.feas==='red'?'⚠️ This leaves Kaunas very early — drop the stop or go direct on the draft.':m.feas==='amber'?'• Early start / late return — share the driving.':'✓ The night slot is protected, with sane departure and return.')+'</p></div>'+
+      '<div class="panel"><p class="lab">Route &amp; driving</p><ul>'+
+        '<li><b>Kaunas → Museum of Ethnocosmology:</b> ~128 km / ~2 h 04 each way (direct).</li>'+
+        '<li><b>Return after the program:</b> a dark ~2 h drive — '+esc(m.lab(s.returnSafety||'one-driver')).toLowerCase()+'. No alcohol if driving.</li>'+
+        '<li><b>Lithuania rules:</b> dipped headlights day &amp; night; normal passenger cars need no road toll/vignette.</li></ul></div>'+
+      '<div class="panel"><p class="lab">Observatory game-plan</p><ul>'+
+        '<li><b>Telescope:</b> '+esc(m.lab(s.anchor))+' — clear-sky dependent, register ahead.</li>'+
+        '<li><b>Arrival buffer:</b> ~45 min before the slot; the tower is outdoor-cold — pack warm fall layers.</li>'+
+        '<li><b>Keep reachable:</b> the museum phone/email for the ~14:00 weather call.</li>'+
+        (s.dayProgram?'<li><b>Daytime:</b> '+esc(m.lab(s.dayProgram))+' — worthwhile even if the night cancels.</li>':'')+
+        (arr(s.rituals).length?'<li><b>Rituals:</b> '+arr(s.rituals).map(function(r){return esc(m.lab(r));}).join(' · ')+'.</li>':'')+'</ul></div>'+
+      '<div class="panel"><p class="lab">Plan-B</p><ul>'+
+        '<li><b>Night cancelled by 14:00:</b> '+(s.weatherPlan==='go-anyway'?'go anyway — day tour / deck / outdoor exhibition / Mindūnai / Molėtai food.':'strict sky-first — reschedule the night, or do a shorter day Plan-B.')+'</li>'+
+        '<li><b>Rain / wind:</b> skip tower / Asveja; museum indoor + food.</li>'+
+        '<li><b>Running late:</b> drop the daytime stop first — never the observatory.</li>'+
+        '<li><b>Driver too tired:</b> driver swap, or the emergency nearby stay.</li></ul></div>'+
+      '<div class="panel"><p class="lab">Packing</p><ul style="columns:2;column-gap:30px;">'+
+        '<li>Warm coat + layers</li><li>Hat / gloves (Oct–Nov)</li><li>Waterproof jacket</li><li>Comfortable shoes</li><li>Thermos / snacks</li><li>Power bank</li><li>Headlamp (red mode)</li><li>Saved booking confirm</li></ul></div>'+
+      '<div class="panel"><p class="lab">Emergency one-pager</p><ul>'+
+        '<li><b>112</b> — emergency.</li>'+
+        '<li><b>Museum registration:</b> +370 6 152 0688 · registracija@lemuziejus.lt.</li>'+
+        '<li><b>Meeting point:</b> museum entrance / the car. Pin the route-home address.</li></ul></div>'+
+    '</div>'+
+    '<aside><div class="sidecard"><p class="lab">Per person · est.</p><div class="total">'+(m.total!=null?'€'+esc(m.total):'—')+'</div><p class="sub">One fall day · 3 sharing</p>'+
+      '<hr><p class="lab" style="margin-bottom:10px;">Your bookings</p>'+bk+
+      '<hr><a class="btn btn--solid" href="#" id="dlSide" data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download checklist</span></a>'+
+      '<a class="btn" href="plan-draft.html" data-transition data-cursor="label" data-label="Edit"><span class="fill"></span><span class="lbl">Edit the draft</span></a></div></aside></div>';
+
+  function arr(x){ return Array.isArray(x)?x:[]; }
+  bindDownload();
+  buildDayArc();
+  buildMap();
+  function buildDayArc(){
+    var host=document.getElementById('dayArc'); if(!host) return;
+    function p2(str){ var mt=/(\d+):(\d+)/.exec(str); return mt?(+mt[1]+(+mt[2])/60):null; }
+    var times=m.timeline.map(function(t){ return {h:p2(t[0]), label:t[1].split(' — ')[0], anchor:!!t[2]}; }).filter(function(x){return x.h!=null;});
+    if(times.length<2){ host.style.display='none'; return; }
+    var prev=-1; times.forEach(function(x){ if(x.h<prev-0.01) x.h+=24; prev=x.h; });
+    var dep=times[0].h, home=times[times.length-1].h, range=Math.max(1,home-dep);
+    var nightF=(m.night-dep)/range;
+    var P0=[44,185], CC=[380,-30], P1=[716,185];
+    function pt(f){ var mt=1-f; return [ mt*mt*P0[0]+2*mt*f*CC[0]+f*f*P1[0], mt*mt*P0[1]+2*mt*f*CC[1]+f*f*P1[1] ]; }
+    var dots=times.map(function(x){ var f=(x.h-dep)/range; var P=pt(f); return '<g><circle cx="'+P[0].toFixed(1)+'" cy="'+P[1].toFixed(1)+'" r="'+(x.anchor?6:3.5)+'" fill="'+(x.anchor?'#e7a877':'#cdbfa8')+'"'+(x.anchor?' filter="url(#dg)"':'')+'/><text x="'+P[0].toFixed(1)+'" y="'+(P[1]-12).toFixed(1)+'" text-anchor="middle" class="da-t">'+m.fmt(x.h)+'</text></g>'; }).join('');
+    host.innerHTML='<div class="da-head"><span class="k">✦ The night, scrubbed</span><span class="da-read" id="daRead"></span></div>'+
+      '<svg viewBox="0 0 760 210" class="da-svg"><defs><linearGradient id="dgrad" x1="0" x2="1"><stop offset="0" stop-color="#e09a63"/><stop offset="0.5" stop-color="#a9c5a0"/><stop offset="1" stop-color="#5b6f8a"/></linearGradient><filter id="dg"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
+      '<path d="M44 185 Q380 -30 716 185" fill="none" stroke="url(#dgrad)" stroke-width="2.5" opacity="0.85"/>'+dots+
+      '<g id="daHandle"><circle r="11" fill="#0b1310" stroke="#e7a877" stroke-width="2"/><circle r="4" fill="#e7a877"/></g></svg>';
+    var svg=host.querySelector('.da-svg'), handle=host.querySelector('#daHandle'), read=host.querySelector('#daRead'), circs=handle.querySelectorAll('circle');
+    var f=Math.max(0,Math.min(1,nightF)), drag=false;
+    function actAt(ff){ var cur=times[0]; times.forEach(function(x){ if((x.h-dep)/range<=ff+0.001) cur=x; }); return cur; }
+    function set(ff){ f=Math.max(0,Math.min(1,ff)); var P=pt(f); handle.setAttribute('transform','translate('+P[0].toFixed(1)+','+P[1].toFixed(1)+')'); var act=actAt(f); read.innerHTML='<b>'+m.fmt(dep+f*range)+'</b> · '+act.label; var warm=f<nightF; circs[1].setAttribute('fill', warm?'#e7a877':'#dfe8ef'); circs[0].setAttribute('stroke', warm?'#e7a877':'#8fb6d6'); }
+    function fromEvt(e){ var r=svg.getBoundingClientRect(); var sx=(e.clientX-r.left)/r.width*760; set((sx-P0[0])/(P1[0]-P0[0])); }
+    svg.addEventListener('pointerdown', function(e){ drag=true; fromEvt(e); });
+    window.addEventListener('pointermove', function(e){ if(drag) fromEvt(e); });
+    window.addEventListener('pointerup', function(){ drag=false; });
+    set(f);
+  }
+  function buildMap(){
+    var start=[54.8985,23.9036], museum=[55.31539,25.55488];
+    var host=document.getElementById('route-gmaps');
+    var stopNames={ 'moletai-food':'Molėtai, Lithuania', mindunai:'Mindūnai Observation Tower, Lithuania', dubingiai:'Dubingiai, Lithuania', rumsiskes:'Open-Air Museum of Lithuania, Rumšiškės', taujenai:'Taujėnai Manor, Lithuania', ukmerge:'Ukmergė, Lithuania' };
+    var points=['Kaunas, Lithuania'];
+    if(stopNames[s.mainStop]) points.push(stopNames[s.mainStop]);
+    if(s.food==='moletai-cafe' && s.mainStop!=='moletai-food') points.push('Molėtai, Lithuania');
+    points.push('Lithuanian Museum of Ethnocosmology, Kulionys');
+    function directions(places){
+      var url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(places[0])+'&destination='+encodeURIComponent(places[places.length-1])+'&travelmode=driving';
+      if(places.length>2) url+='&waypoints='+places.slice(1,-1).map(encodeURIComponent).join('%7C');
+      return url;
+    }
+    host.innerHTML='<a class="btn btn--solid" target="_blank" rel="noopener" href="'+directions(points)+'"><span class="fill"></span><span class="lbl">Open outbound route ↗</span></a>'+
+      '<a class="btn" target="_blank" rel="noopener" href="'+directions([points[points.length-1],points[0]])+'"><span class="fill"></span><span class="lbl">Open route home ↗</span></a>';
+    if(!window.L){ document.getElementById('map').textContent='Map unavailable right now. Use the route links below.'; return; }
+    var map=L.map('map',{scrollWheelZoom:false}).setView([55.15,24.7],9);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',maxZoom:19}).addTo(map);
+    L.polyline([start,museum],{color:'#e7a877',weight:3,opacity:.9,dashArray:'4,8'}).addTo(map);
+    L.circleMarker(start,{radius:6,color:'#e09a63',weight:2,fillColor:'#e7a877',fillOpacity:.7}).addTo(map).bindPopup('<b>Kaunas</b><br>Start and return');
+    var star=L.divIcon({className:'',html:'<div class="star-pin">✦</div>',iconSize:[26,26],iconAnchor:[13,13]});
+    L.marker(museum,{icon:star}).addTo(map).bindPopup('<b>Museum of Ethnocosmology</b><br>Night telescope — the anchor');
+    var crewPins=L.layerGroup().addTo(map), bounds=[start,museum];
+    function showCrew(){
+      crewPins.clearLayers(); bounds=[start,museum]; var count=0;
+      (window.CREW?window.CREW.all():[]).forEach(function(person){
+        if(person.going==='no') return;
+        (person.stops||[]).forEach(function(stop){
+          var lat=Number(stop.lat), lng=Number(stop.lng);
+          if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat < -90||lat > 90||lng < -180||lng > 180) return;
+          L.circleMarker([lat,lng],{radius:7,color:'#a9c5a0',weight:2,fillColor:'#a9c5a0',fillOpacity:.55})
+            .addTo(crewPins).bindPopup('<b>'+esc(person.name)+'</b> suggested:<br>'+esc(stop.label||'Pinned stop'));
+          bounds.push([lat,lng]); count++;
+        });
+      });
+      map.fitBounds(bounds,{padding:[42,42],maxZoom:10});
+      document.getElementById('map-legend').innerHTML='<span><i class="map-dot" style="background:#e09a63"></i>Kaunas</span><span>✦ Museum anchor</span><span><i class="map-dot" style="background:#a9c5a0"></i>Crew suggested stops ('+count+')</span><span>··· Direction guide</span>';
+    }
+    showCrew();
+    if(window.Store && window.Store.all) window.Store.all().then(showCrew);
+    setTimeout(function(){map.invalidateSize();},250);
+  }
+  function bindDownload(){ ['dlTop','dlSide'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click', function(e){ e.preventDefault(); if(window.WTC_obsDownload) window.WTC_obsDownload(plan); }); }); }
+})();
+</script>
+<script src="../assets/motion.js?v=2"></script>
+<script src="../assets/sky.js"></script>
+<script>/* service worker disabled in this build — purge any stale one so the page never auto-reloads or serves stale */
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
+</body>
+</html>

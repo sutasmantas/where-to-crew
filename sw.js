@@ -4,15 +4,18 @@
    images (they don't change). Cross-origin (Supabase/Worker API, CDN libs, map
    tiles) is left untouched. Versioned cache + skipWaiting + clients.claim so a
    new deploy takes over immediately. This is the offline support, done right. */
-var CACHE = 'wtc-v13';
+var CACHE = 'wtc-v14';
 // Resolve the app-shell as ABSOLUTE same-origin URLs relative to THIS worker's
 // location (e.g. .../where-to-crew/), so addAll works under any subpath.
 var BASE = self.location.href.replace(/sw\.js(\?.*)?$/, '');
 var SHELL = [
   'index.html','emergency.html','car-games.html',
-  'poland/sign-up.html','poland/plan-draft.html','poland/plan.html',
-  'assets/motion.css','assets/site.css',
-  'assets/motion.js','assets/config.js','assets/store.js','assets/crew.js','assets/plan-draft.js','assets/checklist.js','assets/car-games-data.js',
+  'observatory/sign-up.html','observatory/plan-draft.html','observatory/plan.html',
+  'poland/index.html','poland/sign-up.html','poland/plan-draft.html','poland/plan.html',
+  'assets/motion.css','assets/site.css','assets/observatory.css',
+  'assets/motion.js','assets/config.js','assets/store.js','assets/crew.js','assets/sky.js',
+  'assets/plan-draft.js','assets/checklist.js','assets/car-games-data.js',
+  'assets/plan-draft-observatory.js','assets/checklist-observatory.js','assets/share.js',
   'manifest.webmanifest'
 ].map(function(p){ return BASE + p; });
 
@@ -40,5 +43,5 @@ self.addEventListener('fetch', function(e){
   if(req.method !== 'GET') return;                                   // never touch API writes
   if(new URL(req.url).origin !== self.location.origin) return;       // skip cross-origin (API/CDN/tiles)
   if(/\.(?:jpg|jpeg|png|gif|webp|svg|ico|woff2?|ttf)(?:\?|$)/i.test(req.url)) e.respondWith(cacheFirst(req));
-  else e.respondWith(networkFirst(req, './poland/plan.html'));
+  else e.respondWith(networkFirst(req, './observatory/plan.html'));
 });

@@ -1,13 +1,13 @@
 {
-  "name": "Where To, Crew? — Poland",
+  "name": "Where To, Crew? — Observatory",
   "short_name": "Where To, Crew?",
-  "description": "Friends-only trip planning — plan, decide, and carry the Poland road trip offline.",
-  "start_url": "./poland/plan.html",
+  "description": "Friends-only trip planning — plan, decide, and carry the Observatory night offline.",
+  "start_url": "./observatory/plan.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#16241c",
-  "theme_color": "#16241c",
+  "background_color": "#0b1310",
+  "theme_color": "#0b1310",
   "icons": [
-    { "src": "assets/img/giewont.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" }
+    { "src": "assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }
