@@ -22,7 +22,7 @@
   if(saved&&saved.sel){ Object.keys(sel).forEach(function(g){ if(saved.sel[g]==null) return; sel[g]=(TYPE[g]==='multi')?(Array.isArray(saved.sel[g])?saved.sel[g].slice():[]):saved.sel[g]; }); }
   sel.routeStyle=sel.routeStyle||'direct';
   sel.mainStop=sel.mainStop||'none';
-  sel.dayProgram=sel.dayProgram||'outdoor';
+  sel.dayProgram=sel.dayProgram==='deck'?'outdoor':(sel.dayProgram||'outdoor');
   sel.food=sel.food||'picnic';
   sel.seasonWindow='oct'; sel.dateStrategy='best-sky'; sel.anchor='80cm'; sel.weatherPlan='strict';
 
@@ -33,7 +33,7 @@
     '80cm':'80 cm telescope', '40cm':'40 cm telescope',
     direct:'Direct route', nature:'Nature route', culture:'Culture route',
     none:'No stop — arrive early', 'moletai-food':'Molėtai food / warm-up', mindunai:'Mindūnai tower + Labanoras', dubingiai:'Dubingiai + Asveja', rumsiskes:'Rumšiškės Open-Air Museum', taujenai:'Taujėnai Manor', ukmerge:'Ukmergė food stop',
-    fulltour:'Full museum day tour', deck:'Observation deck', outdoor:'Outdoor exhibition',
+    fulltour:'Guided museum tour + observation deck', outdoor:'Outdoor exhibition',
     picnic:'Pack snacks / picnic', 'moletai-cafe':'Molėtai café / restaurant', 'route-meal':'Ukmergė / Taujėnai meal',
     'one-driver':'One rested driver', 'driver-swap':'Driver swap plan', 'emergency-hotel':'Emergency nearby stay',
     strict:'Strict sky-first', 'go-anyway':'Go anyway',
@@ -206,7 +206,7 @@
       add('weathercall','Weather confirmation by ~14:00','Same-day SMS/phone — keep the phone reachable', {must:true});
       add('english','English-language request (optional)','Call/email several days ahead — not guaranteed');
     }
-    if(sel.dayProgram==='fulltour'||sel.dayProgram==='deck') add('dayprogram', lab(sel.dayProgram)+' (daytime)', 'Register / check availability', {sells:false});
+    if(sel.dayProgram==='fulltour') add('dayprogram', lab(sel.dayProgram)+' (daytime)', 'Ask museum for a Saturday slot · +370 6 152 0688', {sells:false});
     if(sel.mainStop==='rumsiskes') add('rumsiskes','Rumšiškės Open-Air Museum','Check fall hours / tickets for the date', {sells:true});
     if(sel.mainStop==='taujenai') add('taujenai','Taujėnai Manor','Verify opening / private events / tickets', {sells:true});
     if(sel.mainStop==='mindunai'||sel.mainStop==='dubingiai') add('statepark','State-park visitor ticket (optional)','€0–1 · saugoma.lt if you use the system');

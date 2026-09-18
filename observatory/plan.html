@@ -200,7 +200,9 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
         '<li><b>Telescope:</b> '+esc(m.lab(s.anchor))+' — clear-sky dependent, register ahead.</li>'+
         '<li><b>Arrival buffer:</b> ~45 min before the slot; the tower is outdoor-cold — pack warm fall layers.</li>'+
         '<li><b>Keep reachable:</b> the museum phone/email for the ~14:00 weather call.</li>'+
-        (s.dayProgram?'<li><b>Daytime:</b> '+esc(m.lab(s.dayProgram))+' — worthwhile even if the night cancels.</li>':'')+
+        (s.dayProgram==='fulltour'?'<li><b>Optional daytime tour:</b> Seven exhibition spaces on culture and astronomy, plus the 32 m observation deck. Up to 1.5 h, €8 adult; ask the museum whether a Saturday slot is available. This is separate from the night telescope.</li>':'<li><b>Daytime:</b> Outdoor exhibition at the museum.</li>')+
+        '<li><b>About the observation deck:</b> The short €4 deck-only visit is offered on weekdays, so it is not part of this Saturday plan.</li>'+
+        (m.deckChanged?'<li><b>Previous deck pick:</b> Changed to the outdoor exhibition because the stand-alone deck visit is weekdays only.</li>':'')+
         '</ul></div>'+
       '<div class="panel"><p class="lab">Plan-B</p><ul>'+
         '<li><b>Night cancelled by 14:00:</b> call the museum to reschedule the telescope visit.</li>'+
