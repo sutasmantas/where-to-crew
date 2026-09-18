@@ -67,6 +67,13 @@
   .map-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
   .route-links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
   .route-links .btn{ font-size:.78rem; }
+  .share-panel{ display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,1.2fr); gap:22px; align-items:center; margin:18px 0 28px; scroll-margin-top:100px; }
+  .share-panel p{ margin:5px 0 0; color:var(--paper-soft); font-size:.9rem; }
+  .share-controls{ display:flex; gap:8px; min-width:0; }
+  .share-controls input{ flex:1; min-width:0; border:1px solid var(--line); border-radius:8px; padding:10px 12px; color:var(--paper); background:var(--forest-3); font:inherit; font-size:.83rem; }
+  .share-controls .btn{ flex:none; }
+  #shareStatus{ min-height:1.3em; font-family:var(--mono); font-size:.72rem; color:var(--sage); }
+  @media(max-width:760px){ .share-panel{ grid-template-columns:1fr; } .share-controls{ flex-wrap:wrap; } .share-controls input{ flex-basis:100%; } }
 
   /* interactive day-arc scrubber (CAND-012/015) */
   .dayarc{ background:var(--forest-3); border:1px solid var(--line); border-radius:16px; padding:18px 20px 8px; margin-top:34px; }
@@ -93,7 +100,7 @@
   <a class="brand" href="../index.html"><svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg> Where To, Crew?</a>
   <div class="nav-links">
     <a href="plan-draft.html" class="underline hide-sm" data-transition data-cursor="link">Edit draft</a>
-    <a class="btn" href="#" id="dlTop" data-magnetic data-cursor="label" data-label="Save"><span class="fill"></span><span class="lbl">Download</span></a>
+    <a class="btn" href="#share-plan" data-cursor="label" data-label="Share"><span class="fill"></span><span class="lbl">Share plan</span></a>
   </div>
 </nav>
 
@@ -110,6 +117,11 @@
       <h1 class="display" data-reveal data-reveal="words">The night we're planning.</h1>
       <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Saturday 10 October is our new-moon target for the 80 cm telescope. Keep the museum confirmation handy; the day sequence uses the entered start time when available, with driving and visit durations as estimates.</p>
     </header>
+
+    <section class="panel share-panel" id="share-plan" aria-labelledby="share-heading">
+      <div><p class="lab">Send it to the crew</p><h2 id="share-heading">Share this plan</h2><p>Anyone with the link can view these choices and booking statuses. Your own draft stays editable here.</p></div>
+      <div><label class="lab" for="planShareLink">Plan link</label><div class="share-controls"><input id="planShareLink" type="url" readonly><button class="btn btn--solid" type="button" id="copyPlanLink"><span class="fill"></span><span class="lbl">Copy link</span></button></div><p id="shareStatus" role="status" aria-live="polite">Select the link to copy it manually.</p></div>
+    </section>
 
     <div id="planRoot"></div>
   </div>
@@ -137,7 +149,7 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
 </script>
 <script src="../assets/config.js"></script>
 <script src="../assets/trip-facts.js?v=19"></script>
-<script src="../assets/store.js?v=19"></script>
+<script src="../assets/store.js?v=20"></script>
 <script src="../assets/crew.js?v=19"></script>
 <script src="../assets/trip-tools.js?v=19"></script>
 <script src="../assets/share.js?v=19"></script>
@@ -245,6 +257,18 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       '<button type="button" class="btn" data-share-trip><span class="fill"></span><span class="lbl">Invite the crew ↗</span></button>'+
       '<a class="btn" href="plan-draft.html" data-transition data-cursor="label" data-label="Edit"><span class="fill"></span><span class="lbl">Edit the draft</span></a></div></aside></div>';
 
+  var shareInput=document.getElementById('planShareLink'), shareStatus=document.getElementById('shareStatus');
+  shareInput.value=window.WTC_shareURL(plan);
+  document.getElementById('copyPlanLink').addEventListener('click',function(){
+    function fallback(){
+      shareInput.focus(); shareInput.select();
+      try{ if(document.execCommand('copy')){ shareStatus.textContent='Plan link copied. Paste it to the crew.'; return; } }catch(e){}
+      shareStatus.textContent='Link selected. Use Copy on your device, then send it to the crew.';
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(shareInput.value).then(function(){ shareStatus.textContent='Plan link copied. Paste it to the crew.'; },fallback);
+    } else fallback();
+  });
   document.getElementById('sharePlan').addEventListener('click',function(){ if(window.WTC_sharePlan) window.WTC_sharePlan(plan); });
   document.querySelectorAll('[data-share-trip]').forEach(function(b){ b.addEventListener('click',window.WTC_shareTrip); });
 
