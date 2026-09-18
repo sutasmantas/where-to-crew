@@ -26,6 +26,7 @@
   fieldset{ border:0; padding:0; margin:0; }
   #map{ height:380px; border-radius:12px; border:1px solid var(--line); overflow:hidden; z-index:0; }
   .leaflet-container{ font-family:var(--sans); background:#0a130f; }
+  .leaflet-tile-pane img.leaflet-tile{ filter:grayscale(1) invert(.88) brightness(.86) contrast(.9); }
   .leaflet-bar a{ background:var(--forest-3); color:var(--paper); border-color:var(--line); }
   .leaflet-bar a:hover{ background:var(--forest-2); }
   .leaflet-popup-content-wrapper, .leaflet-popup-tip{ background:var(--forest-3); color:var(--paper); box-shadow:0 8px 24px rgba(0,0,0,.5); }
@@ -219,7 +220,7 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   var map, myStops=[];
   function initMap(){
     map=L.map('map',{scrollWheelZoom:false}).setView([55.15,24.7], 9);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO', maxZoom:19}).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors', maxZoom:19}).addTo(map);
     var star=L.divIcon({className:'', html:'<div class="star-pin">✦</div>', iconSize:[26,26], iconAnchor:[13,13]});
     L.marker([OBS.lat,OBS.lng],{icon:star}).addTo(map).bindPopup('<b>Museum of Ethnocosmology</b><br>Night telescope — the anchor');
     L.circleMarker([KAUNAS.lat,KAUNAS.lng],{radius:6,color:'#e09a63',weight:2,fillColor:'#e7a877',fillOpacity:.7}).addTo(map).bindPopup('<b>Kaunas</b><br>Start');

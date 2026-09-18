@@ -311,7 +311,7 @@ window.WTC = window.WTC || { save:function(k,v){ try{ localStorage.setItem(k, JS
   var map, myStops=[];
   function initMap(){
     map = L.map('map',{scrollWheelZoom:false}).setView([51.6,20.2], 5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap', maxZoom:18}).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors', maxZoom:19}).addTo(map);
     var star=L.divIcon({className:'', html:'<div class="star-pin">⭐</div>', iconSize:[26,26], iconAnchor:[13,13]});
     L.marker([ENERGY.lat,ENERGY.lng],{icon:star}).addTo(map).bindPopup('<b>Energylandia</b><br>Our destination');
     people.forEach(function(p){ (p.stops||[]).forEach(function(s){ if(!s.lat) return;

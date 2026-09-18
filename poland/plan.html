@@ -87,6 +87,7 @@
   /* map */
   #map{ height:clamp(380px,62vh,580px); margin-top:24px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--forest-2); position:relative; z-index:1; }
   .leaflet-container{ font-family:var(--sans); background:var(--forest-2); }
+  .leaflet-tile-pane img.leaflet-tile{ filter:grayscale(1) invert(.88) brightness(.86) contrast(.9); }
   .leaflet-popup-content-wrapper, .leaflet-popup-tip{ background:var(--forest-3); color:var(--paper); box-shadow:0 8px 24px rgba(0,0,0,.4); }
   .leaflet-popup-content{ font-family:var(--sans); font-size:.86rem; line-height:1.4; }
   .leaflet-popup-content b{ color:var(--terra-2); }
@@ -679,7 +680,7 @@ window.WTC = window.WTC || { load:function(k,f){ try{ var v=localStorage.getItem
     ];
     var LF=window.L;   // (outer `L` is the label helper — use Leaflet via window.L)
     var map=LF.map('map',{scrollWheelZoom:false}).setView([51.6,21.2],6);
-    LF.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:18,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+    LF.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
     var RBV={ 'rb-bonarka':'bonarka','rb-kielce':'kielce-echo','rb-warsaw':'warsaw','rb-lomza':'lomza-veneda','rb-augustow':'augustow','rb-suwalki':'suwalki-plaza' };
     var retVals=(sel.returnStops||[]).map(function(rb){ return RBV[rb]; });   // also light up drive-home stops
     function chosen(p){ return p.t==='anchor' || (p.t==='stop'&&((sel.stops||[]).indexOf(p.val)>=0||retVals.indexOf(p.val)>=0)) || (p.t==='hike'&&sel.hike===p.val) || (p.t==='day4'&&sel.day4===p.val); }
