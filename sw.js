@@ -4,7 +4,7 @@
    images (they don't change). Cross-origin (Supabase/Worker API, CDN libs, map
    tiles) is left untouched. Versioned cache + skipWaiting + clients.claim so a
    new deploy takes over immediately. This is the offline support, done right. */
-var CACHE = 'wtc-v14';
+var CACHE = 'wtc-v15';
 // Resolve the app-shell as ABSOLUTE same-origin URLs relative to THIS worker's
 // location (e.g. .../where-to-crew/), so addAll works under any subpath.
 var BASE = self.location.href.replace(/sw\.js(\?.*)?$/, '');
@@ -13,7 +13,7 @@ var SHELL = [
   'observatory/sign-up.html','observatory/plan-draft.html','observatory/plan.html',
   'poland/index.html','poland/sign-up.html','poland/plan-draft.html','poland/plan.html',
   'assets/motion.css','assets/site.css','assets/observatory.css',
-  'assets/motion.js','assets/config.js','assets/store.js','assets/crew.js','assets/sky.js',
+  'assets/motion.js','assets/config.js','assets/store.js','assets/crew.js','assets/sky.js','assets/warp-hero.js','assets/fling-stars.js',
   'assets/plan-draft.js','assets/checklist.js','assets/car-games-data.js',
   'assets/plan-draft-observatory.js','assets/checklist-observatory.js','assets/share.js',
   'manifest.webmanifest'

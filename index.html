@@ -9,6 +9,7 @@
 <title>Where To, Crew? — One night, one telescope, one clear-sky call.</title>
 <link rel="stylesheet" href="assets/motion.css">
 <link rel="stylesheet" href="assets/observatory.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <style>
   /* ---------- hero ---------- */
   .hero{ position:relative; min-height:100svh; display:flex; align-items:center; overflow:hidden; }
@@ -18,6 +19,11 @@
   .hero .nebula{ position:absolute; inset:0; z-index:2; width:100%; height:100%; pointer-events:none; }
   .hero .launch-cv{ position:absolute; inset:0; z-index:1; width:100%; height:100%; }
   .hero .dome3d{ position:absolute; inset:0; z-index:1; width:100%; height:100%; pointer-events:auto; touch-action:none; }
+  .hero .warp-cv,.hero .fling-cv{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .hero .warp-cv{ z-index:1; }
+  .hero .fling-cv{ z-index:2; }
+  .hero{ background:#080d12 radial-gradient(circle at 67% 43%, #24303b 0, #0d151d 31%, #080d12 75%); }
+  @media(prefers-reduced-motion:reduce){ .hero .warp-cv,.hero .fling-cv{ display:none; } .hero{ background:#080d12 radial-gradient(circle at 67% 43%, #313c47 0, #101a24 34%, #080d12 78%); } }
   .hero [data-stage]{ transition:opacity .6s var(--ease), transform .6s var(--ease); }
   .hero-stage{ position:absolute; left:var(--pad); right:var(--pad); top:30%; max-width:34ch; z-index:3; opacity:0; }
   .hero-stage .display{ font-size:clamp(2.2rem,6vw,4.4rem); }
@@ -148,14 +154,14 @@
 
 <!-- HERO -->
 <header class="hero" data-screen-label="Home — hero" data-journey="Start">
-  <div class="hero-photo" id="heroPhoto" data-img="https://commons.wikimedia.org/wiki/Special:FilePath/Stebykla%2001.jpg?width=1600"></div>
   <div class="hero-veil"></div>
-  <canvas class="dome3d" aria-hidden="true"></canvas>
+  <canvas class="warp-cv" aria-hidden="true"></canvas>
+  <canvas class="fling-cv" aria-hidden="true"></canvas>
   <div class="hero-scrim" aria-hidden="true"></div>
   <div class="inner wrap" data-stage="0">
     <p class="eyebrow" data-reveal data-reveal-mode="fade">Friends-only trip planning · Kaunas → Kulionys · one fall night</p>
     <h1 class="display" data-reveal data-reveal="words">One night, one telescope, one clear-sky call.</h1>
-    <p class="lede hero-sub" data-reveal>A one-day fall run from Kaunas to the Lithuanian Museum of Ethnocosmology — pick a stop on the way, wait for the 14:00 weather call, then finish under the 80&nbsp;cm telescope. Same crew, same drawn line — after dark.</p>
+    <p class="lede hero-sub" data-reveal>Saturday 10 October is our new-moon target. Head from Kaunas to the Lithuanian Museum of Ethnocosmology for its 80&nbsp;cm telescope, if the museum confirms the booking and clear skies. Same crew, same drawn line — after dark.</p>
     <div class="row">
       <a class="btn btn--solid" href="#route" data-magnetic data-cursor="label" data-label="Orbit"><span class="fill"></span><span class="lbl">Follow the sky route ↓</span></a>
       <a class="btn" href="observatory/sign-up.html" data-transition data-magnetic data-cursor="label" data-label="Plan"><span class="fill"></span><span class="lbl">Join the Observatory run</span></a>
@@ -238,9 +244,9 @@
   <div class="wrap">
     <p class="eyebrow" data-reveal data-reveal-mode="fade">The brief</p>
     <h2 class="h2" data-reveal style="margin-top:16px;">One crew, one fall night, one mandatory anchor: the telescope.</h2>
-    <p class="lede" data-reveal style="margin-top:16px; max-width:54ch;">Optional stops make the day richer — they never steal time from the registered night program. The decisive call is the museum's same-day weather confirmation.</p>
+    <p class="lede" data-reveal style="margin-top:16px; max-width:54ch;">Optional stops make the day richer. First book the museum's 80 cm night observation, then keep the phone reachable for its same-day weather confirmation.</p>
     <div class="data-grid" style="margin-top:clamp(34px,5vw,56px);">
-      <div class="data-card" data-reveal data-reveal-mode="fade"><div class="dk">Night anchor</div><div class="dv">80<span class="u"> cm</span></div><div class="ds">Telescope night observation — the headline. €12 pp; 40 cm backup at €10.</div></div>
+      <div class="data-card" data-reveal data-reveal-mode="fade"><div class="dk">Night anchor</div><div class="dv">80<span class="u"> cm</span></div><div class="ds">Telescope night observation · €12 per adult · book with the museum.</div></div>
       <div class="data-card" data-reveal data-reveal-mode="fade"><div class="dk">Kaunas → Kulionys</div><div class="dv">128<span class="u"> km</span></div><div class="ds">~2 h 04 each way. Direct round trip ≈ 256 km before stops.</div></div>
       <div class="data-card" data-reveal data-reveal-mode="fade"><div class="dk">Program starts</div><div class="dv">~1.5<span class="u"> h</span></div><div class="ds">After sunset, lasts 1–1.5 h. Clear skies required.</div></div>
       <div class="data-card" data-reveal data-reveal-mode="fade"><div class="dk">Weather call by</div><div class="dv">14:00</div><div class="ds">Same-day SMS/phone confirm or cancel. Keep the phone reachable.</div></div>
@@ -260,7 +266,7 @@
         <div class="ph"><div class="img" data-img="https://commons.wikimedia.org/wiki/Special:FilePath/Dangaus%20stebykla%20Kulionyse.JPG?width=1200"></div><div class="grad"></div></div>
         <span class="stamp active">✦ Active · planning</span>
         <div class="meta">
-          <p class="season">Fall 2026 · dark-sky</p>
+          <p class="season">10 October 2026 · new moon target</p>
           <p class="name">Observatory<br>Night Run</p>
           <p class="route-min">Kaunas → Molėtai → Kulionys telescope</p>
         </div>
@@ -303,15 +309,15 @@
         <div class="sky-badges" data-reveal data-reveal-mode="fade">
           <span class="sky-badge wait"><span class="ico"></span><span><span class="k">Weather call</span><br><b>Wait for 14:00 confirm</b></span></span>
           <span class="sky-badge moon"><span class="ico"></span><span><span class="k">Moon</span><br><b>Near new — dark sky</b></span></span>
-          <span class="sky-badge go"><span class="ico"></span><span><span class="k">Booking</span><br><b>Telescope registered</b></span></span>
-          <span class="sky-badge warn"><span class="ico"></span><span><span class="k">Return safety</span><br><b>Rested driver after dark</b></span></span>
+          <span class="sky-badge go"><span class="ico"></span><span><span class="k">Telescope</span><br><b>80 cm observation</b></span></span>
+          <span class="sky-badge warn"><span class="ico"></span><span><span class="k">Booking</span><br><b>Museum slot unconfirmed</b></span></span>
         </div>
         <div class="moonwidget" data-illum="0.12" data-reveal data-reveal-mode="fade" style="margin-top:18px;">
           <div class="moondisc"><div class="shadow"></div></div>
           <div class="m-meta">
             <div class="k">Plan around the moon</div>
             <div class="v">New-moon window</div>
-            <div class="s">Best for faint deep-sky. Pick the date strategy in the plan draft.</div>
+            <div class="s">Our target is Saturday 10 October, the new moon. The museum booking still needs confirmation.</div>
           </div>
         </div>
       </div>
@@ -335,9 +341,9 @@
     <p class="eyebrow" data-reveal data-reveal-mode="fade">How it works</p>
     <h2 class="h2" data-reveal style="margin-top:16px; max-width:16ch;">Three steps, ground to telescope.</h2>
     <div class="how-grid">
-      <div class="how-step"><p class="n">01</p><h3 data-reveal>Sign up</h3><p data-reveal>Tell the crew you're in, your fall dates, and the stop you fancy on the way up — drop pins on a real map.</p></div>
-      <div class="how-step"><p class="n">02</p><h3 data-reveal>Plan draft</h3><p data-reveal>Weigh route, stops, telescope and food. The per-person total and a time meter that protects the night slot update live.</p></div>
-      <div class="how-step"><p class="n">03</p><h3 data-reveal>The plan</h3><p data-reveal>The night-observation mission plan — route, weather call, bookings, warm clothes, the drive home, and a Plan-B if clouds cancel.</p></div>
+      <div class="how-step"><p class="n">01</p><h3 data-reveal>Sign up</h3><p data-reveal>Tell the crew if you're in for 10 October and suggest a stop on the way up.</p></div>
+      <div class="how-step"><p class="n">02</p><h3 data-reveal>Plan draft</h3><p data-reveal>The date and 80 cm telescope are set. Choose the route, stop, daytime visit, and food.</p></div>
+      <div class="how-step"><p class="n">03</p><h3 data-reveal>The plan</h3><p data-reveal>See the route, booking status, museum weather call, and what to bring.</p></div>
     </div>
   </div>
 </section>
@@ -369,7 +375,7 @@
       <div style="margin-top:14px;"><button type="button" class="notes-toggle" id="notesToggle">Design &amp; source notes ▾</button></div>
       <div class="notes-body" id="notesBody">
         <p><b>Concept:</b> “Orbit To The Telescope” — the Poland drawn-route line darkens into a constellation that lands at the Lithuanian Museum of Ethnocosmology.</p>
-        <p style="margin-top:8px;"><b>Sources used:</b> Observatory-Trip-Research.md (all content, prices, route, timings); current-site stack (motion.js / store / plan-draft engine, reused not duplicated); Codrops scroll-SVG route pattern → constellation route; local snippet pack (orbit switcher, sky-status badges, moon widget, reticle cursor, data cards) → folded into observatory.css / sky.js. <b>Inspected, mood only:</b> NASA Eyes, Stellarium, VirtualSky (dark data-card styling). <b>Ignored:</b> Three.js GPGPU particles (too heavy for mobile) — used a light canvas starfield with a static cosmos fallback instead. Imagery is hotlinked from Wikimedia Commons (real museum / observatory / tower) as placeholders, to be swapped for local shots.</p>
+        <p style="margin-top:8px;"><b>Hero effect:</b> “Star Nest” volumetric starfield by <a href="https://www.shadertoy.com/view/XlfGRj" target="_blank" rel="noopener" style="color:var(--sage);text-decoration:underline;">Pablo Roman Andrioli (Kali)</a>, adapted for this trip under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener" style="color:var(--sage);text-decoration:underline;">CC BY-NC-SA 3.0</a>. The slow 0.07× drift comes from the selected Observatory hero prototype.</p>
       </div>
     </div>
   </div>
@@ -392,9 +398,7 @@ window.__skyRouteByPage = true;   // page builds the constellation route in WTCM
 window.WTCM_onReady = function(ctx){
   if(window.WTCSky) WTCSky.buildConstellationRoute();
   if(window.ScrollTrigger) ScrollTrigger.refresh();
-  // scrubbed hero photo
   if(window.gsap && !ctx.reduce){
-    gsap.fromTo('#heroPhoto',{ scale:1.16, yPercent:-3 },{ scale:1.3, yPercent:6, ease:'none', scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
     gsap.to('.hero .inner',{ yPercent:-16, opacity:0, ease:'none', scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true } });
     // handover: warm road fades as the constellation draws in on scroll
     gsap.fromTo('#hoLine',{ drawSVG:'0%' },{ drawSVG:'100%', ease:'none', scrollTrigger:{ trigger:'.handover', start:'top 80%', end:'top 30%', scrub:true } });
@@ -424,6 +428,8 @@ document.getElementById('notesToggle').addEventListener('click', function(){ doc
 <script src="assets/motion.js?v=2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/sky.js"></script>
+<script type="module" src="assets/warp-hero.js"></script>
+<script src="assets/fling-stars.js"></script>
 <script>/* service worker disabled in this build — purge any stale one so the page never auto-reloads or serves stale */
 if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); if(window.caches&&caches.keys){ caches.keys().then(function(ks){ ks.forEach(function(k){ caches.delete(k); }); }); } }</script>
 </body>

@@ -101,8 +101,8 @@
 
     <header class="trip-head" data-journey="Plan" style="padding:34px 0 8px;">
       <p class="route-eyebrow" data-reveal data-reveal-mode="fade">The night-observation mission plan</p>
-      <h1 class="display" data-reveal data-reveal="words">The night, locked in.</h1>
-      <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Your crew's picks, scheduled backward from the telescope slot so the anchor is always protected. Re-check the date's sunset, moon and the ~14:00 weather call before you drive.</p>
+      <h1 class="display" data-reveal data-reveal="words">The night we're planning.</h1>
+      <p class="lede" data-reveal style="max-width:56ch; margin-top:14px;">Saturday 10 October is our new-moon target for the 80 cm telescope. The booking and program time still need museum confirmation; the schedule below is a planning estimate.</p>
     </header>
 
     <div id="planRoot"></div>
@@ -151,12 +151,10 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
     document.querySelectorAll('a[href="plan-draft.html"]').forEach(function(a){ if(a!==own) a.style.display='none'; });
   }
 
-  if(!plan || !plan.sel || !plan.sel.anchor){
-    root.innerHTML = '<div class="panel empty-state"><p class="lab">No plan yet</p><h2 style="margin:6px 0 12px;">Build the night first.</h2>'+
-      '<p class="muted" style="max-width:42ch;margin:0 auto 22px;">Pick the telescope and route on the plan draft — it schedules the night and lands every booking here.</p>'+
-      '<a class="btn btn--solid" href="plan-draft.html" data-transition data-cursor="label" data-label="Go"><span class="fill"></span><span class="lbl">Open the plan draft →</span></a></div>';
-    bindDownload(); return;
-  }
+  if(!plan || !plan.sel){ plan={sel:{routeStyle:'direct',mainStop:'none',dayProgram:'outdoor',food:'picnic'},total:27,bookings:[
+    {id:'telescope',name:'80 cm telescope night observation',where:'Museum registration · +370 6 152 0688',must:true},
+    {id:'weathercall',name:'Weather confirmation by 14:00',where:'Same-day SMS or phone',must:true}
+  ]}; }
 
   var m = window.WTC_obsModel(plan);
   var s = m.sel;
@@ -173,22 +171,20 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
   }).join('') : '<p class="muted" style="font-size:.86rem;">No bookings yet.</p>';
 
   var data = '<div class="data-grid" style="margin-bottom:22px;">'+
-    '<div class="data-card"><div class="dk">Telescope</div><div class="dv">'+(s.anchor==='40cm'?'40':'80')+'<span class="u"> cm</span></div><div class="ds">'+(s.anchor==='40cm'?'Backup headline · €10 · cap. 18':'Headline · €12 · cap. 16')+'</div></div>'+
+    '<div class="data-card"><div class="dk">Telescope</div><div class="dv">80<span class="u"> cm</span></div><div class="ds">€12 · group cap 16 · booking unconfirmed</div></div>'+
     '<div class="data-card"><div class="dk">Drive each way</div><div class="dv">~2<span class="u"> h</span></div><div class="ds">Kaunas → Kulionys ≈ 128 km'+(s.routeStyle&&s.routeStyle!=='direct'?' + '+esc(s.routeStyle)+' detour':'')+'.</div></div>'+
-    '<div class="data-card"><div class="dk">Program starts</div><div class="dv">'+m.fmt(m.night)+'</div><div class="ds">~1.5 h after sunset, lasts 1–1.5 h. Clear skies required.</div></div>'+
-    '<div class="data-card"><div class="dk">Home by</div><div class="dv">'+m.fmt(m.home)+'</div><div class="ds">'+(s.returnSafety==='driver-swap'?'Driver swap — share the dark return.':s.returnSafety==='emergency-hotel'?'Or stay over if too tired.':'One rested driver, no alcohol.')+'</div></div>'+
+    '<div class="data-card"><div class="dk">Program starts</div><div class="dv">TBC</div><div class="ds">Confirm actual time with museum; clear skies required.</div></div>'+
+    '<div class="data-card"><div class="dk">Target date</div><div class="dv">10<span class="u"> Oct</span></div><div class="ds">Saturday · new moon · 2026</div></div>'+
   '</div>';
 
   var badges = '<div class="sky-badges" style="margin-bottom:26px;">'+
-    '<span class="sky-badge wait"><span class="ico"></span><span><span class="k">Weather call</span><br><b>By ~14:00 — '+(s.weatherPlan==='go-anyway'?'go anyway plan':'strict sky-first')+'</b></span></span>'+
-    '<span class="sky-badge moon"><span class="ico"></span><span><span class="k">Date</span><br><b>'+esc(m.lab(s.dateStrategy||'easy-saturday'))+'</b></span></span>'+
+    '<span class="sky-badge wait"><span class="ico"></span><span><span class="k">Weather call</span><br><b>By 14:00 · keep phone reachable</b></span></span>'+
+    '<span class="sky-badge moon"><span class="ico"></span><span><span class="k">Date</span><br><b>Saturday 10 October</b></span></span>'+
     '<span class="sky-badge go"><span class="ico"></span><span><span class="k">Anchor</span><br><b>'+esc(m.lab(s.anchor))+'</b></span></span>'+
-    '<span class="sky-badge warn"><span class="ico"></span><span><span class="k">Return</span><br><b>'+esc(m.lab(s.returnSafety||'one-driver'))+'</b></span></span>'+
   '</div>';
 
   root.innerHTML =
     badges + data +
-    '<div class="dayarc" id="dayArc"></div>'+
     '<section class="panel route-map" aria-labelledby="map-title"><p class="lab">Kaunas → Kulionys</p><h2 id="map-title">The night route, mapped.</h2>'+
       '<p class="muted">The dashed line marks the direction to the museum. Crew suggestions are pinned separately; open Google Maps for live driving directions through your chosen stop.</p>'+
       '<div id="map" role="img" aria-label="Map from Kaunas to the Museum of Ethnocosmology, including crew suggested stops"></div>'+
@@ -196,22 +192,21 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       '<div id="route-gmaps" class="route-links"></div>'+
       '<p class="muted" style="font-family:var(--mono);font-size:.72rem;margin-top:13px;">Map tiles and Google Maps directions need a connection.</p></section>'+
     '<div class="plan-grid"><div>'+
-      '<div class="panel"><p class="lab">The night, hour by hour</p><h2>'+esc(m.lab(s.seasonWindow||'oct'))+' · scheduled to protect the slot</h2><div class="timeorbit" style="margin-top:18px;">'+tl+'</div><p class="feas '+m.feas+'" style="margin-top:14px;">'+(m.feas==='red'?'⚠️ This leaves Kaunas very early — drop the stop or go direct on the draft.':m.feas==='amber'?'• Early start / late return — share the driving.':'✓ The night slot is protected, with sane departure and return.')+'</p></div>'+
+      '<div class="panel"><p class="lab">Illustrative timeline</p><h2>Confirm the museum start time before using this schedule</h2><div class="timeorbit" style="margin-top:18px;">'+tl+'</div><p class="feas '+m.feas+'" style="margin-top:14px;">Planning estimate only. Adjust departure once the 80 cm slot is booked.</p></div>'+
       '<div class="panel"><p class="lab">Route &amp; driving</p><ul>'+
         '<li><b>Kaunas → Museum of Ethnocosmology:</b> ~128 km / ~2 h 04 each way (direct).</li>'+
-        '<li><b>Return after the program:</b> a dark ~2 h drive — '+esc(m.lab(s.returnSafety||'one-driver')).toLowerCase()+'. No alcohol if driving.</li>'+
         '<li><b>Lithuania rules:</b> dipped headlights day &amp; night; normal passenger cars need no road toll/vignette.</li></ul></div>'+
       '<div class="panel"><p class="lab">Observatory game-plan</p><ul>'+
         '<li><b>Telescope:</b> '+esc(m.lab(s.anchor))+' — clear-sky dependent, register ahead.</li>'+
         '<li><b>Arrival buffer:</b> ~45 min before the slot; the tower is outdoor-cold — pack warm fall layers.</li>'+
         '<li><b>Keep reachable:</b> the museum phone/email for the ~14:00 weather call.</li>'+
         (s.dayProgram?'<li><b>Daytime:</b> '+esc(m.lab(s.dayProgram))+' — worthwhile even if the night cancels.</li>':'')+
-        (arr(s.rituals).length?'<li><b>Rituals:</b> '+arr(s.rituals).map(function(r){return esc(m.lab(r));}).join(' · ')+'.</li>':'')+'</ul></div>'+
+        '</ul></div>'+
       '<div class="panel"><p class="lab">Plan-B</p><ul>'+
-        '<li><b>Night cancelled by 14:00:</b> '+(s.weatherPlan==='go-anyway'?'go anyway — day tour / deck / outdoor exhibition / Mindūnai / Molėtai food.':'strict sky-first — reschedule the night, or do a shorter day Plan-B.')+'</li>'+
+        '<li><b>Night cancelled by 14:00:</b> call the museum to reschedule the telescope visit.</li>'+
         '<li><b>Rain / wind:</b> skip tower / Asveja; museum indoor + food.</li>'+
         '<li><b>Running late:</b> drop the daytime stop first — never the observatory.</li>'+
-        '<li><b>Driver too tired:</b> driver swap, or the emergency nearby stay.</li></ul></div>'+
+        '</ul></div>'+
       '<div class="panel"><p class="lab">Packing</p><ul style="columns:2;column-gap:30px;">'+
         '<li>Warm coat + layers</li><li>Hat / gloves (Oct–Nov)</li><li>Waterproof jacket</li><li>Comfortable shoes</li><li>Thermos / snacks</li><li>Power bank</li><li>Headlamp (red mode)</li><li>Saved booking confirm</li></ul></div>'+
       '<div class="panel"><p class="lab">Emergency one-pager</p><ul>'+
@@ -226,33 +221,7 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
 
   function arr(x){ return Array.isArray(x)?x:[]; }
   bindDownload();
-  buildDayArc();
   buildMap();
-  function buildDayArc(){
-    var host=document.getElementById('dayArc'); if(!host) return;
-    function p2(str){ var mt=/(\d+):(\d+)/.exec(str); return mt?(+mt[1]+(+mt[2])/60):null; }
-    var times=m.timeline.map(function(t){ return {h:p2(t[0]), label:t[1].split(' — ')[0], anchor:!!t[2]}; }).filter(function(x){return x.h!=null;});
-    if(times.length<2){ host.style.display='none'; return; }
-    var prev=-1; times.forEach(function(x){ if(x.h<prev-0.01) x.h+=24; prev=x.h; });
-    var dep=times[0].h, home=times[times.length-1].h, range=Math.max(1,home-dep);
-    var nightF=(m.night-dep)/range;
-    var P0=[44,185], CC=[380,-30], P1=[716,185];
-    function pt(f){ var mt=1-f; return [ mt*mt*P0[0]+2*mt*f*CC[0]+f*f*P1[0], mt*mt*P0[1]+2*mt*f*CC[1]+f*f*P1[1] ]; }
-    var dots=times.map(function(x){ var f=(x.h-dep)/range; var P=pt(f); return '<g><circle cx="'+P[0].toFixed(1)+'" cy="'+P[1].toFixed(1)+'" r="'+(x.anchor?6:3.5)+'" fill="'+(x.anchor?'#e7a877':'#cdbfa8')+'"'+(x.anchor?' filter="url(#dg)"':'')+'/><text x="'+P[0].toFixed(1)+'" y="'+(P[1]-12).toFixed(1)+'" text-anchor="middle" class="da-t">'+m.fmt(x.h)+'</text></g>'; }).join('');
-    host.innerHTML='<div class="da-head"><span class="k">✦ The night, scrubbed</span><span class="da-read" id="daRead"></span></div>'+
-      '<svg viewBox="0 0 760 210" class="da-svg"><defs><linearGradient id="dgrad" x1="0" x2="1"><stop offset="0" stop-color="#e09a63"/><stop offset="0.5" stop-color="#a9c5a0"/><stop offset="1" stop-color="#5b6f8a"/></linearGradient><filter id="dg"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-      '<path d="M44 185 Q380 -30 716 185" fill="none" stroke="url(#dgrad)" stroke-width="2.5" opacity="0.85"/>'+dots+
-      '<g id="daHandle"><circle r="11" fill="#0b1310" stroke="#e7a877" stroke-width="2"/><circle r="4" fill="#e7a877"/></g></svg>';
-    var svg=host.querySelector('.da-svg'), handle=host.querySelector('#daHandle'), read=host.querySelector('#daRead'), circs=handle.querySelectorAll('circle');
-    var f=Math.max(0,Math.min(1,nightF)), drag=false;
-    function actAt(ff){ var cur=times[0]; times.forEach(function(x){ if((x.h-dep)/range<=ff+0.001) cur=x; }); return cur; }
-    function set(ff){ f=Math.max(0,Math.min(1,ff)); var P=pt(f); handle.setAttribute('transform','translate('+P[0].toFixed(1)+','+P[1].toFixed(1)+')'); var act=actAt(f); read.innerHTML='<b>'+m.fmt(dep+f*range)+'</b> · '+act.label; var warm=f<nightF; circs[1].setAttribute('fill', warm?'#e7a877':'#dfe8ef'); circs[0].setAttribute('stroke', warm?'#e7a877':'#8fb6d6'); }
-    function fromEvt(e){ var r=svg.getBoundingClientRect(); var sx=(e.clientX-r.left)/r.width*760; set((sx-P0[0])/(P1[0]-P0[0])); }
-    svg.addEventListener('pointerdown', function(e){ drag=true; fromEvt(e); });
-    window.addEventListener('pointermove', function(e){ if(drag) fromEvt(e); });
-    window.addEventListener('pointerup', function(){ drag=false; });
-    set(f);
-  }
   function buildMap(){
     var start=[54.8985,23.9036], museum=[55.31539,25.55488];
     var host=document.getElementById('route-gmaps');
@@ -266,8 +235,7 @@ window.WTC_CFG = { apiUrl:'https://wtc-store.mantekarys.workers.dev', trip:'obse
       if(places.length>2) url+='&waypoints='+places.slice(1,-1).map(encodeURIComponent).join('%7C');
       return url;
     }
-    host.innerHTML='<a class="btn btn--solid" target="_blank" rel="noopener" href="'+directions(points)+'"><span class="fill"></span><span class="lbl">Open outbound route ↗</span></a>'+
-      '<a class="btn" target="_blank" rel="noopener" href="'+directions([points[points.length-1],points[0]])+'"><span class="fill"></span><span class="lbl">Open route home ↗</span></a>';
+    host.innerHTML='<a class="btn btn--solid" target="_blank" rel="noopener" href="'+directions(points)+'"><span class="fill"></span><span class="lbl">Open route to museum ↗</span></a>';
     if(!window.L){ document.getElementById('map').textContent='Map unavailable right now. Use the route links below.'; return; }
     var map=L.map('map',{scrollWheelZoom:false}).setView([55.15,24.7],9);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',maxZoom:19}).addTo(map);

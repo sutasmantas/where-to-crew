@@ -29,8 +29,8 @@
   var FOODH={ picnic:0.5, 'moletai-cafe':1, 'route-meal':1 };
 
   function model(plan){
-    plan=plan||{}; var s=plan.sel||{};
-    var night = plan.night || ({sept:21.25,oct:20.0,nov:18.5}[s.seasonWindow]) || 20.0;
+    plan=plan||{}; var s=Object.assign({routeStyle:'direct',mainStop:'none',dayProgram:'outdoor',food:'picnic'},plan.sel||{}, {anchor:'80cm',seasonWindow:'oct',dateStrategy:'best-sky',weatherPlan:'strict'});
+    var night = 20.0; // illustrative until the museum confirms the actual program time
     var driveUp = 2.1 + (DRIVE[s.routeStyle]||0);
     var stopH = STOPH[s.mainStop]||0, dayH=DAYH[s.dayProgram]||0, foodH=FOODH[s.food]||0;
 
@@ -48,79 +48,44 @@
     if(s.food){ tl.push([fmt(foodStart), (s.food==='picnic'?'Picnic / snacks':lab(s.food)), false]); }
     tl.push([fmt(dayStart), (s.dayProgram?lab(s.dayProgram):'Arrive Kulionys'), false]);
     tl.push([fmt(arriveMuseum),'Arrive museum — warm clothes, phones charged, buffer', false]);
-    tl.push([fmt(night), (s.anchor?lab(s.anchor):'Night telescope observation')+' — the anchor', true]);
+    tl.push(['Time TBC', '80 cm telescope night observation — confirm start time with museum', true]);
     tl.push([fmt(progEnd),'Program ends · '+ (arr(s.rituals).indexOf('bestthing')>=0?'one "best thing" lap, then go':'pack up'), false]);
-    tl.push([fmt(home),'Home in Kaunas'+(s.returnSafety==='emergency-hotel'?' (or stay over if too tired)':''), false]);
 
     var feas = depart < 9.5 ? 'red' : depart < 11.5 ? 'amber' : 'green';
 
-    var bookings = arr(plan.bookings);
+    var bookings = arr(plan.bookings).map(function(b){ return b.id==='telescope'?Object.assign({},b,{name:'80 cm telescope night observation'}):b; });
+    if(!bookings.some(function(b){return b.id==='telescope';})) bookings.unshift({id:'telescope',name:'80 cm telescope night observation',where:'Museum registration · +370 6 152 0688',must:true});
     var countdown=[
-      ['−3 wks','Lock the fall date (near new moon if best-sky) · register the night telescope slot (+370 6 152 0688 / registracija@lemuziejus.lt) · book any lodging if staying over.'],
-      ['−2 wks','Confirm the telescope group size · request English if needed (not guaranteed) · check Rumšiškės/Taujėnai fall hours if on the route.'],
-      ['−1 wk','Re-check sunset + program start for the date · re-check moon phase · reserve the Molėtai/route table if a weekend.'],
+      ['Now','Ask the museum for the 80 cm night observation on 10 October · confirm the actual start time, group size and booking (+370 6 152 0688).'],
+      ['−1 wk','Confirm the booking and any daytime stop · check the forecast · reserve a food stop if needed.'],
       ['−2 days','Watch the forecast · pack warm layers, thermos, power bank, headlamp (red mode) · charge phones.'],
-      ['trip day','Keep the phone reachable for the ~14:00 weather call · fuel up · leave Kaunas by ~'+fmt(depart)+' · driver stays alcohol-free.']
+      ['trip day','Keep the phone reachable for the weather decision by 14:00 · follow the confirmed program time.']
     ];
 
-    return { sel:s, night:night, total:plan.total, timeline:tl, feas:feas, depart:depart, home:home, bookings:bookings, countdown:countdown, lab:lab, fmt:fmt };
+    var total=plan.total==null?null:Number(plan.total)+(plan.sel&&plan.sel.anchor==='40cm'?2:0);
+    return { sel:s, night:night, total:total, timeline:tl, feas:feas, depart:depart, home:home, bookings:bookings, countdown:countdown, lab:lab, fmt:fmt };
   }
 
   function picksList(s){
-    var single=[['seasonWindow','Season'],['dateStrategy','Date strategy'],['anchor','Telescope'],['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Daytime'],['food','Food'],['returnSafety','Drive home'],['weatherPlan','Weather plan-B']];
+    var single=[['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Daytime'],['food','Food']];
     var out=[]; single.forEach(function(k){ if(s[k[0]]) out.push([k[1],lab(s[k[0]])]); });
-    var rit=arr(s.rituals); if(rit.length) out.push(['Rituals', rit.map(lab).join(', ')]);
     return out;
   }
 
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function buildHTML(plan){
-    var m=model(plan), s=m.sel;
-    var picks=picksList(s);
-    var picksHTML = picks.length? picks.map(function(p){ return '<li><b>'+p[0]+':</b> '+p[1]+'</li>'; }).join('') : '<li><i>No draft saved yet — build it on the Plan-draft page.</i></li>';
-    if(m.total) picksHTML+='<li><b>Estimated per person:</b> ≈ €'+m.total+' (one fall day, 3 sharing)</li>';
-    var tlHTML=m.timeline.map(function(t){ return '<li><b>'+t[0]+'</b> — '+t[1]+'</li>'; }).join('');
-    var bk = m.bookings.length ? m.bookings.map(function(b){ var st=(plan.bookingStatus&&plan.bookingStatus[b.id])||'todo'; return '<li>[ '+(st==='booked'?'x':' ')+' ] <b>'+b.name+'</b> — '+b.where+(b.must?' · <i>must-have</i>':(b.sells?' · <i>sells out</i>':''))+'</li>'; }).join('') : '<li>Register the night telescope · the rest depends on your picks.</li>';
-    var cd=m.countdown.map(function(c){ return '<li><b>'+c[0]+':</b> '+c[1]+'</li>'; }).join('');
-
-    var css='body{font-family:Georgia,serif;color:#16201c;max-width:760px;margin:30px auto;padding:0 26px;line-height:1.5}'+
-      'h1{font-size:27px;margin-bottom:2px}h2{font-size:15px;text-transform:uppercase;letter-spacing:.12em;border-bottom:2px solid #6a8a60;padding-bottom:5px;margin-top:30px;color:#23362b}'+
-      'h3{font-size:16px;margin:18px 0 4px}ul{padding-left:20px;margin:6px 0}li{margin:4px 0}.tl li{list-style:none;margin-left:-16px}'+
-      '.pb{font-size:13px;color:#5a6a4a;margin:4px 0 8px;background:#eef2e8;padding:7px 10px;border-left:3px solid #6a8a60}'+
-      '.sub{color:#666;font-size:13px}.cols{column-count:2;column-gap:34px}@media print{a{color:#000;text-decoration:none}}';
-
-    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Where To, Crew? — Observatory night plan</title><style>'+css+'</style></head><body>'+
-      '<h1>Where To, Crew? — Observatory Night Run</h1>'+
-      '<p class="sub">Kaunas → Molėtai → Kulionys · Lithuanian Museum of Ethnocosmology · one fall night'+(m.total?' · ≈ €'+m.total+'/person':'')+'</p>'+
-      '<h2>1 · The night, hour by hour</h2><h3 style="margin-top:8px">Your picks</h3><ul>'+picksHTML+'</ul>'+
-      '<ul class="tl">'+tlHTML+'</ul>'+
-      '<p class="pb"><b>The slot is the anchor:</b> the program starts ~1.5 h after sunset and needs clear skies. Arrive ~45 min early, warm clothes ready.</p>'+
-      '<h2>2 · Your bookings (tick when done)</h2><ul>'+bk+'</ul>'+
-      '<p class="sub">Time-sensitive: the night telescope (small groups, weather-confirmed by ~14:00). Phone: +370 6 152 0688 · registracija@lemuziejus.lt.</p>'+
-      '<h2>3 · Route &amp; driving</h2><ul>'+
-        '<li>Kaunas → Museum of Ethnocosmology: ~128 km / ~2 h 04 each way (direct).</li>'+
-        '<li>Return after the program is a dark ~2 h drive — one rested driver minimum, better with a swap. No alcohol if driving.</li>'+
-        '<li>Dipped headlights required day &amp; night. Normal passenger cars need no Lithuanian road toll/vignette.</li></ul>'+
-      '<h2>4 · Observatory game-plan</h2><ul>'+
-        '<li>Telescope: '+(s.anchor?lab(s.anchor):'register the night observation')+' — clear-sky dependent, register ahead.</li>'+
-        '<li>Arrival buffer ~45 min; the tower is outdoor-cold — pack warm fall layers.</li>'+
-        '<li>Keep the museum phone/email reachable for the ~14:00 weather call.</li>'+
-        '<li>80 cm = headline (cap. 16); 40 cm = backup (cap. 18).</li></ul>'+
-      '<h2>5 · Plan-B</h2><ul>'+
-        '<li>Night cancelled by 14:00 → '+(s.weatherPlan==='go-anyway'?'go anyway: day tour / deck / outdoor exhibition / Mindūnai / Molėtai food.':'strict sky-first: reschedule the night, or do a shorter day Plan-B.')+'</li>'+
-        '<li>Rain / wind → skip tower / Asveja; museum indoor + food.</li>'+
-        '<li>Running late → drop the daytime stop first, never the observatory.</li>'+
-        '<li>Driver too tired → driver swap, or the emergency nearby stay.</li></ul>'+
-      '<h2>6 · Pre-trip countdown</h2><ul>'+cd+'</ul>'+
-      '<h2>7 · Packing</h2><ul class="cols">'+
-        '<li>Warm coat + layers</li><li>Hat / gloves (Oct–Nov)</li><li>Waterproof jacket</li><li>Comfortable shoes</li>'+
-        '<li>Thermos / water / snacks</li><li>Phone power bank</li><li>Headlamp — red-light mode</li><li>Saved booking confirmation</li>'+
-        '<li>Tissues / wet wipes</li><li>Motion-sickness tablets if needed</li></ul>'+
-      '<h2>8 · Emergency one-pager</h2><ul>'+
-        '<li><b>112</b> — emergency.</li>'+
-        '<li>Museum registration: <b>+370 6 152 0688</b> · registracija@lemuziejus.lt.</li>'+
-        '<li>Crew driver phone numbers + meeting point: museum entrance / the car.</li>'+
-        '<li>Route-home address pinned · emergency nearby stay on standby.</li></ul>'+
-      '<p class="sub" style="margin-top:28px">Wait for the call. Then look up. — re-check the date\u2019s sunset, moon and weather before you go.</p>'+
+    plan=plan||{}; var m=model(plan), picks=picksList(m.sel);
+    var rows=picks.map(function(p){return '<li><b>'+esc(p[0])+':</b> '+esc(p[1])+'</li>';}).join('');
+    var bookings=m.bookings; if(!bookings.some(function(x){return x.id==='weathercall';})) bookings.push({id:'weathercall',name:'Same-day weather confirmation',where:'Phone or SMS by 14:00'});
+    var bk=bookings.map(function(x){var booked=plan.bookingStatus&&plan.bookingStatus[x.id]==='booked';return '<li>['+(booked?'x':' ')+'] <b>'+esc(x.name)+'</b> — '+esc(x.where)+'</li>';}).join('');
+    var css='body{font:16px/1.5 Arial,sans-serif;max-width:740px;margin:30px auto;padding:0 24px;color:#16201c}h1{font-size:30px;margin-bottom:2px}h2{font-size:15px;text-transform:uppercase;letter-spacing:.1em;border-bottom:2px solid #6a8a60;padding-bottom:5px;margin-top:28px}ul{padding-left:20px}li{margin:6px 0}.note{background:#eef2e8;border-left:3px solid #6a8a60;padding:10px 12px}a{color:#23362b}@media print{a{color:#000}}';
+    return '<!doctype html><html><head><meta charset="utf-8"><title>Observatory trip checklist</title><style>'+css+'</style></head><body>'+
+      '<h1>Observatory night · 10 October 2026</h1><p>Kaunas → Museum of Ethnocosmology, Kulionys · 80 cm telescope</p>'+
+      '<p class="note"><b>Target date; museum slot unconfirmed.</b> The 80 cm observation requires advance booking and clear skies. Confirm its actual start time with the museum. Keep the booking phone reachable for the weather decision by 14:00.</p>'+
+      '<h2>Book and confirm</h2><ul>'+bk+'</ul><p>Museum: <b>+370 6 152 0688</b> · registracija@lemuziejus.lt</p>'+
+      '<h2>Your day choices</h2><ul>'+rows+'</ul>'+(m.total!=null?'<p>Estimated per person: <b>€'+esc(m.total)+'</b> (three sharing; excludes unpriced extras).</p>':'')+
+      '<h2>Before leaving Kaunas</h2><ul><li>Save the museum booking and confirmed time.</li><li>Save the route offline and agree to meet at the museum main entrance.</li><li>Pack warm layers, waterproof jacket, water or thermos, snacks and a charged phone or power bank.</li><li>If the museum cancels for weather, call to reschedule the telescope visit.</li></ul>'+
+      '<h2>Quick help</h2><p><b>112</b> for emergencies in Lithuania. Museum: <b>+370 6 152 0688</b>.<br>Museum address: Kulionių k., Žvaigždžių g. 10, Čiulėnų sen., Molėtų r.</p>'+
       '</body></html>';
   }
 

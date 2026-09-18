@@ -160,7 +160,7 @@
     <header class="trip-head" data-journey="Decide" style="padding:34px 0 22px;">
       <p class="route-eyebrow" data-reveal data-reveal-mode="fade">Decide the night together · stop by stop</p>
       <h1 class="display" data-reveal data-reveal="words">Build the night. Protect the slot.</h1>
-      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">Nothing's pre-picked except the rule that the <b>telescope is the anchor</b>. Choose the route, a stop, the day program and food — the per-person total and a <b>time meter that guards the night slot</b> update live, and every booking lands in <b>Your bookings</b>. Evenings are about the sky, not the bar.</p>
+      <p class="lede" data-reveal style="max-width:60ch; margin-top:16px;">The target is <b>Saturday 10 October 2026</b> with the <b>80 cm telescope</b>. Choose the route, a stop, the day program and food — the per-person total and a <b>time meter that guards the night slot</b> update live, and every booking lands in <b>Your bookings</b>. Evenings are about the sky, not the bar.</p>
     </header>
 
     <div class="wcall" data-reveal data-reveal-mode="fade">
@@ -171,49 +171,8 @@
     <div class="draft-grid">
       <div class="opts">
 
-        <!-- PRESETS -->
-        <div class="presets" data-reveal>
-          <div class="sum-h" style="color:var(--paper-soft);">Start from a preset <span style="text-transform:none;letter-spacing:0;">— then change anything</span></div>
-          <div class="pwrap" id="presets">
-            <button type="button" class="preset" data-preset="lean"><span class="pn">Observatory-first</span><span class="pp">≈ €30</span><span class="pd">Direct, telescope, snacks. Safest timing.</span></button>
-            <button type="button" class="preset" data-preset="balanced"><span class="pn">Balanced fall day</span><span class="pp">≈ €45 · recommended</span><span class="pd">Mindūnai tower, deck, Molėtai dinner.</span></button>
-            <button type="button" class="preset" data-preset="scenic"><span class="pn">Scenic lake-country</span><span class="pp">≈ €55+</span><span class="pd">Lakes + tower + day tour. Weather-exposed.</span></button>
-            <button type="button" class="preset" data-preset="culture"><span class="pn">Culture stop</span><span class="pp">≈ €55+</span><span class="pd">Rumšiškės / Taujėnai on the way. Can run late.</span></button>
-          </div>
-          <p class="pnote">A preset is a starting point, not a validated plan — the time meter still flags anything that risks the night slot.</p>
-        </div>
-
-        <!-- TRIP-WIDE -->
         <section class="dayblock" data-day="0">
-          <div class="day-head"><span class="day-tag">Decide first</span><h2>The night &amp; the date</h2><p class="tradeoff">These set the sky: how dark, how early it starts, and which telescope you book.</p></div>
-
-          <div class="opt" data-group="seasonWindow" data-type="single">
-            <div class="opt-head"><h3>Season window</h3></div>
-            <p class="opt-sub">Fall beats summer here — earlier, darker nights. Earlier in the season is warmer; later is darker but colder and wetter.</p>
-            <div class="choices">
-              <button type="button" class="choice" data-val="sept" data-night="21.25"><span class="mark"></span><span class="ctext"><span class="clabel">Early fall · September</span><span class="cmeta"><span>night ~21:30</span><span class="m-why">Warmer, comfortable, later start.</span></span></span></button>
-              <button type="button" class="choice" data-val="oct" data-night="20.0" data-suggest="Mid-October is the sweet spot: sunset ~18:20 means the program starts ~19:50 — early enough to be home at a sane hour, dark enough to feel like real stargazing."><span class="mark"></span><span class="ctext"><span class="clabel">Mid fall · October</span><span class="cmeta"><span>night ~19:50</span><span class="m-why">Best balance: earlier dark, colder.</span></span></span></button>
-              <button type="button" class="choice" data-val="nov" data-night="18.5"><span class="mark"></span><span class="ctext"><span class="clabel">Late fall · November</span><span class="cmeta"><span>night ~18:30</span><span class="m-why">Earliest dark, but coldest/wettest; the dark return drive matters more.</span></span></span></button>
-            </div>
-          </div>
-
-          <div class="opt" data-group="dateStrategy" data-type="single">
-            <div class="opt-head"><h3>Date strategy</h3></div>
-            <div class="choices">
-              <button type="button" class="choice" data-val="best-sky"><span class="mark"></span><span class="ctext"><span class="clabel">Best sky window</span><span class="cmeta"><span class="m-why">Near new moon — best for faint deep-sky. May not fit everyone's calendar.</span></span></span></button>
-              <button type="button" class="choice" data-val="easy-saturday"><span class="mark"></span><span class="ctext"><span class="clabel">Easiest group Saturday</span><span class="cmeta"><span class="m-why">Crew-first. Moon may be brighter — still great for Moon/planets.</span></span></span></button>
-              <button type="button" class="choice" data-val="custom"><span class="mark"></span><span class="ctext"><span class="clabel">Custom date</span><span class="cmeta"><span class="m-why">Re-check availability, moon and weather close to the day.</span></span></span></button>
-            </div>
-          </div>
-
-          <div class="opt" data-group="anchor" data-type="single">
-            <div class="opt-head"><h3>The telescope</h3><span class="tag-opt">mandatory · 📌 register</span></div>
-            <p class="opt-sub">The night observation is the anchor. Clear-sky dependent; register ahead; small group capacity; weather call by 14:00.</p>
-            <div class="choices">
-              <button type="button" class="choice" data-val="80cm" data-price="12" data-book="telescope" data-suggest="The 80 cm is the headline instrument and the better experience — only €2 more than the 40 cm. Book it unless it's full."><span class="mark"></span><span class="ctext"><span class="clabel">80 cm telescope night observation</span><span class="cmeta"><span>+€12</span><span>cap. 16</span><span class="cbook">📌 register · weather call by 14:00</span></span></span><span class="price up">+€12</span></button>
-              <button type="button" class="choice" data-val="40cm" data-price="10" data-book="telescope"><span class="mark"></span><span class="ctext"><span class="clabel">40 cm telescope night observation</span><span class="cmeta"><span>+€10</span><span>cap. 18</span><span class="cbook">📌 backup headline · register</span></span></span><span class="price up">+€10</span></button>
-            </div>
-          </div>
+          <div class="day-head"><span class="day-tag">The fixed plan</span><h2>Saturday 10 October · 80 cm telescope</h2><p class="tradeoff">A new-moon target for darker skies. The museum slot is not booked yet; confirm availability and its actual start time with the museum. Night observations depend on clear skies and a same-day weather call by 14:00.</p></div>
         </section>
 
         <!-- THE WAY UP -->
@@ -265,36 +224,8 @@
           </div>
         </section>
 
-        <!-- THE NIGHT + HOME -->
         <section class="dayblock" data-day="2">
-          <div class="day-head"><span class="day-tag">The night &amp; home</span><h2>Safety &amp; weather plan</h2><p class="tradeoff">The real risk isn't the telescope — it's the ~2 h drive home after midnight. Plan the driver and the cloud-cancel before you go.</p></div>
-
-          <div class="opt" data-group="returnSafety" data-type="single">
-            <div class="opt-head"><h3>The drive home</h3><span class="tag-opt">no € — safety</span></div>
-            <div class="choices">
-              <button type="button" class="choice" data-val="one-driver" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">One rested return driver</span><span class="cmeta"><span class="m-why">Required minimum — no alcohol, ~2 h home after the program.</span></span></span></button>
-              <button type="button" class="choice" data-val="driver-swap" data-price="0" data-suggest="A driver swap is the safe call after a midnight finish — two rested people sharing the dark ~2 h back to Kaunas."><span class="mark"></span><span class="ctext"><span class="clabel">Driver swap plan</span><span class="cmeta"><span class="m-why">Safer — two rested drivers share the dark return.</span></span></span></button>
-              <button type="button" class="choice" data-val="emergency-hotel" data-price="0" data-book="hotel"><span class="mark"></span><span class="ctext"><span class="clabel">Emergency nearby stay (fallback)</span><span class="cmeta"><span>not in base €</span><span class="cbook">📌 nearby stay on standby</span></span><span class="cnote">Not the normal plan — a safety net if everyone's too tired to drive.</span></span></button>
-            </div>
-          </div>
-
-          <div class="opt" data-group="weatherPlan" data-type="single">
-            <div class="opt-head"><h3>Weather plan-B</h3><span class="tag-opt">decide before 14:00</span></div>
-            <div class="choices">
-              <button type="button" class="choice" data-val="strict" data-price="0" data-suggest="Agree the rule now and there's no on-the-day argument: if the 14:00 call cancels, you reschedule the night or do a shorter Plan-B."><span class="mark"></span><span class="ctext"><span class="clabel">Strict sky-first</span><span class="cmeta"><span class="m-why">If cancelled by 14:00 → reschedule the night, or do a shorter Plan-B.</span></span></span></button>
-              <button type="button" class="choice" data-val="go-anyway" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Go anyway</span><span class="cmeta"><span class="m-why">Day tour / outdoor exhibition / Mindūnai / food even if the telescope cancels.</span></span></span></button>
-            </div>
-          </div>
-
-          <div class="opt" data-group="rituals" data-type="multi">
-            <div class="opt-head"><h3>Night rituals</h3><span class="tag-opt">pick any</span></div>
-            <div class="choices">
-              <button type="button" class="choice" data-multi data-val="thermos" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Thermos / hot chocolate</span><span class="cmeta"><span class="m-why">The tower is outdoor-cold — this is non-negotiable in fall.</span></span></span></button>
-              <button type="button" class="choice" data-multi data-val="photo" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Photo challenge: tower / dome / night sky</span><span class="cmeta"><span class="m-why">📸 best three shots win.</span></span></span></button>
-              <button type="button" class="choice" data-multi data-val="playlist" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">Shared drive playlist</span><span class="cmeta"><span class="m-why">For the dark road home.</span></span></span></button>
-              <button type="button" class="choice" data-multi data-val="bestthing" data-price="0"><span class="mark"></span><span class="ctext"><span class="clabel">"Best thing today" before driving home</span><span class="cmeta"><span class="m-why">One lap of the outdoor exhibition, then go.</span></span></span></button>
-            </div>
-          </div>
+          <div class="day-head"><span class="day-tag">Before the trip</span><h2>Book, then check the sky</h2><p class="tradeoff">Register the 80 cm observation for 10 October. Keep the phone reachable on the day; if the museum cancels for weather, reschedule the telescope visit.</p></div>
         </section>
 
       </div>
@@ -304,7 +235,7 @@
         <div class="summary" id="summary">
           <p class="lab">Per person · est.</p>
           <div class="total"><span class="num" id="sum-total">≈ €25–70</span></div>
-          <p class="days" id="sum-days">Pick the telescope &amp; route to start your total</p>
+          <p class="days" id="sum-days">October 10 target · 80 cm included</p>
           <p class="feasline" id="feasline"></p>
 
           <hr class="sum-line">

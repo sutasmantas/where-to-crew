@@ -20,6 +20,11 @@
   var saved=(shared&&shared.plan)?shared.plan:WTC.load('wtc-observatory-plan',null);
   var bookingStatus=(saved&&saved.bookingStatus)||{};
   if(saved&&saved.sel){ Object.keys(sel).forEach(function(g){ if(saved.sel[g]==null) return; sel[g]=(TYPE[g]==='multi')?(Array.isArray(saved.sel[g])?saved.sel[g].slice():[]):saved.sel[g]; }); }
+  sel.routeStyle=sel.routeStyle||'direct';
+  sel.mainStop=sel.mainStop||'none';
+  sel.dayProgram=sel.dayProgram||'outdoor';
+  sel.food=sel.food||'picnic';
+  sel.seasonWindow='oct'; sel.dateStrategy='best-sky'; sel.anchor='80cm'; sel.weatherPlan='strict';
 
   /* ---------- labels ---------- */
   var LABEL={
@@ -62,11 +67,11 @@
       var c=e.target.closest('.choice'); if(!c||c.classList.contains('greyed')) return;
       var v=c.getAttribute('data-val');
       if(TYPE[g]==='multi'){ var i=sel[g].indexOf(v); if(i>=0) sel[g].splice(i,1); else sel[g].push(v); }
-      else sel[g]=(sel[g]===v)?null:v;
+      else sel[g]=v;
       onPick(g);
     });
   });
-  function onPick(g){ clearPreset(); render(); }
+  function onPick(g){ render(); }
 
   /* ============================================================
      Reveal / greying
@@ -105,14 +110,8 @@
     var st=document.getElementById('sum-total'), sd=document.getElementById('sum-days');
     var mbT=document.getElementById('mb-total'), mbD=document.getElementById('mb-days');
     var bdEl=document.getElementById('breakdown');
-    if(!sel.anchor && !sel.routeStyle){
-      st.textContent='≈ €25–70'; sd.textContent='Pick the telescope & route to start your total';
-      mbT.textContent='€25–70'; mbD.textContent='pick your options';
-      bdEl.innerHTML='<div class="row"><span>Choose the telescope & route to begin</span><span class="v">≈ €25–70</span></div>';
-      lastTotal=null; persistTotals(null); return null;
-    }
-    var total=0, rows=[];
-    var order=['routeStyle','anchor','dayProgram','food','mainStop'];
+    var total=12, rows=[{label:'80 cm telescope · admission',v:'€12',base:true}];
+    var order=['routeStyle','dayProgram','food','mainStop'];
     order.forEach(function(g){
       var v=sel[g]; if(!v) return; var p=priceOf(g,v);
       if(g==='routeStyle'){ total+=p; rows.push({label:'Fuel · '+lab(v).replace(' route',''), v:'€'+p, base:true}); }
@@ -124,7 +123,7 @@
     else st.textContent='€'+total;
     if(lastTotal!=null && total!==lastTotal){ st.classList.remove('flash'); void st.offsetWidth; st.classList.add('flash'); }
     lastTotal=total;
-    sd.innerHTML='<b>One fall day</b> · '+ppl;
+    sd.innerHTML='<b>Sat 10 Oct target</b> · '+ppl+' · museum booking unconfirmed';
     mbT.textContent='€'+total; mbD.textContent='one day · per person';
     bdEl.innerHTML=rows.map(function(r){ return '<div class="row'+(r.base?' base':'')+'"><span>'+r.label+'</span><span class="v">'+r.v+'</span></div>'; }).join('');
     return { total:total };
@@ -134,13 +133,12 @@
      §10 — TIME meter (protect the night slot)
      ============================================================ */
   function fmt(h){ h=((h%24)+24)%24; var hh=Math.floor(h), mm=Math.round((h-hh)*60); if(mm===60){hh++;mm=0;} return (hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm; }
-  var NIGHTLBL={ '21.25':'~21:30','20':'~19:50','18.5':'~18:30' };
-  function nightStart(){ var c=choiceEl('seasonWindow',sel.seasonWindow); var n=c?num(c,'data-night'):20.0; return n||20.0; }
+  function nightStart(){ return 20.0; } // planning placeholder; confirm actual time with museum
 
   function meters(){
     var out=[];
     var night=nightStart();
-    var nlabel = sel.seasonWindow?('night ~'+fmt(night)):'night ~19:50 (Oct default)';
+    var nlabel = 'planning estimate ~'+fmt(night);
     var driveUp = 2.1 + (sel.routeStyle?driveOf('routeStyle',sel.routeStyle):0);
     var stopH = sel.mainStop?hoursOf('mainStop',sel.mainStop):0;
     var dayH = sel.dayProgram?hoursOf('dayProgram',sel.dayProgram):0;
@@ -155,7 +153,7 @@
     d1.h = dayUsed.toFixed(1).replace(/\.0$/,'')+' h day · leave by ~'+fmt(latestDepart);
     if(latestDepart < 9.5){
       d1.color='red';
-      d1.warn='⚠️ '+(sel.mainStop&&sel.mainStop!=='none'?lab(sel.mainStop)+' + ':'')+(sel.dayProgram?lab(sel.dayProgram):'the day')+' needs you to leave Kaunas before ~'+fmt(latestDepart)+' to keep a buffer before the '+(sel.seasonWindow?'':'October ')+'slot — brutal in fall. Drop the stop, go lighter, or pick an earlier-dark month.';
+      d1.warn='⚠️ This route needs an early departure to keep a buffer before the estimated night slot. Drop the stop, choose a lighter day, or go direct.';
       d1.fix=[['Drop the stop','dropStop'],['Lighter day program','lightDay'],['Go direct','goDirect']];
     } else if(latestDepart < 11.5){
       d1.color='amber';
@@ -169,20 +167,8 @@
 
     /* ---- Meter 2: the night anchor (fixed) ---- */
     out.push({ key:'Night anchor', name:(sel.anchor?lab(sel.anchor):'Telescope'), fill:100, color:'green',
-      h: nlabel+' · 1–1.5 h', note: sel.anchor?'Clear-sky dependent — the 14:00 weather call decides. Register ahead.':'Pick the telescope above — it\u2019s the anchor.' });
+      h: nlabel+' · 1–1.5 h', note: '80 cm booking and actual start time still need museum confirmation. Clear skies required.' });
 
-    /* ---- Meter 3: the drive home ---- */
-    var end = night + 1.5 + 0.4;        // program + pack-up
-    var home = end + 2.1;               // ~2 h back to Kaunas
-    var d3={ key:'Drive home', name:'Back to Kaunas' };
-    d3.h='ends ~'+fmt(end)+' · home ~'+fmt(home);
-    d3.fill=Math.max(20,Math.min(100,(home-night)/6*100));
-    var swap = sel.returnSafety==='driver-swap', hotel=sel.returnSafety==='emergency-hotel';
-    if(hotel){ d3.color='green'; d3.h='stay over — split the return'; d3.note='Emergency stay on standby — finish the drive rested in the morning.'; }
-    else if(home>=25.5 && !swap){ d3.color='red'; d3.warn='⚠️ Home ~'+fmt(home)+' after a long day — a dark ~2 h drive past 01:30. Plan a driver swap, or keep a nearby stay on standby.'; d3.fix=[['Driver swap','swap'],['Nearby stay on standby','hotel']]; }
-    else if(home>=24){ d3.color='amber'; d3.warn='Late return ~'+fmt(home)+' — share the driving, swap every ~1 h, coffee before you go.'; if(!swap) d3.fix=[['Driver swap','swap']]; d3.note=swap?'Driver swap set — two rested drivers share the dark return.':null; }
-    else { d3.color='green'; d3.note='Manageable return ~'+fmt(home)+'. Still no alcohol for the driver.'; }
-    out.push(d3);
     return out;
   }
 
@@ -198,7 +184,7 @@
     var fl=document.getElementById('feasline');
     if(worst&&worst.color==='red'){ fl.className='feasline warn'; fl.textContent='⚠️ '+worst.key+' risks the night — see the meter.'; }
     else if(worst){ fl.className='feasline warn'; fl.textContent='• '+worst.key+' is tight.'; }
-    else if(sel.anchor){ fl.className='feasline ok'; fl.textContent='✓ The night slot is protected.'; }
+    else if(sel.anchor){ fl.className='feasline ok'; fl.textContent='✓ Route fits the estimated night slot; confirm the museum time.'; }
     else fl.textContent='';
     document.querySelectorAll('#daymeter .fixbtn').forEach(function(b){ b.addEventListener('click', function(){ doFix(b.getAttribute('data-fix')); }); });
   }
@@ -206,9 +192,7 @@
     if(k==='dropStop') sel.mainStop='none';
     else if(k==='lightDay') sel.dayProgram='outdoor';
     else if(k==='goDirect'){ sel.routeStyle='direct'; }
-    else if(k==='swap') sel.returnSafety='driver-swap';
-    else if(k==='hotel') sel.returnSafety='emergency-hotel';
-    clearPreset(); render();
+    render();
   }
 
   /* ============================================================
@@ -227,7 +211,6 @@
     if(sel.mainStop==='taujenai') add('taujenai','Taujėnai Manor','Verify opening / private events / tickets', {sells:true});
     if(sel.mainStop==='mindunai'||sel.mainStop==='dubingiai') add('statepark','State-park visitor ticket (optional)','€0–1 · saugoma.lt if you use the system');
     if(sel.food==='moletai-cafe'||sel.food==='route-meal'||sel.mainStop==='moletai-food'||sel.mainStop==='ukmerge') add('restaurant','Restaurant / warm-up table','Reserve if a weekend');
-    if(sel.returnSafety==='emergency-hotel') add('hotel','Emergency nearby stay (standby)','Not in base € unless activated', {sells:false});
     return r;
   }
   function renderBookings(rows){
@@ -247,7 +230,7 @@
   /* ============================================================
      Progress + jump
      ============================================================ */
-  var KEY=[['seasonWindow','Season'],['dateStrategy','Date'],['anchor','Telescope'],['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Day program'],['food','Food'],['returnSafety','Drive home'],['weatherPlan','Weather plan-B']];
+  var KEY=[['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Day program'],['food','Food']];
   function renderProgress(){
     var keys=KEY.filter(function(k){ return k[0]!=='mainStop' || sel.routeStyle; });
     var made=keys.filter(function(k){ var v=sel[k[0]]; return TYPE[k[0]]==='multi'?v.length>0:!!v; });
@@ -283,7 +266,7 @@
     });
   }
   function renderLean(){
-    var groups=[['anchor','Telescope'],['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Day program'],['seasonWindow','Season']];
+    var groups=[['routeStyle','Route'],['mainStop','Main stop'],['dayProgram','Day program'],['food','Food']];
     var voters=people.length;
     var rows=groups.map(function(g){
       var tally=window.CREW.tally(people, function(p){ return p.plan[g[0]]?[p.plan[g[0]]]:[]; });
@@ -302,25 +285,6 @@
       clabel.insertAdjacentHTML('beforeend',' <span class="suggest-chip">★ Suggested</span><span class="whyi" tabindex="0">i<span class="pop">'+why+'</span></span>');
     });
   }
-
-  /* ============================================================
-     Presets
-     ============================================================ */
-  var PRESETS={
-    lean:{ seasonWindow:'oct', dateStrategy:'easy-saturday', anchor:'80cm', routeStyle:'direct', mainStop:'none', dayProgram:'outdoor', food:'picnic', returnSafety:'one-driver', weatherPlan:'strict', rituals:['thermos'] },
-    balanced:{ seasonWindow:'oct', dateStrategy:'best-sky', anchor:'80cm', routeStyle:'nature', mainStop:'mindunai', dayProgram:'deck', food:'moletai-cafe', returnSafety:'driver-swap', weatherPlan:'strict', rituals:['thermos','photo'] },
-    scenic:{ seasonWindow:'oct', dateStrategy:'best-sky', anchor:'80cm', routeStyle:'nature', mainStop:'dubingiai', dayProgram:'fulltour', food:'moletai-cafe', returnSafety:'driver-swap', weatherPlan:'strict', rituals:['thermos','photo','playlist'] },
-    culture:{ seasonWindow:'sept', dateStrategy:'easy-saturday', anchor:'80cm', routeStyle:'culture', mainStop:'rumsiskes', dayProgram:'deck', food:'route-meal', returnSafety:'driver-swap', weatherPlan:'strict', rituals:['thermos','bestthing'] }
-  };
-  var activePreset=null;
-  function clearPreset(){ activePreset=null; document.querySelectorAll('.preset').forEach(function(p){ p.classList.remove('active'); }); }
-  function applyPreset(name){
-    Object.keys(sel).forEach(function(g){ sel[g]=TYPE[g]==='multi'?[]:null; });
-    var P=PRESETS[name]; Object.keys(P).forEach(function(g){ if(g in sel) sel[g]=TYPE[g]==='multi'?P[g].slice():P[g]; });
-    render(); activePreset=name;
-    document.querySelectorAll('.preset').forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-preset')===name); });
-  }
-  document.querySelectorAll('.preset').forEach(function(b){ b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); }); });
 
   /* ---------- persistence ---------- */
   function persistTotals(total){ var p=WTC.load('wtc-observatory-plan',{})||{}; p.total=total; WTC.save('wtc-observatory-plan',p); }
