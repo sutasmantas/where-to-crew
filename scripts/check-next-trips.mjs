@@ -10,7 +10,8 @@ const trips = context.window.NEXT_TRIPS;
 
 const required = [
   'id', 'place', 'title', 'strap', 'unique', 'image', 'imageAlt', 'credit',
-  'creditUrl', 'estimate', 'budget', 'core', 'duration', 'coverage', 'timing', 'season',
+  'creditUrl', 'estimate', 'budget', 'core', 'duration', 'coverage', 'usableDays',
+  'handsOnDays', 'timing', 'season',
   'travel', 'intensity', 'balance', 'risk', 'coreIncludes', 'optional',
   'plan', 'basis', 'sources'
 ];
@@ -29,6 +30,11 @@ const seen = new Set();
   const statedDays = Number(String(trip.duration).match(/^\d+/)?.[0]);
   const plannedDays = new Set((trip.plan || []).flatMap((step) => [...String(step).matchAll(/Day (\d+)/g)].map((match) => Number(match[1]))));
   if (statedDays < 4) errors.push(`${trip.id}: trips must last at least four days`);
+  if (!Number.isInteger(trip.usableDays) || !Number.isInteger(trip.handsOnDays) || trip.usableDays < 2 || trip.handsOnDays > trip.usableDays) {
+    errors.push(`${trip.id}: invalid usable-day or hands-on-day count`);
+  } else if (trip.handsOnDays < Math.ceil(trip.usableDays * 0.6)) {
+    errors.push(`${trip.id}: hands-on activities must cover at least 60% of non-travel days`);
+  }
   if (!statedDays || plannedDays.size !== statedDays || Math.max(...plannedDays) !== statedDays) {
     errors.push(`${trip.id}: day-by-day plan does not account for all ${statedDays || '?'} stated days`);
   }
