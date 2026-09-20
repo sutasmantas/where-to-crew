@@ -31,15 +31,15 @@
   <div class="wrap">
     <p class="eyebrow">The trip after the Observatory · shared crew poll</p>
     <h1 class="display">Choose the next adventure.</h1>
-    <p class="lede">Eleven ideas, checked against current provider prices and realistic timings. Pick one favorite, then mark every other trip you would genuinely join. Your saved vote appears for everyone.</p>
+    <p class="lede"><span id="heroCandidateCount">Fifteen</span> ideas, ordered from lower to higher estimated cost and checked against current provider prices, real activity time and recovery. Pick one favorite, then mark every other trip you would genuinely join. Your saved vote appears for everyone.</p>
     <div class="hero-actions">
-      <a class="btn btn--solid" href="#choices"><span class="fill"></span><span class="lbl">Compare all 11 ↓</span></a>
+      <a class="btn btn--solid" href="#choices"><span class="fill"></span><span class="lbl" id="compareCount">Compare all 15 ↓</span></a>
       <a class="btn" href="#results"><span class="fill"></span><span class="lbl">See crew result</span></a>
     </div>
     <div class="research-note" aria-label="How to use the comparison">
       <div><b>Whole-trip estimate</b><span>A planning range per person for four adults starting in Kaunas: activity, travel, stay and basic food.</span></div>
-      <div><b>Checked core price</b><span>The provider price found for the defining activity. Use its linked source when it is time to book.</span></div>
-      <div><b>Decision signals</b><span>Season, travel effort, physical demand and the main booking risk reveal the real tradeoffs.</span></div>
+      <div><b>Checked core price</b><span>The provider price for the defining activities. Each card separates that core from extras triggered by your choices.</span></div>
+      <div><b>Decision signals</b><span>Why the place is unique, real activity time, recovery, travel effort and the main booking risk expose the tradeoffs.</span></div>
     </div>
   </div>
 </header>
@@ -53,7 +53,7 @@
         <button class="filter" type="button" data-filter="600to899">€600–899</button>
         <button class="filter" type="button" data-filter="900plus">€900+</button>
       </div>
-      <span class="toolbar-count" id="candidateCount">11 choices</span>
+      <span class="toolbar-count" id="candidateCount">15 choices</span>
     </div>
 
     <div class="trip-grid" id="tripGrid" aria-live="polite"></div>
@@ -83,6 +83,8 @@
       <p>Research checked on <b>20 September 2026</b>. Core prices and operating details link to the provider or official destination source on each card. Whole-trip totals are honest planning estimates, because flights, rooms, exchange rates and availability move with the exact dates. Once the vote produces a winner, the next step is to choose a date window and replace that winner’s estimate with live bookable transport and accommodation.</p>
       <ul>
         <li>Estimates assume four adults sharing car, boat, cabin or rooms where the product allows it.</li>
+        <li>Lower-cost nearby choices appear first. A distant trip needs several connected hands-on activities or a multi-day skill course.</li>
+        <li>Every card separates the defining core from conditional extras, and shows how active days are balanced with recovery.</li>
         <li>No booking is made by this page. Evidence links open the actual provider.</li>
         <li>The poll uses its own <code>next</code> data namespace, so votes cannot enter the Observatory or Poland records.</li>
       </ul>
