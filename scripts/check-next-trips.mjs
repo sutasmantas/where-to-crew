@@ -31,7 +31,7 @@ const seen = new Set();
     if (!Array.isArray(entry) || !entry[0] || !/^https:\/\//.test(entry[1] || '')) errors.push(`${trip.id}: invalid source entry`);
   });
   if (!/^https:\/\//.test(trip.creditUrl || '')) errors.push(`${trip.id}: invalid photo credit link`);
-  const imagePath = path.resolve(root, 'next', trip.image);
+  const imagePath = path.resolve(root, 'next', trip.image.split('?')[0]);
   if (!imagePath.startsWith(root + path.sep) || !fs.existsSync(imagePath)) errors.push(`${trip.id}: missing local image ${trip.image}`);
 });
 

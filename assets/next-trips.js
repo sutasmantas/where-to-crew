@@ -76,7 +76,7 @@ window.NEXT_TRIPS = [
     id:'slovenia', place:'Slovenia', title:'Three underground worlds',
     strap:'Kayak beneath Mount Peca, cycle through the mine and cross Križna’s underground lake by boat.',
     unique:'Few trips combine a flooded mine by kayak, another mine route by bicycle and a natural cave-lake crossing in one region.',
-    image:'../assets/img/next/slovenia.jpg', imageAlt:'Kayakers paddling through a turquoise flooded passage beneath Mount Peca',
+    image:'../assets/img/next/slovenia.jpg?v=2', imageAlt:'Kayakers paddling through a turquoise flooded passage beneath Mount Peca',
     credit:'Koroška Tourism · official destination photo', creditUrl:'https://www.koroska.si/en/Experience/Active/Mysterious-peca-underground',
     estimate:'€380–560', budget:470, core:'€115–160 for the three core activities',
     duration:'5–6 days', timing:'Kayak 4–5 h · bike ~2.5 h · cave 1–4 h', season:'April–October', travel:'Long shared drive from Kaunas', intensity:'Moderate', balance:'One substantial activity daily; road-trip recovery between regions', risk:'Only four visitors fit the long Križna water tour',
