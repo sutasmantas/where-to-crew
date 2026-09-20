@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#08100d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+<title>Choose Our Next Trip — Where To, Crew?</title>
+<link rel="stylesheet" href="../assets/motion.css">
+<link rel="stylesheet" href="../assets/observatory.css">
+<link rel="stylesheet" href="../assets/next-trip.css">
+</head>
+<body class="theme-observatory next-page" data-screen-label="Next trip poll">
+<div class="cosmos" aria-hidden="true"><div class="band"></div><div class="haze"></div></div>
+<svg class="grain" aria-hidden="true"><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#grain)"/></svg>
+
+<nav class="nav">
+  <a class="brand" href="../index.html">
+    <svg viewBox="0 0 30 18"><path class="bl" d="M2,14 C9,3 13,3 16,9 C19,15 23,15 28,5"/><circle class="bd" cx="2" cy="14" r="2.4"/><circle class="bd" cx="28" cy="5" r="2.4"/></svg>
+    Where To, Crew?
+  </a>
+  <div class="nav-links">
+    <a href="#choices" class="underline hide-sm">Compare</a>
+    <a href="#results" class="underline hide-sm">Results</a>
+    <button class="btn" type="button" id="sharePoll"><span class="fill"></span><span class="lbl">Share poll</span></button>
+  </div>
+</nav>
+
+<header class="poll-hero">
+  <div class="wrap">
+    <p class="eyebrow">The trip after the Observatory · shared crew poll</p>
+    <h1 class="display">Choose the next adventure.</h1>
+    <p class="lede">Eleven ideas, checked against current provider prices and realistic timings. Pick one favorite, then mark every other trip you would genuinely join. Your saved vote appears for everyone.</p>
+    <div class="hero-actions">
+      <a class="btn btn--solid" href="#choices"><span class="fill"></span><span class="lbl">Compare all 11 ↓</span></a>
+      <a class="btn" href="#results"><span class="fill"></span><span class="lbl">See crew result</span></a>
+    </div>
+    <div class="research-note" aria-label="How to use the comparison">
+      <div><b>Whole-trip estimate</b><span>A planning range per person for four adults starting in Kaunas: activity, travel, stay and basic food.</span></div>
+      <div><b>Checked core price</b><span>The provider price found for the defining activity. Use its linked source when it is time to book.</span></div>
+      <div><b>Decision signals</b><span>Season, travel effort, physical demand and the main booking risk reveal the real tradeoffs.</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="poll-main" id="choices">
+  <div class="wrap">
+    <div class="poll-toolbar" aria-label="Filter trip ideas">
+      <div class="filters">
+        <button class="filter on" type="button" data-filter="all">All</button>
+        <button class="filter" type="button" data-filter="under600">Under €600</button>
+        <button class="filter" type="button" data-filter="600to899">€600–899</button>
+        <button class="filter" type="button" data-filter="900plus">€900+</button>
+      </div>
+      <span class="toolbar-count" id="candidateCount">11 choices</span>
+    </div>
+
+    <div class="trip-grid" id="tripGrid" aria-live="polite"></div>
+
+    <section class="vote-panel" id="results">
+      <form class="vote-form" id="voteForm">
+        <p class="eyebrow">Your vote</p>
+        <h2>Save your choices.</h2>
+        <p>One favorite is required. “Would join” can include as many acceptable trips as you like.</p>
+        <label class="field"><span>Your name</span><input id="voterName" name="name" required maxlength="80" autocomplete="name" placeholder="Mantas"></label>
+        <label class="field"><span>Anything the crew should know? · optional</span><textarea id="voterNote" maxlength="500" placeholder="For example: November works, but I need a private room."></textarea></label>
+        <div class="vote-summary" id="voteSummary">Pick one favorite. You can also mark every other trip you would actually join.</div>
+        <button class="btn btn--solid save-vote" type="submit"><span class="fill"></span><span class="lbl">Save my vote for everyone</span></button>
+        <div class="save-status" id="saveStatus" role="status"></div>
+      </form>
+
+      <div class="results-panel">
+        <div class="results-head"><div><p class="eyebrow">Live crew result</p><h2>Where the crew overlaps.</h2></div><span class="toolbar-count" id="voterCount">0 voters</span></div>
+        <p class="intro">A favorite counts for two points and every “would join” counts for one. This rewards excitement while keeping a broadly acceptable trip visible.</p>
+        <div class="results-list" id="resultsList"><div class="empty-results">Loading shared votes…</div></div>
+        <div class="crew-notes" id="crewNotes"></div>
+      </div>
+    </section>
+
+    <section class="method">
+      <h2>What is checked, and what still depends on dates</h2>
+      <p>Research checked on <b>20 September 2026</b>. Core prices and operating details link to the provider or official destination source on each card. Whole-trip totals are honest planning estimates, because flights, rooms, exchange rates and availability move with the exact dates. Once the vote produces a winner, the next step is to choose a date window and replace that winner’s estimate with live bookable transport and accommodation.</p>
+      <ul>
+        <li>Estimates assume four adults sharing car, boat, cabin or rooms where the product allows it.</li>
+        <li>No booking is made by this page. Evidence links open the actual provider.</li>
+        <li>The poll uses its own <code>next</code> data namespace, so votes cannot enter the Observatory or Poland records.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="poll-footer"><div class="wrap"><a class="brand" href="../index.html">Where To, Crew?</a> · Researched choices for friends, with shared editable votes.</div></footer>
+
+<script src="../assets/next-trips.js"></script>
+<script src="../assets/config.js"></script>
+<script src="../assets/store.js"></script>
+<script src="../assets/next-poll.js"></script>
+</body>
+</html>

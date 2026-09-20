@@ -11,7 +11,7 @@
    silent: assets/store.js falls back to 'poland', so an un-namespaced trip
    would write its sign-ups straight into the Poland data. */
 (function(){
-  var TRIPS  = { observatory:1, poland:1 };   // every trip folder that has its own bucket
+  var TRIPS  = { observatory:1, poland:1, next:1 };   // every trip folder that has its own bucket
   var ACTIVE = 'observatory';                 // fallback for root pages (index/emergency/car-games)
   var folder = location.pathname.replace(/\/[^\/]*$/, '').split('/').pop() || '';
   window.WTC_CFG = {
