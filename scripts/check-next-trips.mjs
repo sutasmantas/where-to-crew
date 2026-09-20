@@ -10,7 +10,7 @@ const trips = context.window.NEXT_TRIPS;
 
 const required = [
   'id', 'place', 'title', 'strap', 'unique', 'image', 'imageAlt', 'credit',
-  'creditUrl', 'estimate', 'budget', 'core', 'duration', 'timing', 'season',
+  'creditUrl', 'estimate', 'budget', 'core', 'duration', 'coverage', 'timing', 'season',
   'travel', 'intensity', 'balance', 'risk', 'coreIncludes', 'optional',
   'plan', 'basis', 'sources'
 ];
@@ -26,6 +26,12 @@ const seen = new Set();
   seen.add(trip.id);
   if (index && trips[index - 1].budget > trip.budget) errors.push(`${trip.id}: choices are not ordered by budget`);
   if (!Array.isArray(trip.plan) || trip.plan.length < 3) errors.push(`${trip.id}: activity plan needs at least 3 steps`);
+  const statedDays = Number(String(trip.duration).match(/^\d+/)?.[0]);
+  const plannedDays = new Set((trip.plan || []).flatMap((step) => [...String(step).matchAll(/Day (\d+)/g)].map((match) => Number(match[1]))));
+  if (statedDays < 4) errors.push(`${trip.id}: trips must last at least four days`);
+  if (!statedDays || plannedDays.size !== statedDays || Math.max(...plannedDays) !== statedDays) {
+    errors.push(`${trip.id}: day-by-day plan does not account for all ${statedDays || '?'} stated days`);
+  }
   if (!Array.isArray(trip.sources) || trip.sources.length < 2) errors.push(`${trip.id}: needs at least 2 evidence or booking links`);
   (trip.sources || []).forEach((entry) => {
     if (!Array.isArray(entry) || !entry[0] || !/^https:\/\//.test(entry[1] || '')) errors.push(`${trip.id}: invalid source entry`);

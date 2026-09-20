@@ -14,7 +14,7 @@ body.next-page{min-height:100vh;background:#08100d;color:var(--paper);}
 .research-note span{color:var(--paper-soft);font-size:.78rem;line-height:1.45}
 .poll-main{padding:0 var(--pad) 90px}
 .poll-main>.wrap{max-width:1280px}
-.poll-toolbar{position:sticky;top:74px;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;margin-bottom:24px;background:rgba(7,13,11,.92);border:1px solid var(--line);border-radius:12px;backdrop-filter:blur(12px)}
+.poll-toolbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;margin-bottom:24px;background:rgba(7,13,11,.92);border:1px solid var(--line);border-radius:12px}
 .filters{display:flex;gap:7px;flex-wrap:wrap}
 .filter{border:1px solid var(--line);border-radius:100px;background:transparent;color:var(--paper-soft);padding:.65em 1em;font:600 .68rem var(--mono);letter-spacing:.04em;cursor:pointer}
 .filter:hover,.filter.on{border-color:var(--sage);color:var(--forest-3);background:var(--sage)}
