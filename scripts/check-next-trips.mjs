@@ -26,6 +26,12 @@ const seen = new Set();
   if (seen.has(trip.id)) errors.push(`${trip.id}: duplicate id`);
   seen.add(trip.id);
   if (index && trips[index - 1].budget > trip.budget) errors.push(`${trip.id}: choices are not ordered by budget`);
+  const estimateValues = String(trip.estimate).match(/\d[\d,]*/g)?.map((value) => Number(value.replaceAll(',', ''))) || [];
+  if (estimateValues.length !== 2 || estimateValues.some((value) => !Number.isFinite(value)) || estimateValues[0] > estimateValues[1]) {
+    errors.push(`${trip.id}: estimate must be a valid low–high euro range`);
+  } else if (trip.budget < estimateValues[0] || trip.budget > estimateValues[1]) {
+    errors.push(`${trip.id}: budget midpoint must sit inside its estimate range`);
+  }
   if (!Array.isArray(trip.plan) || trip.plan.length < 3) errors.push(`${trip.id}: activity plan needs at least 3 steps`);
   const statedDays = Number(String(trip.duration).match(/^\d+/)?.[0]);
   const plannedDays = new Set((trip.plan || []).flatMap((step) => [...String(step).matchAll(/Day (\d+)/g)].map((match) => Number(match[1]))));
@@ -58,8 +64,8 @@ if (errors.length) {
 }
 
 const buckets = {
-  under600: trips.filter((t) => t.budget < 600).length,
-  from600to899: trips.filter((t) => t.budget >= 600 && t.budget < 900).length,
-  over900: trips.filter((t) => t.budget >= 900).length
+  under600: trips.filter((t) => Number(t.estimate.match(/\d[\d,]*/g).at(-1).replaceAll(',', '')) < 600).length,
+  from600to899: trips.filter((t) => { const max = Number(t.estimate.match(/\d[\d,]*/g).at(-1).replaceAll(',', '')); return max >= 600 && max < 900; }).length,
+  over900: trips.filter((t) => Number(t.estimate.match(/\d[\d,]*/g).at(-1).replaceAll(',', '')) >= 900).length
 };
 console.log(JSON.stringify({ choices: trips.length, uniqueIds: seen.size, buckets, checkedFieldsPerChoice: required.length }, null, 2));

@@ -1,7 +1,21 @@
-/* Researched on 20 September 2026. Provider prices are separated from whole-trip
+/* Researched on 27 September 2026. Provider prices are separated from whole-trip
    planning ranges for four adults starting in Kaunas. Choices are deliberately
    ordered from lower to higher estimated total cost. */
 window.NEXT_TRIPS = [
+  {
+    id:'nida-orienteering', place:'Nida, Lithuania', title:'Four days of dune orienteering',
+    strap:'Train once, then race three different map courses through Curonian Spit forest, settlements and open dunes.',
+    unique:'The 2027 event uses the Curonian Spit as the puzzle: coastal forest, micro-dune relief, beach dunes and changing visibility rather than a generic running route.',
+    image:'../assets/img/next/nida.jpg?v=1', imageAlt:'Orienteer approaching a control above the Curonian Spit coast during the Nida event',
+    credit:'FS Forest Stadiums · official 2027 event artwork', creditUrl:'https://uzjudek.lt/events/nida-3-days-2027-neringa-2027-06-10',
+    estimate:'€160–280', budget:220, core:'€64 planning figure: 2026 early entry €50 + prologue €8 + SI rental €6',
+    usableDays:4, handsOnDays:4, duration:'4 days / 3 nights', coverage:'The open training and all three race days are dated for 10–13 June 2027; the drive from Kaunas fits before the evening prologue and after the final awards.', timing:'Prologue + 3 timed courses; 2026 winning times were 25–50 min', season:'10–13 June 2027', travel:'Shared car Kaunas → Nida', intensity:'Moderate in short blocks', balance:'One course daily, leaving the rest of each day for recovery', risk:'The 2027 entry fee is not published yet; choose the newcomer class if the crew lacks race experience',
+    coreIncludes:'A conservative placeholder based on the official 2026 adult early fee, the separate prologue and three days of SI-card rental. The 2027 event and registration page are already live.',
+    optional:'The estimate allows up to €80 for 2027 registration. If the published fee exceeds that ceiling, recalculate before paying. Staying in Klaipėda is cheaper but adds the ferry and a daily drive.',
+    plan:['Day 1 — drive from Kaunas, cross to the Spit, check in and complete the 17:00 open training / prologue','Day 2 — race stage 1; recover on the coast after the course','Day 3 — race stage 2 on a different Curonian Spit map; keep the afternoon easy','Day 4 — race stage 3, attend the awards and drive home'],
+    basis:'The 2027 organizer confirms an open prologue on 10 June and three race days on 11–13 June. The latest full bulletin charged €50 early for three adult stages, €8 for training and €2/day for an SI card. The range adds shared fuel, ferry/entry, three nights and food.',
+    sources:[['2027 dates & direct registration','https://uzjudek.lt/events/nida-3-days-2027-neringa-2027-06-10'],['2026 official bulletin: course lengths, newcomer class & fees','https://foreststadiums.lt/nida_2026_3days_eng/'],['2027 registration page','https://dbsportas.lt/lt/varz/2027003']]
+  },
   {
     id:'sweden', place:'Sweden', title:'Archipelago kayak expedition',
     strap:'Night ferry, your own car and two self-guided paddling stages among the sheltered Blekinge islands.',
@@ -15,6 +29,34 @@ window.NEXT_TRIPS = [
     plan:['Day 1 — board the overnight Klaipėda → Karlshamn ferry','Day 2 — collect kayaks, take the safety briefing and paddle 3–4 sheltered hours to camp/cabin','Day 3 — island exploration, swim and weather-flex recovery; make only a short optional move if conditions are easy','Day 4 — second 3–4 hour paddling stage, return the gear and board the ferry','Day 5 — arrive home from the overnight ferry'],
     basis:'DFDS starts at €61 each way per person with a car when four share a cabin. A three-day single kayak is SEK 1,050. The estimate adds shared fuel, simple camps/cabins and food.',
     sources:[['DFDS fare & schedule','https://www.dfds.com/nb-no/ferge/batreise/ferge-sverige/klaipeda-karlshamn'],['2026 kayak prices','https://kajakparadiset.se/en/rent-kayak/kayak-rent-prices'],['Blekinge paddling guide','https://www.visitblekinge.se/en/canoeing-and-kayaking'],['Sweden access rules','https://visitsweden.com/what-to-do/nature-outdoors/nature/sustainable-and-rural-tourism/the-right-of-public-access/']]
+  },
+  {
+    id:'soomaa', place:'Soomaa, Estonia', title:'Bog and river skills weekend',
+    strap:'Cross the bog on bogshoes, paddle its rivers by canoe and return at dusk for the beaver-water route.',
+    unique:'Soomaa is built around waterlogged bog country and a living dugout-canoe culture; the trip moves through the wetland instead of observing it from a boardwalk.',
+    image:'../assets/img/next/soomaa.jpg?v=1', imageAlt:'Canoe paddler travelling along a quiet forest river in Soomaa',
+    credit:'Soomaa.com · official provider photo', creditUrl:'https://soomaa.com/wilderness-day-trip/',
+    estimate:'€300–460', budget:380, core:'€195: wilderness day €110 + canoe €25 + beaver canoe €60',
+    usableDays:2, handsOnDays:2, duration:'4 days / 3 nights', coverage:'Two drive days surround two substantial wetland days: one guided bog-and-canoe day and one self-guided plus evening canoe progression.', timing:'Wilderness day 5–6 h · canoe 2–3 h · beaver route 2–3 h', season:'May–October', travel:'Shared car from Kaunas', intensity:'Moderate', balance:'The first day alternates walking and paddling; the second has a long rest between canoe sessions', risk:'Water level and weather change routes; confirm all three departures before reserving rooms',
+    coreIncludes:'A guided wilderness day with bogshoe walk, canoe and lunch; one self-guided 2–3 hour canoe rental; and the 2–3 hour evening beaver canoe program.',
+    optional:'A private dugout-canoe workshop is culturally stronger but has no public price, so it is excluded. Add it only after receiving a written quote and remove one normal canoe block.',
+    plan:['Day 1 — drive Kaunas → Soomaa, check in and rest','Day 2 — complete the 5–6 hour wilderness day: bogshoes, bog pools, canoe and outdoor lunch','Day 3 — take a 2–3 hour self-guided canoe route, rest through the afternoon, then join the 2–3 hour evening beaver canoe','Day 4 — slow breakfast and drive home'],
+    basis:'Published prices are €110 for the combined wilderness day, €25 for a self-guided canoe and €60 for the beaver canoe. The total adds shared fuel, three simple nights and food outside the included wilderness lunch.',
+    sources:[['Wilderness day price, duration & booking','https://soomaa.com/wilderness-day-trip/'],['Self-guided canoe price','https://www.soomaapuhkekyla.com/en/matkadsoomaal/kanuumatkad-soomaal'],['Official beaver canoe price & duration','https://visitsoomaa.ee/en/api-objekt/soomaa-com-beaver-safari-and-a-canoe-trip-in-soomaa-in-the-evening/'],['UNESCO dugout-canoe context','https://haabjakoda.ee/en/home/']]
+  },
+  {
+    id:'estonia-weaving', place:'Lake Peipus, Estonia', title:'Three-day loom weaving camp',
+    strap:'Four friends take over a farm workshop, learn the loom from first setup to simple patterns and leave with an actual skill.',
+    unique:'This is a private English-language camp sized exactly for the crew, taught in Estonia’s Onion Route textile country with the loom, materials, farm meals and beds together.',
+    image:'../assets/img/next/weaving.jpg?v=1', imageAlt:'Estonian weaver working at a large wooden loom',
+    credit:'Anastasia Lakhtikova · CC BY-SA 4.0', creditUrl:'https://commons.wikimedia.org/wiki/File:Weaving_demonstration.jpg',
+    estimate:'€330–450', budget:390, core:'€250 including 3 training days, materials, meals and 2 nights',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'One drive day each way plus the complete three-day residential weaving camp; no sightseeing days are needed to reach the minimum.', timing:'3 full workshop days', season:'Any time by arrangement', travel:'Shared car Kaunas → Torila', intensity:'Low physical load', balance:'Long seated craft blocks with farm meals and evenings free', risk:'Exactly four participants and at least two weeks advance contact; agree dates before booking the extra night',
+    coreIncludes:'Weaving instruction, necessary materials, three lunches, two dinners, two breakfasts and two nights at Turgi Handicraft Farm.',
+    optional:'One simple room is needed before the camp because the drive is too long to combine safely with the first full workshop day. Any premium room choice changes only the whole-trip total.',
+    plan:['Day 1 — drive from Kaunas to the Lake Peipus area and sleep near Torila','Day 2 — camp day 1: loom basics, materials, warp and first controlled passes','Day 3 — camp day 2: build a simple pattern and correct tension with the instructor','Day 4 — camp day 3: finish the piece and practise working independently','Day 5 — drive home'],
+    basis:'The published €250 price is for exactly four people and already covers the expensive parts: training, materials, most camp meals and two nights. The range adds shared driving, one pre-camp night and remaining food.',
+    sources:[['Three-day camp, inclusions & contact','https://www.sibulatee.ee/en/offers/weaving-workshops-master-the-art-in-3-days/'],['Turgi Handicraft Farm contact','https://www.facebook.com/turgitalu/']]
   },
   {
     id:'belgium-space', place:'Belgian Ardennes', title:'Astronaut day and river mission',
@@ -43,6 +85,34 @@ window.NEXT_TRIPS = [
     plan:['Day 1 — drive south with one overnight split','Day 2 — complete the 4–5 hour Peca underground kayak expedition','Day 3 — ride the Peca underground cycling route, then transfer toward Križna','Day 4 — take the chosen Križna cave boat route; quiet Ljubljana or lake evening','Day 5 — drive home with meal and rest stops'],
     basis:'Peca kayaking is €55 off peak or €75 June–September; cycling is €45. Križna is €13–15 short or about €60 for the limited long route. Estimate adds car costs, rooms and meals.',
     sources:[['Official kayak experience','https://www.slovenia.info/en/things-to-do/slovenia-unique-experiences/37-kayaking-adventure-through-the-underground-of-mount-peca'],['Peca 2026 price list','https://www.podzemljepece.com/?page_id=1519'],['Križna short tour','https://notranjski-park.si/en/plan-your-trip/experiences/visit-krizna-cave'],['Križna long tour details','https://www.exploreinslovenia.com/listings/krizna-cave/']]
+  },
+  {
+    id:'vjosa', place:'Përmet, Albania', title:'Three ways down the Vjosa',
+    strap:'Progress from a full rafting run to body-level hydrospeed and a canyon route in Europe’s first Wild River National Park.',
+    unique:'The Vjosa remains a free-flowing wild-river system; this plan learns three different water techniques instead of treating the river as scenery.',
+    image:'../assets/img/next/vjosa.jpg?v=1', imageAlt:'Two equipped paddlers celebrating after a Vjosa river run near Përmet',
+    credit:'Rafting in Përmet · official provider photo', creditUrl:'https://raftinginpermet.com/',
+    estimate:'€480–590', budget:535, core:'€160: full-day rafting €60 + hydrospeed €60 + canyoning €40',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'Two flight/transfer days and three separate river-skill days in Përmet.', timing:'Full-day raft · hydrospeed session · canyoning day', season:'May–September', travel:'Vilnius flight + shared Tirana transfer', intensity:'Moderate–high', balance:'The hardest full-day blocks sit around the shorter hydrospeed session', risk:'This stays under €600 only with a return flight at or below €220 and shared ground transfer at or below €50 pp',
+    coreIncludes:'Provider prices for the extreme full-day rafting format, hydrospeed and Lengarica canyoning; confirm technical equipment, lunch and exact duration in one written booking before paying.',
+    optional:'The €220 return-flight and €50 ground-transfer ceilings are hard triggers. If either is exceeded, change dates or reject this budget version rather than hiding the overrun.',
+    plan:['Day 1 — fly to Tirana and share the transfer to Përmet','Day 2 — full-day Vjosa rafting: safety, paddle commands and the longer river run','Day 3 — hydrospeed session using fins and body position; keep the rest of the day for recovery','Day 4 — Lengarica canyoning through water, rock and short technical sections','Day 5 — transfer to Tirana and fly home'],
+    basis:'The activity menu totals €160. A live airBaltic example starts at €108 one way from Vilnius; the range therefore requires return airfare no higher than €220, then allows €50 transfer, €80–120 shared rooms, and €60–90 food.',
+    sources:[['Përmet activity prices & inquiry','https://raftinginpermet.com/'],['Vjosa rafting schedule & €35 standard option','https://vjosarafting.com/'],['Official Albania rafting overview','https://albaniatourism.al/tour_category/explore-by-interest/nature-adventure/rafting-kayaking/'],['Current Vilnius–Tirana fare example','https://www.airbaltic.com/en-lt/flight-deals/flights-from-vilnius-to-tirana']]
+  },
+  {
+    id:'croatia-skipper', place:'Vodice, Croatia', title:'Three-day skipper course',
+    strap:'Live aboard for four nights while the crew learns to steer, trim sails, navigate, anchor and take charge of a yacht.',
+    unique:'The Adriatic is the classroom and the accommodation: three connected days turn the crew from passengers into people who can handle a yacht in familiar coastal water.',
+    image:'../assets/img/next/croatia.jpg?v=1', imageAlt:'Sailing yachts moored in a Croatian Adriatic marina',
+    credit:'Matti Blume · CC BY-SA 4.0', creditUrl:'https://commons.wikimedia.org/wiki/File:Harbour,_Zadar_(P1080744).jpg',
+    estimate:'€500–590', budget:545, core:'€375 for 3 course days + 4 nights aboard',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'Arrival and departure wrap the included four nights aboard and three consecutive practical course days.', timing:'3 practical days; Sunday–Tuesday or Wednesday–Friday', season:'April–October by confirmed course date', travel:'Direct Kaunas → Zadar flight + transfer to Vodice', intensity:'Low–moderate', balance:'Active sailing days include shared roles and nights aboard; effort rotates across the crew', risk:'The sub-€600 version requires return flights at or below €100 and a course date that matches the seasonal Kaunas route',
+    coreIncludes:'Three practical skipper-course days plus four marina nights aboard with bedding and towels. The course teaches navigation, meteorology, seamanship and yacht handling.',
+    optional:'The separate Croatian licence exam is not included or required for this training trip. Food, transfer and any exam become add-ons only if the crew deliberately selects them.',
+    plan:['Day 1 — fly Kaunas → Zadar, transfer to Vodice and board for the first included night','Day 2 — course day 1: safety, steering, sail handling and basic manoeuvres','Day 3 — course day 2: navigation, pilotage, anchoring and crew coordination','Day 4 — course day 3: take-charge practice, docking and final skills review','Day 5 — leave the boat, transfer to Zadar and fly home'],
+    basis:'The provider lists €375 and includes four nights aboard. The whole-trip range reserves €100 return airfare, €35–50 shared transfers and €65–90 food. Ryanair currently advertises the direct Kaunas–Zadar route from €14.99 one way, but exact course-aligned dates must be checked together.',
+    sources:[['Course price, contents, nights & booking','https://www.go4sailing.com/en/skipper-course'],['Direct Kaunas–Zadar route & fare search','https://www.ryanair.com/flights/gb/en/flights-from-kaunas-to-zadar'],['Zadar Airport','https://zadar-airport.hr/en/homepage/']]
   },
   {
     id:'germany', place:'Germany', title:'Become a houseboat crew',

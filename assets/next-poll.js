@@ -13,9 +13,13 @@
   function esc(v){ return String(v==null?'':v).replace(/[&<>'"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]; }); }
   function url(v){ return /^https:\/\//.test(v||'') ? esc(v) : '#'; }
   function tripById(id){ return trips.find(function(t){ return t.id===id; }); }
+  function estimateMax(t){
+    var values=String(t.estimate||'').match(/\d[\d,]*/g)||[];
+    return Number(String(values[values.length-1]||t.budget).replace(/,/g,''));
+  }
 
   function card(t){
-    return '<article class="trip-card" data-trip="'+esc(t.id)+'" data-budget="'+t.budget+'">'+
+    return '<article class="trip-card" data-trip="'+esc(t.id)+'" data-budget="'+t.budget+'" data-budget-max="'+estimateMax(t)+'">'+
       '<div class="trip-photo"><img src="'+esc(t.image)+'" alt="'+esc(t.imageAlt)+'" loading="lazy" width="900" height="600">'+
       '<div class="photo-shade"></div><span class="place-tag">'+esc(t.place)+'</span><a class="photo-credit" href="'+url(t.creditUrl)+'" target="_blank" rel="noopener">'+esc(t.credit)+' ↗</a></div>'+
       '<div class="trip-body"><h2 class="trip-title">'+esc(t.title)+'</h2><p class="trip-strap">'+esc(t.strap)+'</p><div class="unique-case"><span>Why this earns the journey</span>'+esc(t.unique)+'</div>'+
@@ -87,7 +91,7 @@
 
   document.querySelectorAll('.filter').forEach(function(btn){btn.addEventListener('click',function(){
     document.querySelectorAll('.filter').forEach(function(b){b.classList.toggle('on',b===btn);}); var f=btn.dataset.filter,count=0;
-    document.querySelectorAll('.trip-card').forEach(function(card){var b=Number(card.dataset.budget),show=f==='all'||(f==='under600'&&b<600)||(f==='600to899'&&b>=600&&b<900)||(f==='900plus'&&b>=900);card.classList.toggle('hidden',!show);if(show)count++;});
+    document.querySelectorAll('.trip-card').forEach(function(card){var b=Number(card.dataset.budgetMax),show=f==='all'||(f==='under600'&&b<600)||(f==='600to899'&&b>=600&&b<900)||(f==='900plus'&&b>=900);card.classList.toggle('hidden',!show);if(show)count++;});
     document.getElementById('candidateCount').textContent=count+' '+(count===1?'choice':'choices');
   });});
 
