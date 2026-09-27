@@ -32,21 +32,6 @@ window.NEXT_TRIPS = [
     sources:[['2026 dates and 50+ venue program','https://crystalvalley.cz/en/akce-cv/vikend-kristaloveho-udoli'],['G&B Beads CZK 50 making workshop','https://crystalvalley.cz/en/videt/g-amp-b-beads-muzeum-vyroby-koralku'],['Železný Brod glass-school try-it-yourself program','https://crystalvalley.cz/en/videt/supss-zelezny-brod'],['25 Sep ECB exchange rates','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']]
   },
   {
-    id:'tatra-sleds', place:'High Tatras, Slovakia', title:'Mountain-sled descent circuit',
-    strap:'Ride the funicular or gondola up, then steer repeated 2.5 km descents on two separate mountain tracks by day and after dark.',
-    unique:'The activity is the mountain descent itself: two lift-served forest sled tracks, with Hrebienok adding a fully lit night session instead of a token amusement-park run.',
-    image:'../assets/img/next/tatras-hero.jpg?v=1', imageAlt:'Two riders descending the snowy Hrebienok mountain sled track with High Tatra peaks behind them',
-    credit:'Marek Hajkovský / Vysoké Tatry · official resort photo', creditUrl:'https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok',
-    detailImage:'../assets/img/next/tatras-detail.jpg?v=1', detailImageAlt:'Friends on sledges at night on the illuminated Hrebienok track', detailCredit:'Marek Hajkovský / Vysoké Tatry · official resort photo', detailCreditUrl:'https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok',
-    estimate:'€240–410', budget:325, core:'€98 planning figure: Hrebienok 4 h €25 + night with sledge €31 + Bachledka 4 h pass €22 + sledge €20',
-    usableDays:2, handsOnDays:2, duration:'4 days / 3 nights', coverage:'Two road days surround two lift-served sled days. The first combines day and night Hrebienok runs; the second uses Bachledka’s different 2.5 km forest descent.', timing:'Hrebienok 4 h day + 2 h night · Bachledka 4 h', season:'Late December 2026–March 2027, only while both tracks report open', travel:'Shared car Kaunas → Starý Smokovec', intensity:'Low–moderate', balance:'Repeated short descents with lift recovery; sleep between the double Hrebienok block and Bachledka', risk:'Snow controls the product. Do not buy non-refundable rooms until both live track-status pages confirm operation',
-    coreIncludes:'A four-hour Hrebienok day ticket, the two-hour Hrebienok night ticket with sledge, and the latest published four-hour Bachledka sled pass plus rental.',
-    optional:'Own sledges reduce rental cost. Ski passes, ice attractions, wellness and food are separate activities and are excluded. Bachledka must publish or reconfirm its 2026/27 tariff before payment.',
-    plan:['Day 1 — drive Kaunas → Starý Smokovec and sleep near the tracks','Day 2 — repeat Hrebienok’s 2.5 km track for four daylight hours, rest, then return for the 18:30–21:00 illuminated session','Day 3 — move to Bachledka for four hours of gondola-served 2.5 km descents; keep the evening for recovery','Day 4 — drive home'],
-    basis:'Hrebienok currently lists €25 for four hours and €31 for a two-hour night ticket with sledge. Bachledka’s latest full tariff lists €22 for four hours and €20 rental. The whole-trip range adds shared road costs, three nights and basic food.',
-    sources:[['Hrebienok times, live status and current prices','https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok'],['Bachledka route, status and latest tariff','https://bachledka.sk/en/cennik-sankovanie'],['Official Slovakia winter-sled overview','https://slovakia.travel/en/enjoyable-activities-in-winter-resorts']]
-  },
-  {
     id:'soomaa', place:'Soomaa, Estonia', title:'Bog and river skills weekend',
     strap:'Cross the bog on bogshoes, paddle its rivers by canoe and return at dusk for the beaver-water route.',
     unique:'Soomaa is built around waterlogged bog country and a living dugout-canoe culture; the trip moves through the wetland instead of observing it from a boardwalk.',
@@ -73,6 +58,21 @@ window.NEXT_TRIPS = [
     plan:['Day 1 — drive from Kaunas to the Lake Peipus area and sleep near Torila','Day 2 — camp day 1: loom basics, materials, warp and first controlled passes','Day 3 — camp day 2: build a simple pattern and correct tension with the instructor','Day 4 — camp day 3: finish the piece and practise working independently','Day 5 — drive home'],
     basis:'The published €250 price is for exactly four people and already covers the expensive parts: training, materials, most camp meals and two nights. The range adds shared driving, one pre-camp night and remaining food.',
     sources:[['Three-day camp, inclusions & contact','https://www.sibulatee.ee/en/offers/weaving-workshops-master-the-art-in-3-days/'],['Turgi Handicraft Farm contact','https://www.facebook.com/turgitalu/']]
+  },
+  {
+    id:'bialka-ski', place:'Białka Tatrzańska, Poland', title:'Three-day ski or snowboard progression',
+    strap:'Choose skis or a snowboard, then spend three complete mountain days building control, mileage and confidence across the Tatry Super Ski network.',
+    unique:'Białka gives the crew a real mountain learning base within driving distance: Kotelnica alone has varied floodlit pistes and a snowpark, while one pass reaches 19 Polish and Slovak resorts with 84 km of runs.',
+    image:'../assets/img/next/bialka-hero.jpg?v=1', imageAlt:'Aerial view of skiers, chairlifts and snowy pistes at Kotelnica Białczańska with the Tatra Mountains behind',
+    credit:'Kotelnica Białczańska · official resort photo', creditUrl:'https://bialkatatrzanska.pl/en/winter',
+    detailImage:'../assets/img/next/bialka-detail.jpg?v=1', detailImageAlt:'Snowboarder practising on a rail in the Kotelnica snowpark', detailCredit:'Kotelnica Białczańska · official snowpark photo', detailCreditUrl:'https://bialkatatrzanska.pl/en/winter/snowpark/',
+    estimate:'€320–520', budget:420, core:'About €135 ski / €144 snowboard: 3-day pass PLN 470 + 3-day set PLN 120 / 160',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'One road day each way surrounds three full slope days. Every local day is skiing or snowboarding; the route changes terrain instead of inserting sightseeing.', timing:'3 × 6–8 h slope days', season:'18–22 December 2026 if enough terrain opens; otherwise January–early March 2027', travel:'Shared car Kaunas → Białka Tatrzańska', intensity:'Moderate–high', balance:'Three active days are unavoidable for this trip, but lift rides, lunch stops and early finishes control the load; nobody has to use the snowpark', risk:'The 2026/27 daily tariff and opening date are not published yet. Keep rooms refundable and commit only after the live report shows enough beginner/intermediate terrain for all three days',
+    coreIncludes:'The latest published three-day Tatry Super Ski adult pass and a three-day standard equipment set. Choose one: skis, boots and poles cost PLN 120; snowboard and boots cost PLN 160.',
+    optional:'A snowboard set adds about €9 over skis. Add a helmet only for anyone without one. If a rider cannot stop and turn safely, book instruction before travel; the latest official school rate starts at PLN 174.99 for the first 55-minute hour, with shared-person supplements. Thermal pools and fast-pass upgrades are excluded.',
+    plan:['Day 1 — drive Kaunas → Białka Tatrzańska, collect equipment if evening pickup is offered and sleep','Day 2 — full Kotelnica day: safety check, controlled turns and repeated suitable runs; beginners start with a booked instructor','Day 3 — use the same pass at the best fully open nearby sector, such as Jurgów or Rusiń-Ski, for different gradients and sustained mileage','Day 4 — return to Kotelnica for a full progression day; confident riders may use the snowpark while everyone else stays on normal pistes','Day 5 — return equipment and drive home'],
+    basis:'The latest complete Tatry Super Ski tariff lists PLN 470 for three high-season days. U Maćka lists PLN 120 for a three-day ski set or PLN 160 for a snowboard set. The range adds shared driving, four modest nights and food, with buffer for the unpublished 2026/27 tariff.',
+    sources:[['Official resort, pistes and live conditions','https://bialkatatrzanska.pl/en/winter'],['Latest complete 3-day pass tariff and online sale','https://sklep.tatrysuperski.pl/en/winter/support/prices'],['Current ski and snowboard rental table','https://www.umacka.com/en'],['Official lessons and published rates','https://szkolastok.pl/en/price-list-ski-snowboard-lessons']]
   },
   {
     id:'knife-camp', place:'Lipnice nad Sázavou, Czechia', title:'Build a knife and leather sheath',

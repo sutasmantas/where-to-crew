@@ -26,6 +26,9 @@ const legacyCardsWithoutDetailPhotos = new Set([
   'vjosa', 'croatia-skipper', 'germany', 'portugal', 'north-wales', 'malta',
   'iceland', 'finland', 'dakhla'
 ]);
+const legacyCardsAllowedTwoActivityDays = new Set([
+  'crystal-valley', 'soomaa', 'belgium-space', 'north-wales'
+]);
 (trips || []).forEach((trip, index) => {
   required.forEach((key) => {
     if (trip[key] === undefined || trip[key] === null || trip[key] === '') errors.push(`${trip.id || index}: missing ${key}`);
@@ -47,6 +50,9 @@ const legacyCardsWithoutDetailPhotos = new Set([
     errors.push(`${trip.id}: invalid usable-day or hands-on-day count`);
   } else if (trip.handsOnDays < Math.ceil(trip.usableDays * 0.6)) {
     errors.push(`${trip.id}: hands-on activities must cover at least 60% of non-travel days`);
+  }
+  if (trip.handsOnDays < 3 && !legacyCardsAllowedTwoActivityDays.has(trip.id)) {
+    errors.push(`${trip.id}: new and rebuilt trips need at least 3 genuine activity days`);
   }
   if (!statedDays || plannedDays.size !== statedDays || Math.max(...plannedDays) !== statedDays) {
     errors.push(`${trip.id}: day-by-day plan does not account for all ${statedDays || '?'} stated days`);
