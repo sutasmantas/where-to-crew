@@ -19,6 +19,13 @@ const errors = [];
 
 if (!Array.isArray(trips) || !trips.length) errors.push('NEXT_TRIPS is empty or missing');
 const seen = new Set();
+// Existing cards can be backfilled gradually. Every ID added after this baseline
+// automatically fails validation until it has a second credited local photo.
+const legacyCardsWithoutDetailPhotos = new Set([
+  'nida-orienteering', 'soomaa', 'estonia-weaving', 'belgium-space', 'slovenia',
+  'vjosa', 'croatia-skipper', 'germany', 'portugal', 'north-wales', 'malta',
+  'iceland', 'finland', 'dakhla'
+]);
 (trips || []).forEach((trip, index) => {
   required.forEach((key) => {
     if (trip[key] === undefined || trip[key] === null || trip[key] === '') errors.push(`${trip.id || index}: missing ${key}`);
@@ -51,6 +58,16 @@ const seen = new Set();
   if (!/^https:\/\//.test(trip.creditUrl || '')) errors.push(`${trip.id}: invalid photo credit link`);
   const imagePath = path.resolve(root, 'next', trip.image.split('?')[0]);
   if (!imagePath.startsWith(root + path.sep) || !fs.existsSync(imagePath)) errors.push(`${trip.id}: missing local image ${trip.image}`);
+  if (!legacyCardsWithoutDetailPhotos.has(trip.id)) {
+    for (const key of ['detailImage', 'detailImageAlt', 'detailCredit', 'detailCreditUrl']) {
+      if (!trip[key]) errors.push(`${trip.id}: missing ${key}`);
+    }
+  }
+  if (trip.detailImage) {
+    if (!/^https:\/\//.test(trip.detailCreditUrl || '')) errors.push(`${trip.id}: invalid detail photo credit link`);
+    const detailImagePath = path.resolve(root, 'next', trip.detailImage.split('?')[0]);
+    if (!detailImagePath.startsWith(root + path.sep) || !fs.existsSync(detailImagePath)) errors.push(`${trip.id}: missing local detail image ${trip.detailImage}`);
+  }
 });
 
 const page = fs.readFileSync(path.join(root, 'next', 'index.html'), 'utf8');

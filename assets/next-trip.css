@@ -64,6 +64,11 @@ body.next-page{min-height:100vh;background:#08100d;color:var(--paper);}
 .activity-plan{list-style:none;counter-reset:days;display:grid;gap:8px;margin:0 0 18px;padding:0}
 .activity-plan li{counter-increment:days;display:grid;grid-template-columns:28px 1fr;gap:9px;color:var(--paper);font-size:.85rem;line-height:1.4}
 .activity-plan li:before{content:counter(days);display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1px solid var(--sage);color:var(--sage);font:.65rem var(--mono)}
+.activity-photo{position:relative;margin:0 0 20px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--forest-2)}
+.activity-photo img{display:block;width:100%;height:clamp(190px,29vw,300px);object-fit:cover}
+.activity-photo figcaption{position:absolute;right:8px;bottom:8px;padding:.35em .5em;border-radius:4px;background:rgba(7,13,11,.78);font:.58rem var(--mono)}
+.activity-photo a{color:rgba(243,237,225,.82);text-decoration:none}
+.activity-photo a:hover{color:var(--paper)}
 .basis{color:var(--paper-soft);font-size:.82rem;line-height:1.55;margin-bottom:15px}
 .cost-scope{display:grid;gap:8px;margin:0 0 18px}
 .cost-scope p{padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--forest-2);color:var(--paper-soft);font-size:.8rem;line-height:1.5}

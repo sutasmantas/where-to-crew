@@ -17,18 +17,34 @@ window.NEXT_TRIPS = [
     sources:[['2027 dates & direct registration','https://uzjudek.lt/events/nida-3-days-2027-neringa-2027-06-10'],['2026 official bulletin: course lengths, newcomer class & fees','https://foreststadiums.lt/nida_2026_3days_eng/'],['2027 registration page','https://dbsportas.lt/lt/varz/2027003']]
   },
   {
-    id:'sweden', place:'Sweden', title:'Archipelago kayak expedition',
-    strap:'Night ferry, your own car and two self-guided paddling stages among the sheltered Blekinge islands.',
-    unique:'The overnight car ferry drops the crew beside an island network where legal wild camping turns two paddles into a moving expedition.',
-    image:'../assets/img/next/sweden.jpg', imageAlt:'Rocky Swedish archipelago beneath a cloudy sky',
-    credit:'Tommie Hansen · CC BY 3.0', creditUrl:'https://commons.wikimedia.org/wiki/File:Cloudy_and_kayaks_at_Fj%C3%A4rdl%C3%A5ng,_Stockholm_archipelago_(Sweden)_-_panoramio.jpg',
-    estimate:'€280–430', budget:355, core:'Ferry from €122 return pp + kayak SEK 1,050',
-    usableDays:3, handsOnDays:2, duration:'5 days / 2 ferry nights', coverage:'Two ferry nights plus three days in Sweden: two paddle stages and one necessary weather-flex island day.', timing:'2 × 3–4 h paddles + flexible island day', season:'May–September', travel:'Own car + Klaipėda ferry', intensity:'Moderate', balance:'Paddling stops at half-days; middle day flexes with weather and energy', risk:'Sea weather and beginner paddling safety',
-    coreIncludes:'Return ferry lead fare and a three-day single-kayak rental; safety gear depends on the chosen outfitter.',
-    optional:'Camping is the low-cost version. Cabins, guided paddling or tandem kayaks change the total and must be priced after the crew chooses comfort level.',
-    plan:['Day 1 — board the overnight Klaipėda → Karlshamn ferry','Day 2 — collect kayaks, take the safety briefing and paddle 3–4 sheltered hours to camp/cabin','Day 3 — island exploration, swim and weather-flex recovery; make only a short optional move if conditions are easy','Day 4 — second 3–4 hour paddling stage, return the gear and board the ferry','Day 5 — arrive home from the overnight ferry'],
-    basis:'DFDS starts at €61 each way per person with a car when four share a cabin. A three-day single kayak is SEK 1,050. The estimate adds shared fuel, simple camps/cabins and food.',
-    sources:[['DFDS fare & schedule','https://www.dfds.com/nb-no/ferge/batreise/ferge-sverige/klaipeda-karlshamn'],['2026 kayak prices','https://kajakparadiset.se/en/rent-kayak/kayak-rent-prices'],['Blekinge paddling guide','https://www.visitblekinge.se/en/canoeing-and-kayaking'],['Sweden access rules','https://visitsweden.com/what-to-do/nature-outdoors/nature/sustainable-and-rural-tourism/the-right-of-public-access/']]
+    id:'crystal-valley', place:'Liberec Region, Czechia', title:'Two-day glassmaker circuit',
+    strap:'Use the one weekend when more than fifty glassworks and studios open, then build both days around places where the crew can make glass objects.',
+    unique:'Bohemian glass is concentrated across this valley, and the dated open weekend exposes working schools, bead shops and studios that are normally scattered or closed to casual visitors.',
+    image:'../assets/img/next/crystal-hero.jpg?v=1', imageAlt:'Cut and coloured Czech glass objects displayed in the Crystal Valley',
+    credit:'Crystal Valley · official event photo', creditUrl:'https://crystalvalley.cz/en/akce-cv/vikend-kristaloveho-udoli',
+    detailImage:'../assets/img/next/crystal-detail.jpg?v=1', detailImageAlt:'Hands sorting brightly coloured glass rods during a Crystal Valley workshop', detailCredit:'Crystal Valley · official event photo', detailCreditUrl:'https://crystalvalley.cz/en/akce-cv/vikend-kristaloveho-udoli',
+    estimate:'€220–400', budget:310, core:'From CZK 50 (€2.05) per named workshop; reserve 2–3 workshops daily',
+    usableDays:2, handsOnDays:2, duration:'4 days / 3 nights', coverage:'One road day each way surrounds the complete Saturday and Sunday Crystal Valley program; both local days are built from making sessions rather than museum stops.', timing:'17 Oct 09:00–18 Oct 17:00 · target 2–3 practical sessions daily', season:'17–18 October 2026', travel:'Shared car Kaunas → Liberec', intensity:'Low', balance:'Short making blocks with driving between studios and a normal night between event days', risk:'The overall event is confirmed, but individual workshops have small capacities; secure four written reservations before booking rooms',
+    coreIncludes:'The event itself and the named low-cost making sessions. G&B Beads lists a CZK 50 workshop; Urbanglass and the Železný Brod glass school advertise creative or try-it-yourself work with donation or voluntary admission.',
+    optional:'Demonstrations and museums are available between booked workshops but do not count as core activity. Paid glassblowing, purchases and premium pieces enter the budget only after the crew chooses them.',
+    plan:['Day 1 — drive Kaunas → Liberec, check in and confirm the studio route','Day 2 — Saturday maker circuit: reserve G&B Beads plus two practical studios; use demonstrations only between hands-on slots','Day 3 — Sunday maker circuit: reserve the Železný Brod school and two different making techniques, then compare what everyone produced','Day 4 — drive home'],
+    basis:'The official weekend runs 09:00 Saturday to 17:00 Sunday and includes 50+ venues. Published workshop examples start at CZK 50. The range allows €40–100 for reserved making, then shared fuel, Czech road charges, three simple nights and food.',
+    sources:[['2026 dates and 50+ venue program','https://crystalvalley.cz/en/akce-cv/vikend-kristaloveho-udoli'],['G&B Beads CZK 50 making workshop','https://crystalvalley.cz/en/videt/g-amp-b-beads-muzeum-vyroby-koralku'],['Železný Brod glass-school try-it-yourself program','https://crystalvalley.cz/en/videt/supss-zelezny-brod'],['25 Sep ECB exchange rates','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']]
+  },
+  {
+    id:'tatra-sleds', place:'High Tatras, Slovakia', title:'Mountain-sled descent circuit',
+    strap:'Ride the funicular or gondola up, then steer repeated 2.5 km descents on two separate mountain tracks by day and after dark.',
+    unique:'The activity is the mountain descent itself: two lift-served forest sled tracks, with Hrebienok adding a fully lit night session instead of a token amusement-park run.',
+    image:'../assets/img/next/tatras-hero.jpg?v=1', imageAlt:'Two riders descending the snowy Hrebienok mountain sled track with High Tatra peaks behind them',
+    credit:'Marek Hajkovský / Vysoké Tatry · official resort photo', creditUrl:'https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok',
+    detailImage:'../assets/img/next/tatras-detail.jpg?v=1', detailImageAlt:'Friends on sledges at night on the illuminated Hrebienok track', detailCredit:'Marek Hajkovský / Vysoké Tatry · official resort photo', detailCreditUrl:'https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok',
+    estimate:'€240–410', budget:325, core:'€98 planning figure: Hrebienok 4 h €25 + night with sledge €31 + Bachledka 4 h pass €22 + sledge €20',
+    usableDays:2, handsOnDays:2, duration:'4 days / 3 nights', coverage:'Two road days surround two lift-served sled days. The first combines day and night Hrebienok runs; the second uses Bachledka’s different 2.5 km forest descent.', timing:'Hrebienok 4 h day + 2 h night · Bachledka 4 h', season:'Late December 2026–March 2027, only while both tracks report open', travel:'Shared car Kaunas → Starý Smokovec', intensity:'Low–moderate', balance:'Repeated short descents with lift recovery; sleep between the double Hrebienok block and Bachledka', risk:'Snow controls the product. Do not buy non-refundable rooms until both live track-status pages confirm operation',
+    coreIncludes:'A four-hour Hrebienok day ticket, the two-hour Hrebienok night ticket with sledge, and the latest published four-hour Bachledka sled pass plus rental.',
+    optional:'Own sledges reduce rental cost. Ski passes, ice attractions, wellness and food are separate activities and are excluded. Bachledka must publish or reconfirm its 2026/27 tariff before payment.',
+    plan:['Day 1 — drive Kaunas → Starý Smokovec and sleep near the tracks','Day 2 — repeat Hrebienok’s 2.5 km track for four daylight hours, rest, then return for the 18:30–21:00 illuminated session','Day 3 — move to Bachledka for four hours of gondola-served 2.5 km descents; keep the evening for recovery','Day 4 — drive home'],
+    basis:'Hrebienok currently lists €25 for four hours and €31 for a two-hour night ticket with sledge. Bachledka’s latest full tariff lists €22 for four hours and €20 rental. The whole-trip range adds shared road costs, three nights and basic food.',
+    sources:[['Hrebienok times, live status and current prices','https://www.vt.sk/en/activities/winter-activities/sledging-in-hrebienok'],['Bachledka route, status and latest tariff','https://bachledka.sk/en/cennik-sankovanie'],['Official Slovakia winter-sled overview','https://slovakia.travel/en/enjoyable-activities-in-winter-resorts']]
   },
   {
     id:'soomaa', place:'Soomaa, Estonia', title:'Bog and river skills weekend',
@@ -59,6 +75,21 @@ window.NEXT_TRIPS = [
     sources:[['Three-day camp, inclusions & contact','https://www.sibulatee.ee/en/offers/weaving-workshops-master-the-art-in-3-days/'],['Turgi Handicraft Farm contact','https://www.facebook.com/turgitalu/']]
   },
   {
+    id:'knife-camp', place:'Lipnice nad Sázavou, Czechia', title:'Build a knife and leather sheath',
+    strap:'Spend a residential weekend shaping a Swedish blade’s handle, then cut, stitch and wet-form its fitted leather sheath.',
+    unique:'The object progresses through two connected crafts at a quarry-side workshop: wood or resin handle work followed by traditional saddlery, and everyone leaves with a usable matched set.',
+    image:'../assets/img/next/knife-hero.jpg?v=1', imageAlt:'Rows of finished handmade knives and leather sheaths from the Czech residential course',
+    credit:'Dřevokurzy · official course photo', creditUrl:'https://drevokurzy.cz/nozir-4/',
+    detailImage:'../assets/img/next/knife-detail.jpg?v=1', detailImageAlt:'Knife-course participants gathered around a workbench beside the quarry accommodation', detailCredit:'Dřevokurzy · official course photo', detailCreditUrl:'https://drevokurzy.cz/nozir-4/',
+    estimate:'€360–520', budget:440, core:'CZK 5,920 (€243): course CZK 4,300 + full-board stay CZK 1,620',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'One road day each way plus the complete Friday-to-Sunday residential course. The fourth night lets the crew arrive before the Friday start without cutting into the workshop.', timing:'Fri 18:00–20:00 · Sat 09:00–20:00 · Sun 09:00–12:00', season:'9–11 October 2026', travel:'Shared car Kaunas → Lipnice area', intensity:'Low–moderate', balance:'Two light edge days surround the long main workshop day; accommodation and meals are on site', risk:'The public page is Czech. Get written confirmation that one instructor can support four English speakers before paying or reject this option',
+    coreIncludes:'All three course blocks, the blade and standard handle/sheath materials, two nights of lodging and three meals per day during the residential weekend.',
+    optional:'Premium handle materials are optional. The sauna is a free-time extra, not part of the activity case. Add one pre-course night only; it is already included in the whole-trip estimate.',
+    plan:['Day 1 — drive Kaunas → Czechia and sleep near Lipnice','Day 2 — check in, choose the design, drill and glue the handle materials during the 18:00–20:00 opening block','Day 3 — work 09:00–20:00: shape, polish and oil the handle; cut, stitch and wet-form the leather sheath','Day 4 — finish polishing and waxing 09:00–12:00, inspect the knife and leave after the included lunch','Day 5 — drive home after the post-course night'],
+    basis:'The provider publishes CZK 4,300 for the course and CZK 1,620 for lodging with three meals daily, about €243 at the 25 September ECB rate. The range adds shared driving, one extra room night and road food.',
+    sources:[['2026 date, exact hours, price and reservation','https://drevokurzy.cz/nozir-4/'],['25 Sep ECB exchange rates','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']]
+  },
+  {
     id:'belgium-space', place:'Belgian Ardennes', title:'Astronaut day and river mission',
     strap:'Train across eleven space simulations for six hours, then paddle the Lesse through the Ardennes.',
     unique:'The Euro Space Center condenses astronaut-style simulators, Mars and Moon movement, a rotor and mission exhibits into one full active day.',
@@ -73,6 +104,36 @@ window.NEXT_TRIPS = [
     sources:[['Space-day details & booking','https://www.eurospacecenter.be/en/journee-du-spationaute'],['Space-day prices, hours & restrictions','https://www.eurospacecenter.be/en/faq'],['2026 Lesse kayak price','https://www.dinant-evasion.be/fr/activite/kayak/descente-de-la-lesse-gendron-anseremme-12-km']]
   },
   {
+    id:'warsaw-bartender', place:'Warsaw, Poland', title:'Three-day bartender qualification',
+    strap:'Train behind a professional bar for eighteen hours, prepare and compare classic cocktails, then finish with practical and theory exams.',
+    unique:'The trip is a complete English first-degree course from one of Poland’s largest bartender schools, with repeated drink-making rather than a short tourist cocktail class.',
+    image:'../assets/img/next/bartender-hero.jpg?v=1', imageAlt:'Bartender student pouring two cocktails at once during practical training in Warsaw',
+    credit:'Polish Bartender School · official course gallery', creditUrl:'https://www.szkolabarmanow.pl/galeria/barmanskie_I_stopnia',
+    detailImage:'../assets/img/next/bartender-detail.jpg?v=1', detailImageAlt:'Cocktail tools, glassware and ingredients arranged at the Warsaw training bar', detailCredit:'Polish Bartender School · official course gallery', detailCreditUrl:'https://www.szkolabarmanow.pl/galeria/barmanskie_I_stopnia',
+    estimate:'€380–530', budget:455, core:'PLN 1,199 (€274): 18 h English course, ingredients and exams',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'One drive day each way surrounds three fixed six-hour course days. There is no bar crawl or city filler in the plan.', timing:'3 × 6 h · 09:00–15:00 daily', season:'19–21 October 2026', travel:'Shared car Kaunas → Warsaw', intensity:'Low physical load', balance:'Six-hour practical days finish at 15:00; use public transport after tasting sessions', risk:'Alcohol tasting is part of the course. Anyone avoiding alcohol should confirm a tasting-free adaptation before registering',
+    coreIncludes:'Three English training days, all bar tools and premium ingredients used in class, practical and theory exams, unlimited exam retakes and an English certificate.',
+    optional:'The school says the PLN 1,199 fee has no extra charges. Accommodation, food and Warsaw public transport are the only planned additions; nightlife is excluded.',
+    plan:['Day 1 — drive Kaunas → Warsaw, park the car and check in near public transport','Day 2 — course 09:00–15:00: station setup, measures, spirits, tasting and first preparation methods','Day 3 — course 09:00–15:00: shaking, stirring, throwing, texture, temperature and classic recipes','Day 4 — course 09:00–15:00: garnish, smoked cocktails, speed and service, then practical and theory exams','Day 5 — drive home'],
+    basis:'The school publishes PLN 1,199 total, about €274 at the 25 September ECB rate, for three six-hour days with 80% practical work. The range adds shared fuel, four modest nights, food and local transport.',
+    sources:[['English course, date, program, fee and enrolment','https://www.szkolabarmanow.pl/szkolenie/barmanskie_I_en'],['Official first-degree course gallery','https://www.szkolabarmanow.pl/galeria/barmanskie_I_stopnia'],['25 Sep ECB exchange rates','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']]
+  },
+  {
+    id:'romania-forage', place:'Ermitaj Malin, Romania', title:'Wild food field-and-kitchen course',
+    strap:'Identify autumn plants and mushrooms in the field, separate edible species from toxic lookalikes, then cook and preserve what the group studies.',
+    unique:'The off-grid Transylvanian venue joins real forest identification to applied cooking and preservation across three days instead of selling a two-hour foraging walk.',
+    image:'../assets/img/next/forage-hero.jpg?v=1', imageAlt:'Wild mushroom specimens labelled for identification during the Ermitaj Malin course',
+    credit:'Ermitaj Malin · official course photo', creditUrl:'https://ermitajmalin.com/en/training-wild-edible-plants-mushrooms-ermitaj-october-2026/',
+    detailImage:'../assets/img/next/forage-detail.jpg?v=1', detailImageAlt:'The garden and outdoor learning landscape at Ermitaj Malin in Romania', detailCredit:'Ermitaj Malin · official venue photo', detailCreditUrl:'https://ermitajmalin.com/en/the-place/',
+    estimate:'€370–560', budget:465, core:'RON 1,200–1,800 (€227–341): workshop RON 500 + income-based full board RON 700–1,300',
+    usableDays:3, handsOnDays:3, duration:'5 days / 4 nights', coverage:'A long shared drive each way surrounds the complete three-day residential course; every local day combines field or kitchen practice.', timing:'3 full course days · 9–11 October 2026', season:'9–11 October 2026', travel:'Shared car Kaunas → Malin, Romania', intensity:'Low–moderate', balance:'Field walks alternate with seated identification, cooking, meals and processing sessions', risk:'The page is translated into English but does not explicitly promise English teaching; receive written language confirmation before any non-refundable payment',
+    coreIncludes:'Educational facilitation, materials, guided identification walks, applied workshops, cooking and processing, three days of accommodation, meals from first breakfast through final lunch, snacks and drinks.',
+    optional:'The full-board amount is a published income-based contribution, not a comfort upgrade. Use the correct bracket. The estimate assumes the standard fee because the early-bird deadline has passed.',
+    plan:['Day 1 — share the long drive from Kaunas and arrive for the pre-course night','Day 2 — course day 1: field recognition, habitat reading and safe comparison with toxic species','Day 3 — course day 2: collect responsibly, test simple recipes and compare cooking techniques','Day 4 — course day 3: preservation and processing practice, final identification review and included lunch','Day 5 — drive home'],
+    basis:'The workshop is RON 500 and standard full board is RON 700–1,300 according to household income, together about €227–341 at the 25 September ECB rate. The range adds shared road costs and one pre-course night.',
+    sources:[['2026 dates, curriculum, prices and registration','https://ermitajmalin.com/en/training-wild-edible-plants-mushrooms-ermitaj-october-2026/'],['Venue and arrival information','https://ermitajmalin.com/en/getting-to-ermitaj/'],['25 Sep ECB exchange rates','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']]
+  },
+  {
     id:'slovenia', place:'Slovenia', title:'Three underground worlds',
     strap:'Kayak beneath Mount Peca, cycle through the mine and cross Križna’s underground lake by boat.',
     unique:'Few trips combine a flooded mine by kayak, another mine route by bicycle and a natural cave-lake crossing in one region.',
@@ -85,6 +146,21 @@ window.NEXT_TRIPS = [
     plan:['Day 1 — drive south with one overnight split','Day 2 — complete the 4–5 hour Peca underground kayak expedition','Day 3 — ride the Peca underground cycling route, then transfer toward Križna','Day 4 — take the chosen Križna cave boat route; quiet Ljubljana or lake evening','Day 5 — drive home with meal and rest stops'],
     basis:'Peca kayaking is €55 off peak or €75 June–September; cycling is €45. Križna is €13–15 short or about €60 for the limited long route. Estimate adds car costs, rooms and meals.',
     sources:[['Official kayak experience','https://www.slovenia.info/en/things-to-do/slovenia-unique-experiences/37-kayaking-adventure-through-the-underground-of-mount-peca'],['Peca 2026 price list','https://www.podzemljepece.com/?page_id=1519'],['Križna short tour','https://notranjski-park.si/en/plan-your-trip/experiences/visit-krizna-cave'],['Križna long tour details','https://www.exploreinslovenia.com/listings/krizna-cave/']]
+  },
+  {
+    id:'spala-volleyball', place:'Spała, Poland', title:'Indoor beach-volleyball camp',
+    strap:'Train four coached sessions on warm sand inside Poland’s Olympic preparation centre, with court access, meals and beds in the same complex.',
+    unique:'December beach volleyball normally means a flight south; Spała puts a heated three-to-four-court sand hall inside a national-team training centre reachable by car from Kaunas.',
+    image:'../assets/img/next/spala-hero.jpg?v=1', imageAlt:'Players receiving coaching on indoor beach-volleyball courts at Spała',
+    credit:'Kontra Camps · official camp photo', creditUrl:'https://kontracamps.com/camps/beachvolleyball/christmas-spala-dec-4th-6th-2026/',
+    detailImage:'../assets/img/next/spala-detail.jpg?v=1', detailImageAlt:'Beach-volleyball players practising together on the indoor sand courts at Spała', detailCredit:'Kontra Camps · official camp photo', detailCreditUrl:'https://kontracamps.com/camps/beachvolleyball/christmas-spala-dec-4th-6th-2026/',
+    estimate:'€420–550', budget:485, core:'€320: four coached sessions, 2 nights, 5 meals and extra court access',
+    usableDays:3, handsOnDays:3, duration:'4 days / 3 nights', coverage:'Thursday is the road day. Friday through Sunday are the full English camp, with free-play time around four coached sessions and the return drive after Sunday’s final slot.', timing:'Fri 14:00 free play / 16:00 first session · final session ends by Sun 13:00', season:'4–6 December 2026', travel:'Shared car Kaunas → Spała', intensity:'Moderate–high', balance:'Four coached sessions across three days, free play only when wanted, pool access and two nights on site', risk:'Exact session slots arrive about one week before camp; choose the full Friday–Sunday package and register everyone at the honest skill level',
+    coreIncludes:'Four professional training sessions in English, two nights, five meals, drinking water, daily pool entry, social activities and court access outside coached blocks.',
+    optional:'Friday and Sunday lunches are the only named meal add-ons. Private coaching, massage, cryochamber and single-room upgrades are optional and excluded from the estimate.',
+    plan:['Day 1 — drive Kaunas → Spała, check in for the extra Thursday night and sleep before training','Day 2 — free play from 14:00, first coached session from 16:00 and camp dinner','Day 3 — two coached sessions with pool and recovery between them; extra court time only if the crew still wants it','Day 4 — final coached session ending by 13:00, optional booked lunch, then drive home'],
+    basis:'The dated full camp is €320 and includes the expensive parts: four sessions, two nights and five meals. The range adds shared driving, one Thursday room, road meals and only the lunches selected during booking.',
+    sources:[['2026 camp, schedule, inclusions and direct booking','https://kontracamps.com/camps/beachvolleyball/christmas-spala-dec-4th-6th-2026/'],['Official Spała Olympic centre','https://spala.cos.pl/']]
   },
   {
     id:'vjosa', place:'Përmet, Albania', title:'Three ways down the Vjosa',
